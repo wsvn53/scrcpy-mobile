@@ -30,7 +30,11 @@ add_library( # Sets the name of the library.
         ../../scrcpy/app/src/util/tick.c
         ../../scrcpy/app/src/util/intmap.c
         ../../scrcpy/app/src/util/intr.c
-        ../../scrcpy/app/src/scrcpy.c
+
+        # Replace with porting version of scrcpy.c
+        # ../../scrcpy/app/src/scrcpy.c
+        ../../porting/src/scrcpy-porting.c
+
         ../../scrcpy/app/src/v4l2_sink.c
         ../../scrcpy/app/src/screen.c
         ../../scrcpy/app/src/fps_counter.c
@@ -39,6 +43,7 @@ add_library( # Sets the name of the library.
         ../../scrcpy/app/src/server.c
         ../../scrcpy/app/src/keyboard_inject.c
         ../../scrcpy/app/src/file_pusher.c
+
         # Disable usb sources
         # ../../scrcpy/app/src/usb/usb.c
         # ../../scrcpy/app/src/usb/aoa_hid.c
@@ -46,16 +51,23 @@ add_library( # Sets the name of the library.
         # ../../scrcpy/app/src/usb/hid_mouse.c
         # ../../scrcpy/app/src/usb/scrcpy_otg.c
         # ../../scrcpy/app/src/usb/hid_keyboard.c
+
         ../../scrcpy/app/src/adb/adb.c
         ../../scrcpy/app/src/adb/adb_device.c
         ../../scrcpy/app/src/adb/adb_tunnel.c
         ../../scrcpy/app/src/adb/adb_parser.c
+
         # Remove windows platform sources
         # ../../scrcpy/app/src/sys/win/process.c
         # ../../scrcpy/app/src/sys/win/file.c
+
         ../../scrcpy/app/src/sys/unix/process.c
         ../../scrcpy/app/src/sys/unix/file.c
-        ../../scrcpy/app/src/main.c
+
+        # Use porting main.c
+        # ../../scrcpy/app/src/main.c
+
+        ../../porting/src/main-porting.c
         ../../scrcpy/app/src/video_buffer.c
         ../../scrcpy/app/src/opengl.c
         ../../scrcpy/app/src/version.c
