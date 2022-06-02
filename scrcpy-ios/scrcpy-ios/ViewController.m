@@ -6,6 +6,7 @@
 //
 
 #import "ViewController.h"
+#import "ScrcpyClient.h"
 
 @interface ViewController ()
 
@@ -15,8 +16,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    self.view.backgroundColor = UIColor.redColor;
+    [ScrcpySharedClient startWith:@"redmi.wsen.me" adbPort:@"5555" options:@[
+         @"-f", @"--verbosity=verbose"
+    ]];
 }
-
 
 @end

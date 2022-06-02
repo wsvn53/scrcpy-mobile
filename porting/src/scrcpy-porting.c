@@ -13,6 +13,11 @@
 
 #undef sc_server_init
 
+__attribute__((weak))
+void ScrcpyUpdateStatus(enum ScrcpyStatus status) {
+    printf("ScrcpyUpdateStatus: %d\n", status);
+}
+
 static void
 sc_server_on_connection_failed_hijack(struct sc_server *server, void *userdata) {
     sc_server_on_connection_failed(server, userdata);

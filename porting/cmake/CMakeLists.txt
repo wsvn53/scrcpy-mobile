@@ -61,7 +61,11 @@ add_library( # Sets the name of the library.
         # ../../scrcpy/app/src/sys/win/process.c
         # ../../scrcpy/app/src/sys/win/file.c
 
-        ../../scrcpy/app/src/sys/unix/process.c
+        # Replace process.c with porting version
+        # ../../scrcpy/app/src/sys/unix/process.c
+        ../../porting/src/process-porting.c
+        # Add process manager
+        ../../porting/src/process-porting.cpp
         ../../scrcpy/app/src/sys/unix/file.c
 
         # Use porting main.c
@@ -107,6 +111,9 @@ target_link_options(scrcpy
         ../../output/iphone/libavdevice.a
         ../../output/iphone/libavcodec.a
         )
+
+set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "")
+set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
 
 #set_target_properties(scrcpy
 #        PROPERTIES
