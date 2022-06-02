@@ -1,3 +1,9 @@
 [submodule "scrcpy"]
 	path = scrcpy
 	url = https://github.com/Genymobile/scrcpy.git
+[submodule "external/adb-mobile"]
+	path = external/adb-mobile
+	url = https://github.com/wsvn53/adb-mobile.git
+[submodule "ios-cmake"]
+	path = ios-cmake
+	url = https://github.com/leetal/ios-cmake.git
