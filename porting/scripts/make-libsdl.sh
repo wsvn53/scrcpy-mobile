@@ -6,7 +6,7 @@ OUTPUT=$(cd $OUTPUT && pwd);
 BUILD_DIR=$(mktemp -d -t SDL);
 cd $BUILD_DIR;
 
-curl -O https://www.libsdl.org/release/SDL2-2.0.16.tar.gz;
+curl -O https://www.libsdl.org/release/SDL2-2.0.22.tar.gz;
 tar xzvf SDL*.tar.gz;
 
 # Build iOS Libraries
@@ -15,13 +15,13 @@ echo "=> Building for iOS..";
 xcodebuild clean build OTHER_CFLAGS="-fembed-bitcode" \
 	BUILD_DIR=$BUILD_DIR/build \
 	ARCHS="arm64" \
-	CONFIGURATION=Release \
+	CONFIGURATION=Debug \
     GCC_PREPROCESSOR_DEFINITIONS='CFRunLoopRunInMode=CFRunLoopRunInMode_fix' \
 	-project SDL2-*/Xcode/SDL/SDL.xcodeproj -scheme "Static Library-iOS" -sdk iphoneos;
 xcodebuild clean build OTHER_CFLAGS="-fembed-bitcode" \
 	BUILD_DIR=$BUILD_DIR/build \
 	ARCHS="x86_64" \
-	CONFIGURATION=Release \
+	CONFIGURATION=Debug \
     GCC_PREPROCESSOR_DEFINITIONS='CFRunLoopRunInMode=CFRunLoopRunInMode_fix' \
 	-project SDL2-*/Xcode/SDL/SDL.xcodeproj -scheme "Static Library-iOS" -sdk iphonesimulator;
 
