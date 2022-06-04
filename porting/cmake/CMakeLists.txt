@@ -9,7 +9,11 @@ add_library( # Sets the name of the library.
         STATIC
         # Sources of scrcpy
         ../../scrcpy/app/src/control_msg.c
-        ../../scrcpy/app/src/controller.c
+
+        # Replace with porting version of cotnroller.c
+        # ../../scrcpy/app/src/controller.c
+        ../../porting/src/controller-porting.c
+
         ../../scrcpy/app/src/recorder.c
         ../../scrcpy/app/src/demuxer.c
         ../../scrcpy/app/src/cli.c
@@ -36,7 +40,11 @@ add_library( # Sets the name of the library.
         ../../porting/src/scrcpy-porting.c
 
         ../../scrcpy/app/src/v4l2_sink.c
-        ../../scrcpy/app/src/screen.c
+
+        # Replace with porting version of screen.c
+        # ../../scrcpy/app/src/screen.c
+        ../../porting/src/screen-porting.m
+
         ../../scrcpy/app/src/fps_counter.c
         ../../scrcpy/app/src/clock.c
         ../../scrcpy/app/src/frame_buffer.c
@@ -70,8 +78,8 @@ add_library( # Sets the name of the library.
 
         # Use porting main.c
         # ../../scrcpy/app/src/main.c
-
         ../../porting/src/main-porting.c
+
         ../../scrcpy/app/src/video_buffer.c
         ../../scrcpy/app/src/opengl.c
         ../../scrcpy/app/src/version.c

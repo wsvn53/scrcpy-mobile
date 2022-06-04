@@ -1,6 +1,6 @@
 //
 //  process-fix.c
-//  scrcpy
+//  scrcpy-module
 //
 //  Created by Ethan on 2022/2/10.
 //
