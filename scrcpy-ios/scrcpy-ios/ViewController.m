@@ -17,9 +17,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.backgroundColor = UIColor.redColor;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(start)];
+    [self.view addGestureRecognizer:tap];
+}
+
+-(void)setupViews {
+    self.view.backgroundColor = UIColor.whiteColor;
+}
+
+-(void)start {
     [ScrcpySharedClient startWith:@"redmi.wsen.me" adbPort:@"5555" options:@[
-         @"-f", @"--verbosity=verbose"
+         @"--verbosity=verbose", @"-f", @"--display-buffer=8", @"--max-fps=60", @"--stay-awake", @"--bit-rate=4M"
     ]];
 }
 

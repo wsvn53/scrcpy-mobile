@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AAF222102848B03F00B732AE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2220F2848B03F00B732AE /* AppDelegate.m */; };
-		AAF222132848B03F00B732AE /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222122848B03F00B732AE /* SceneDelegate.m */; };
 		AAF222162848B03F00B732AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222152848B03F00B732AE /* ViewController.m */; };
 		AAF222192848B03F00B732AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF222172848B03F00B732AE /* Main.storyboard */; };
 		AAF2221B2848B04100B732AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAF2221A2848B04100B732AE /* Assets.xcassets */; };
@@ -20,10 +18,6 @@
 
 /* Begin PBXFileReference section */
 		AAF2220B2848B03F00B732AE /* scrcpy-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scrcpy-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AAF2220E2848B03F00B732AE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		AAF2220F2848B03F00B732AE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		AAF222112848B03F00B732AE /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		AAF222122848B03F00B732AE /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		AAF222142848B03F00B732AE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		AAF222152848B03F00B732AE /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		AAF222182848B03F00B732AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -66,10 +60,6 @@
 		AAF2220D2848B03F00B732AE /* scrcpy-ios */ = {
 			isa = PBXGroup;
 			children = (
-				AAF2220E2848B03F00B732AE /* AppDelegate.h */,
-				AAF2220F2848B03F00B732AE /* AppDelegate.m */,
-				AAF222112848B03F00B732AE /* SceneDelegate.h */,
-				AAF222122848B03F00B732AE /* SceneDelegate.m */,
 				AAF222142848B03F00B732AE /* ViewController.h */,
 				AAF222152848B03F00B732AE /* ViewController.m */,
 				AAF2222E2848BDE300B732AE /* ScrcpyClient.h */,
@@ -156,10 +146,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAF222162848B03F00B732AE /* ViewController.m in Sources */,
-				AAF222102848B03F00B732AE /* AppDelegate.m in Sources */,
 				AAF222302848BDE300B732AE /* ScrcpyClient.m in Sources */,
 				AAF222212848B04100B732AE /* main.m in Sources */,
-				AAF222132848B03F00B732AE /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,6 +286,7 @@
 		AAF222252848B04100B732AE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"ARCHS[sdk=iphonesimulator*]" = x86_64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -314,9 +303,13 @@
 				);
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Scrcpy;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -369,6 +362,8 @@
 					QuartzCore,
 					"-framework",
 					CoreGraphics,
+					"-framework",
+					CoreBluetooth,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mobile.scrcpy-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -396,9 +391,13 @@
 				);
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Scrcpy;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -451,6 +450,8 @@
 					QuartzCore,
 					"-framework",
 					CoreGraphics,
+					"-framework",
+					CoreBluetooth,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mobile.scrcpy-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";

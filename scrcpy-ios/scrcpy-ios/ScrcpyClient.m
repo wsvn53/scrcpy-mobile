@@ -9,6 +9,7 @@
 #import "scrcpy-porting.h"
 #import "adb_public.h"
 #import <SDL2/SDL_events.h>
+#import <SDL2/SDL_system.h>
 
 @interface ScrcpyClient ()
 // Connecting infomations
@@ -27,7 +28,7 @@
 
 CFRunLoopRunResult CFRunLoopRunInMode_fix(CFRunLoopMode mode, CFTimeInterval seconds, Boolean returnAfterSourceHandled) {
     // Upper runloop duration to reduce CPU usage
-    return CFRunLoopRunInMode(mode, 0.01, returnAfterSourceHandled);
+    return CFRunLoopRunInMode(mode, 0.0025, returnAfterSourceHandled);
 }
 
 void adb_connect_status_updated(const char *serial, const char *status) {
@@ -51,7 +52,7 @@ void adb_connect_status_updated(const char *serial, const char *status) {
 
 -(void)setup {
     // Create queue
-    self.scrcpyQueue = [[NSOperationQueue alloc] init];
+    self.scrcpyQueue = [NSOperationQueue mainQueue];
     self.scrcpyQueue.maxConcurrentOperationCount = 1;
     
     // ADB Settings
@@ -73,24 +74,18 @@ void adb_connect_status_updated(const char *serial, const char *status) {
         [self stopScrcpy];
     }
     
-    // Flush all events include the not proccessed SERVER_DISCONNECT events
-    SDL_FlushEvents(0, 0xFFFF);
-    
     // If there are scrcpy connected
     if (self.scrcpyQueue.operationCount > 0) {
         [self stopScrcpy];
         [self.scrcpyQueue cancelAllOperations];
     }
     
-    // Flush all events include the not proccessed SERVER_DISCONNECT events
-    SDL_FlushEvents(0, 0xFFFF);
-    
     // Connect ADB First
     __weak typeof(self) _self = self;
     self.adbStatusUpdated = ^(NSString *serial, NSString *status) {
         NSLog(@"ADB Status Updated: %@ - %@", serial, status);
-        if ([status isEqualToString:@"device"]) {
-            // Call scrcpy_main
+        // Prevent multipile called start
+        if ([status isEqualToString:@"device"] && _self.scrcpyQueue.operationCount == 0) {
             [_self.scrcpyQueue addOperationWithBlock:^{
                 [_self startWithOptions:scrcpyOptions];
             }];
@@ -103,19 +98,24 @@ void adb_connect_status_updated(const char *serial, const char *status) {
 }
 
 -(void)startWithOptions:(NSArray *)scrcpyOptions {
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        // Setup arguments
-        int idx = 0;
-        const char *args[20];
-        args[idx] = "scrcpy";
-        while ((++idx) && idx <= scrcpyOptions.count) {
-            args[idx] = [scrcpyOptions[idx-1] UTF8String];
-        }
+    // Because after SDL proxied didFinishLauch, PumpEvent will set to FASLE
+    // So we need to set to TRUE in order to handle UI events
+    SDL_iPhoneSetEventPump(SDL_TRUE);
     
-        ScrcpyUpdateStatus(ScrcpyStatusConnecting);
-        scrcpy_main((int)scrcpyOptions.count+1, (char **)args);
-        ScrcpyUpdateStatus(ScrcpyStatusDisconnected);
-    });
+    // Flush all events include the not proccessed SERVER_DISCONNECT events
+    SDL_FlushEvents(0, 0xFFFF);
+    
+    // Setup arguments
+    int idx = 0;
+    const char *args[20];
+    args[idx] = "scrcpy";
+    while ((++idx) && idx <= scrcpyOptions.count) {
+        args[idx] = [scrcpyOptions[idx-1] UTF8String];
+    }
+
+    ScrcpyUpdateStatus(ScrcpyStatusConnecting);
+    scrcpy_main((int)scrcpyOptions.count+1, (char **)args);
+    ScrcpyUpdateStatus(ScrcpyStatusDisconnected);
 }
 
 -(void)stopScrcpy {
@@ -159,11 +159,13 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     for (NSString *device in deviceLines) {
         if ([device containsString:serial] && [devices containsString:@"unauthorized"]) {
             NSLog(@"adb device unauthorized %@", serial);
+            if (self.adbStatusUpdated) self.adbStatusUpdated(serial, @"unauthorized");
             return;
         }
 
         if ([device containsString:serial] && [devices containsString:@"device"]) {
             NSLog(@"adb device already connected %@", serial);
+            if (self.adbStatusUpdated) self.adbStatusUpdated(serial, @"device");
             return;
         }
     }
