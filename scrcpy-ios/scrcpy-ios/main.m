@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AppDelegate.h"
 #import <SDL2/SDL_main.h>
 #import "config.h"
 #import "ViewController.h"
@@ -15,7 +14,7 @@ int main(int argc, char * argv[]) {
     NSLog(@"Hello scrcpy v%s", SCRCPY_VERSION);
     
     static UIWindow *window = nil;
-    window = [[UIWindow alloc] init];
+    window = window ?: [[UIWindow alloc] init];
     
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     ViewController *mainController = [sb instantiateViewControllerWithIdentifier:@"ViewController"];
