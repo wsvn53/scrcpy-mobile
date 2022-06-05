@@ -14,6 +14,7 @@
 		AAF222212848B04100B732AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222202848B04100B732AE /* main.m */; };
 		AAF2222A2848BD5B00B732AE /* scrcpy-server in Resources */ = {isa = PBXBuildFile; fileRef = AAF222292848BD5B00B732AE /* scrcpy-server */; };
 		AAF222302848BDE300B732AE /* ScrcpyClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2222F2848BDE300B732AE /* ScrcpyClient.m */; };
+		AAF2225C284B60CD00B732AE /* CVCreate.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2225A284B60CD00B732AE /* CVCreate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,8 @@
 		AAF222292848BD5B00B732AE /* scrcpy-server */ = {isa = PBXFileReference; lastKnownFileType = file; name = "scrcpy-server"; path = "../../output/scrcpy-server"; sourceTree = "<group>"; };
 		AAF2222E2848BDE300B732AE /* ScrcpyClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrcpyClient.h; sourceTree = "<group>"; };
 		AAF2222F2848BDE300B732AE /* ScrcpyClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScrcpyClient.m; sourceTree = "<group>"; };
+		AAF2225A284B60CD00B732AE /* CVCreate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CVCreate.m; path = "chainable-view/CVCreate.m"; sourceTree = SOURCE_ROOT; };
+		AAF2225B284B60CD00B732AE /* CVCreate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CVCreate.h; path = "chainable-view/CVCreate.h"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +63,8 @@
 		AAF2220D2848B03F00B732AE /* scrcpy-ios */ = {
 			isa = PBXGroup;
 			children = (
+				AAF2225B284B60CD00B732AE /* CVCreate.h */,
+				AAF2225A284B60CD00B732AE /* CVCreate.m */,
 				AAF222142848B03F00B732AE /* ViewController.h */,
 				AAF222152848B03F00B732AE /* ViewController.m */,
 				AAF2222E2848BDE300B732AE /* ScrcpyClient.h */,
@@ -147,6 +152,7 @@
 			files = (
 				AAF222162848B03F00B732AE /* ViewController.m in Sources */,
 				AAF222302848BDE300B732AE /* ScrcpyClient.m in Sources */,
+				AAF2225C284B60CD00B732AE /* CVCreate.m in Sources */,
 				AAF222212848B04100B732AE /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -303,13 +309,12 @@
 				);
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Scrcpy;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeRight UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -391,13 +396,12 @@
 				);
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Scrcpy;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeRight UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

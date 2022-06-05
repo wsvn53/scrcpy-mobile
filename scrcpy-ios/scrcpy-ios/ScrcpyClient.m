@@ -18,9 +18,6 @@
 // Scrcpy status
 @property (nonatomic, assign)   enum ScrcpyStatus   status;
 
-// Scrcpy queue
-@property (nonatomic, strong)   NSOperationQueue    *scrcpyQueue;
-
 // Underlying ADB status change callback
 @property (nonatomic, copy)     void (^adbStatusUpdated)(NSString *serial, NSString *status);
 
@@ -51,12 +48,7 @@ void adb_connect_status_updated(const char *serial, const char *status) {
 }
 
 -(void)setup {
-    // Create queue
-    self.scrcpyQueue = [NSOperationQueue mainQueue];
-    self.scrcpyQueue.maxConcurrentOperationCount = 1;
-    
     // ADB Settings
-//    [self enableADBVerbose];
     self.adbDaemonPort = 15037;
     
     // Set ADB Home
@@ -70,14 +62,9 @@ void adb_connect_status_updated(const char *serial, const char *status) {
          adbPort:(NSString *)adbPort
          options:(NSArray *)scrcpyOptions
 {
-    if (self.connectedSerial.length != 0) {
+    if (self.connectedSerial.length != 0 ||
+        self.status == ScrcpyStatusConnected) {
         [self stopScrcpy];
-    }
-    
-    // If there are scrcpy connected
-    if (self.scrcpyQueue.operationCount > 0) {
-        [self stopScrcpy];
-        [self.scrcpyQueue cancelAllOperations];
     }
     
     // Connect ADB First
@@ -85,10 +72,8 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     self.adbStatusUpdated = ^(NSString *serial, NSString *status) {
         NSLog(@"ADB Status Updated: %@ - %@", serial, status);
         // Prevent multipile called start
-        if ([status isEqualToString:@"device"] && _self.scrcpyQueue.operationCount == 0) {
-            [_self.scrcpyQueue addOperationWithBlock:^{
-                [_self startWithOptions:scrcpyOptions];
-            }];
+        if ([status isEqualToString:@"device"] && _self.status != ScrcpyStatusConnected) {
+            [_self performSelectorOnMainThread:@selector(startWithOptions:) withObject:scrcpyOptions waitUntilDone:NO];
         } else if ([status isEqualToString:@"unauthorized"] && self.onADBUnauthorized) {
             _self.onADBUnauthorized(serial);
         }
@@ -98,6 +83,8 @@ void adb_connect_status_updated(const char *serial, const char *status) {
 }
 
 -(void)startWithOptions:(NSArray *)scrcpyOptions {
+    CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.1, NO);
+
     // Because after SDL proxied didFinishLauch, PumpEvent will set to FASLE
     // So we need to set to TRUE in order to handle UI events
     SDL_iPhoneSetEventPump(SDL_TRUE);
@@ -129,7 +116,7 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     
     // Wait for scrcpy exited
     while (self.status != ScrcpyStatusDisconnected) {
-        CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.001, NO);
+        CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.01, NO);
     }
 }
 

@@ -7,3 +7,6 @@
 [submodule "ios-cmake"]
 	path = ios-cmake
 	url = https://github.com/leetal/ios-cmake.git
+[submodule "scrcpy-ios/chainable-view"]
+	path = scrcpy-ios/chainable-view
+	url = https://github.com/wsvn53/chainable-view.git

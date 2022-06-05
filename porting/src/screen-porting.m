@@ -15,14 +15,13 @@
 
 #undef sc_screen_init
 
-struct sc_size
-sc_screen_current_frame(struct sc_size new_frame) {
-    static struct sc_size current_frame;
-    if (new_frame.width > 0 && new_frame.height > 0) {
-        current_frame.width = new_frame.width;
-        current_frame.height = new_frame.height;
+struct sc_screen *
+sc_screen_current_screen(struct sc_screen *screen) {
+    static struct sc_screen *current_screen;
+    if (screen != NULL) {
+        current_screen = screen;
     }
-    return current_frame;
+    return current_screen;
 }
 
 float screen_scale(void) {
@@ -40,8 +39,8 @@ sc_screen_init(struct sc_screen *screen,
     // Set renderer scale
     SDL_RenderSetScale(screen->renderer, screen_scale(), screen_scale());
     
-    // Save current screen frame
-    sc_screen_current_frame(params->frame_size);
+    // Save current screen pointer
+    sc_screen_current_screen(screen);
 
     return ret;
 }
