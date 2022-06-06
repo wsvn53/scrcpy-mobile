@@ -47,7 +47,7 @@
 -(void)startRedmi {
     [ScrcpySharedClient startWith:@"redmi.wsen.me" adbPort:@"5555" options:@[
          @"--verbosity=verbose", @"-f", @"--display-buffer=16",
-         @"--max-fps=60", @"--stay-awake", @"--bit-rate=4M"
+         @"--max-fps=60", @"--stay-awake", @"--bit-rate=3M"
     ]];
 }
 

@@ -70,16 +70,22 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     // Connect ADB First
     __weak typeof(self) _self = self;
     self.adbStatusUpdated = ^(NSString *serial, NSString *status) {
-        NSLog(@"ADB Status Updated: %@ - %@", serial, status);
-        // Prevent multipile called start
-        if ([status isEqualToString:@"device"] && _self.status != ScrcpyStatusConnected) {
-            [_self performSelectorOnMainThread:@selector(startWithOptions:) withObject:scrcpyOptions waitUntilDone:NO];
-        } else if ([status isEqualToString:@"unauthorized"] && self.onADBUnauthorized) {
-            _self.onADBUnauthorized(serial);
-        }
+        [_self onADBStatusChanged:serial status:status options:scrcpyOptions];
     };
     adbPort = adbPort.length == 0 ? @"5555" : adbPort;
     [self adbConnect:adbHost port:adbPort];
+}
+
+-(void)onADBStatusChanged:(NSString *)serial
+                   status:(NSString *)status
+                  options:(NSArray *)scrcpyOptions {
+    NSLog(@"ADB Status Updated: %@ - %@", serial, status);
+    // Prevent multipile called start
+    if ([status isEqualToString:@"device"] && self.status != ScrcpyStatusConnected) {
+        [self performSelectorOnMainThread:@selector(startWithOptions:) withObject:scrcpyOptions waitUntilDone:NO];
+    } else if ([status isEqualToString:@"unauthorized"] && self.onADBUnauthorized) {
+        self.onADBUnauthorized(serial);
+    }
 }
 
 -(void)startWithOptions:(NSArray *)scrcpyOptions {
