@@ -7,17 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA6F711C284E6DDD00A09442 /* scrcpy-server in Resources */ = {isa = PBXBuildFile; fileRef = AA6F711B284E6DDD00A09442 /* scrcpy-server */; };
 		AAF222162848B03F00B732AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222152848B03F00B732AE /* ViewController.m */; };
 		AAF222192848B03F00B732AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF222172848B03F00B732AE /* Main.storyboard */; };
 		AAF2221B2848B04100B732AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAF2221A2848B04100B732AE /* Assets.xcassets */; };
 		AAF2221E2848B04100B732AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF2221C2848B04100B732AE /* LaunchScreen.storyboard */; };
 		AAF222212848B04100B732AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222202848B04100B732AE /* main.m */; };
-		AAF2222A2848BD5B00B732AE /* scrcpy-server in Resources */ = {isa = PBXBuildFile; fileRef = AAF222292848BD5B00B732AE /* scrcpy-server */; };
 		AAF222302848BDE300B732AE /* ScrcpyClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2222F2848BDE300B732AE /* ScrcpyClient.m */; };
 		AAF2225C284B60CD00B732AE /* CVCreate.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2225A284B60CD00B732AE /* CVCreate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA6F711B284E6DDD00A09442 /* scrcpy-server */ = {isa = PBXFileReference; lastKnownFileType = file; name = "scrcpy-server"; path = "../../porting/server/scrcpy-server"; sourceTree = "<group>"; };
 		AAF2220B2848B03F00B732AE /* scrcpy-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scrcpy-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF222142848B03F00B732AE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		AAF222152848B03F00B732AE /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -26,7 +27,6 @@
 		AAF2221D2848B04100B732AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AAF2221F2848B04100B732AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AAF222202848B04100B732AE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AAF222292848BD5B00B732AE /* scrcpy-server */ = {isa = PBXFileReference; lastKnownFileType = file; name = "scrcpy-server"; path = "../../output/scrcpy-server"; sourceTree = "<group>"; };
 		AAF2222E2848BDE300B732AE /* ScrcpyClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrcpyClient.h; sourceTree = "<group>"; };
 		AAF2222F2848BDE300B732AE /* ScrcpyClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScrcpyClient.m; sourceTree = "<group>"; };
 		AAF2225A284B60CD00B732AE /* CVCreate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CVCreate.m; path = "chainable-view/CVCreate.m"; sourceTree = SOURCE_ROOT; };
@@ -72,8 +72,8 @@
 				AAF222172848B03F00B732AE /* Main.storyboard */,
 				AAF2221A2848B04100B732AE /* Assets.xcassets */,
 				AAF2221C2848B04100B732AE /* LaunchScreen.storyboard */,
-				AAF222292848BD5B00B732AE /* scrcpy-server */,
 				AAF2221F2848B04100B732AE /* Info.plist */,
+				AA6F711B284E6DDD00A09442 /* scrcpy-server */,
 				AAF222202848B04100B732AE /* main.m */,
 			);
 			path = "scrcpy-ios";
@@ -137,7 +137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAF2221E2848B04100B732AE /* LaunchScreen.storyboard in Resources */,
-				AAF2222A2848BD5B00B732AE /* scrcpy-server in Resources */,
+				AA6F711C284E6DDD00A09442 /* scrcpy-server in Resources */,
 				AAF2221B2848B04100B732AE /* Assets.xcassets in Resources */,
 				AAF222192848B03F00B732AE /* Main.storyboard in Resources */,
 			);

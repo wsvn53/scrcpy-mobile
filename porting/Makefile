@@ -1,4 +1,4 @@
-all: scrcpy-init adb-mobile libsdl ffmpeg scrcpy
+all: scrcpy-init adb-mobile libsdl ffmpeg scrcpy scrcpy-server
 
 scrcpy-init:
 	cd ../scrcpy && rm -rf x && meson x --buildtype release --strip -Db_lto=true -Dportable=true -Dusb=false
@@ -18,7 +18,9 @@ scrcpy:
 	lipo -create ../output/*/*/libscrcpy.a -output ../output/iphone/libscrcpy.a
 
 scrcpy-server:
-	export SCRCPY_VERSION=1.24 && cd server && rm -rf scrcpy-* && \
+	export SCRCPY_VERSION=1.24 && export JAVA_HOME="$$(/usr/libexec/java_home --version 1.11)" && \
+		export PATH="$$JAVA_HOME/bin:$$PATH" && cd server && rm -rf scrcpy-* && \
 		curl -o scrcpy.zip -L https://github.com/Genymobile/scrcpy/archive/refs/tags/v$$SCRCPY_VERSION.zip && \
-		unzip scrcpy.zip && find src -name "*.java" -exec cp -v {} scrcpy-$$SCRCPY_VERSION/server/{} \;
-	
+		unzip scrcpy.zip && find src -name "*.java" -exec cp -v {} scrcpy-$$SCRCPY_VERSION/server/{} \; && \
+		cd scrcpy-$$SCRCPY_VERSION && meson x --buildtype=release --strip -Db_lto=true -Dcompile_app=false -Dcompile_server=true && \
+		ninja -Cx -v
