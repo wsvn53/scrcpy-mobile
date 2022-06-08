@@ -7,7 +7,6 @@
 
 #import <SDL2/SDL.h>
 #import <SDL2/SDL_render.h>
-#import <UIKit/UIKit.h>
 
 #define sc_screen_init(...)   sc_screen_init_orig(__VA_ARGS__)
 
@@ -24,11 +23,9 @@ sc_screen_current_screen(struct sc_screen *screen) {
     return current_screen;
 }
 
+__attribute__((weak))
 float screen_scale(void) {
-    if ([UIScreen.mainScreen respondsToSelector:@selector(nativeScale)]) {
-        return UIScreen.mainScreen.nativeScale;
-    }
-    return UIScreen.mainScreen.scale;
+    return 2.f;
 }
 
 bool

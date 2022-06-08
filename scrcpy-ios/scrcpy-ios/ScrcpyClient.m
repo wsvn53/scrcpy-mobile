@@ -10,6 +10,7 @@
 #import "adb_public.h"
 #import <SDL2/SDL_events.h>
 #import <SDL2/SDL_system.h>
+#import <UIKit/UIKit.h>
 
 @interface ScrcpyClient ()
 // Connecting infomations
@@ -32,6 +33,13 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     NSString *adbSerial = [NSString stringWithUTF8String:serial];
     NSString *adbStatus = [NSString stringWithUTF8String:status];
     if (ScrcpySharedClient.adbStatusUpdated) ScrcpySharedClient.adbStatusUpdated(adbSerial, adbStatus);
+}
+
+float screen_scale(void) {
+    if ([UIScreen.mainScreen respondsToSelector:@selector(nativeScale)]) {
+        return UIScreen.mainScreen.nativeScale;
+    }
+    return UIScreen.mainScreen.scale;
 }
 
 @implementation ScrcpyClient
@@ -69,7 +77,14 @@ void adb_connect_status_updated(const char *serial, const char *status) {
     
     // Connect ADB First
     __weak typeof(self) _self = self;
+    NSMutableDictionary *statusFlags = [NSMutableDictionary dictionary];
     self.adbStatusUpdated = ^(NSString *serial, NSString *status) {
+        if ([@[@"device", @"unauthorized"] containsObject:status] &&
+            [statusFlags[status] boolValue]) {
+            NSLog(@"Ignore this status update, because already changed before");
+            return;
+        }
+        statusFlags[status] = @YES;
         [_self onADBStatusChanged:serial status:status options:scrcpyOptions];
     };
     adbPort = adbPort.length == 0 ? @"5555" : adbPort;
@@ -81,9 +96,10 @@ void adb_connect_status_updated(const char *serial, const char *status) {
                   options:(NSArray *)scrcpyOptions {
     NSLog(@"ADB Status Updated: %@ - %@", serial, status);
     // Prevent multipile called start
-    if ([status isEqualToString:@"device"] && self.status != ScrcpyStatusConnected) {
+    if ([status isEqualToString:@"device"] &&
+        self.status != ScrcpyStatusConnected) {
         [self performSelectorOnMainThread:@selector(startWithOptions:) withObject:scrcpyOptions waitUntilDone:NO];
-    } else if ([status isEqualToString:@"unauthorized"] && self.onADBUnauthorized) {
+    } else if ([status isEqualToString:@"unauthorized"]) {
         self.onADBUnauthorized(serial);
     }
 }

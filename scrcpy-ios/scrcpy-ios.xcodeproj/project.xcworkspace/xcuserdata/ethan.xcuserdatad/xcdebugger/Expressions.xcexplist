@@ -3,6 +3,9 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "run_buffering:video_buffer.c">
+      </ContextState>
+      <ContextState
          contextName = "sc_screen_update_frame:screen.c">
          <PersistentStrings>
             <PersistentString

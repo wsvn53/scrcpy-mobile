@@ -43,7 +43,7 @@ add_library( # Sets the name of the library.
 
         # Replace with porting version of screen.c
         # ../../scrcpy/app/src/screen.c
-        ../../porting/src/screen-porting.m
+        ../../porting/src/screen-porting.c
 
         ../../scrcpy/app/src/fps_counter.c
         ../../scrcpy/app/src/clock.c
@@ -80,7 +80,9 @@ add_library( # Sets the name of the library.
         # ../../scrcpy/app/src/main.c
         ../../porting/src/main-porting.c
 
-        ../../scrcpy/app/src/video_buffer.c
+        # Replace video_buffer.c with porting version
+        # ../../scrcpy/app/src/video_buffer.c
+        ../../porting/src/video_buffer-porting.c
         ../../scrcpy/app/src/opengl.c
         ../../scrcpy/app/src/version.c
         ../../scrcpy/app/src/decoder.c
