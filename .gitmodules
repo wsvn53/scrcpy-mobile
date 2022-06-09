@@ -10,3 +10,9 @@
 [submodule "scrcpy-ios/chainable-view"]
 	path = scrcpy-ios/chainable-view
 	url = https://github.com/wsvn53/chainable-view.git
+[submodule "scrcpy-ios/Keychain-iOS-ObjC"]
+	path = scrcpy-ios/Keychain-iOS-ObjC
+	url = https://github.com/Keyflow/Keychain-iOS-ObjC.git
+[submodule "scrcpy-ios/MBProgressHUD"]
+	path = scrcpy-ios/MBProgressHUD
+	url = https://github.com/jdg/MBProgressHUD.git

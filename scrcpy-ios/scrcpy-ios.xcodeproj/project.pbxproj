@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA18E3A9285264BB00A8B07D /* KFKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3A8285264BB00A8B07D /* KFKeychain.m */; };
+		AA18E3AC2852664F00A8B07D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3AB2852664F00A8B07D /* MBProgressHUD.m */; };
 		AA6F711C284E6DDD00A09442 /* scrcpy-server in Resources */ = {isa = PBXBuildFile; fileRef = AA6F711B284E6DDD00A09442 /* scrcpy-server */; };
 		AAF222162848B03F00B732AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222152848B03F00B732AE /* ViewController.m */; };
 		AAF222192848B03F00B732AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF222172848B03F00B732AE /* Main.storyboard */; };
@@ -18,6 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA18E3A7285264BB00A8B07D /* KFKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KFKeychain.h; path = "Keychain-iOS-ObjC/KFKeychain.h"; sourceTree = SOURCE_ROOT; };
+		AA18E3A8285264BB00A8B07D /* KFKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KFKeychain.m; path = "Keychain-iOS-ObjC/KFKeychain.m"; sourceTree = SOURCE_ROOT; };
+		AA18E3AA2852664F00A8B07D /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = MBProgressHUD/MBProgressHUD.h; sourceTree = SOURCE_ROOT; };
+		AA18E3AB2852664F00A8B07D /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = MBProgressHUD/MBProgressHUD.m; sourceTree = SOURCE_ROOT; };
 		AA6F711B284E6DDD00A09442 /* scrcpy-server */ = {isa = PBXFileReference; lastKnownFileType = file; name = "scrcpy-server"; path = "../../porting/server/scrcpy-server"; sourceTree = "<group>"; };
 		AAF2220B2848B03F00B732AE /* scrcpy-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scrcpy-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF222142848B03F00B732AE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -63,6 +69,10 @@
 		AAF2220D2848B03F00B732AE /* scrcpy-ios */ = {
 			isa = PBXGroup;
 			children = (
+				AA18E3AA2852664F00A8B07D /* MBProgressHUD.h */,
+				AA18E3AB2852664F00A8B07D /* MBProgressHUD.m */,
+				AA18E3A7285264BB00A8B07D /* KFKeychain.h */,
+				AA18E3A8285264BB00A8B07D /* KFKeychain.m */,
 				AAF2225B284B60CD00B732AE /* CVCreate.h */,
 				AAF2225A284B60CD00B732AE /* CVCreate.m */,
 				AAF222142848B03F00B732AE /* ViewController.h */,
@@ -151,8 +161,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAF222162848B03F00B732AE /* ViewController.m in Sources */,
+				AA18E3AC2852664F00A8B07D /* MBProgressHUD.m in Sources */,
 				AAF222302848BDE300B732AE /* ScrcpyClient.m in Sources */,
 				AAF2225C284B60CD00B732AE /* CVCreate.m in Sources */,
+				AA18E3A9285264BB00A8B07D /* KFKeychain.m in Sources */,
 				AAF222212848B04100B732AE /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
