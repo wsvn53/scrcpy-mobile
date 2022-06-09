@@ -11,6 +11,8 @@
 #import <SDL2/SDL_events.h>
 #import <SDL2/SDL_system.h>
 #import <UIKit/UIKit.h>
+#import <libavutil/frame.h>
+#import <video_buffer.h>
 
 @interface ScrcpyClient ()
 // Connecting infomations
@@ -40,6 +42,28 @@ float screen_scale(void) {
         return UIScreen.mainScreen.nativeScale;
     }
     return UIScreen.mainScreen.scale;
+}
+
+bool avcodec_enable_hardware_decoding(void) {
+    return true;
+}
+
+AVFrame *convert_to_metal_frame(AVFrame *frame) {
+    if (avcodec_enable_hardware_decoding() == false) {
+        return frame;
+    }
+    
+    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)frame->data[3];
+    if (CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly) == kCVReturnSuccess) {
+        // Format NV12 CVPixelBuffer after decoded by VideoToolbox
+        frame->data[0] = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
+        frame->data[1] = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1);
+        frame->linesize[0] = (int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0);
+        frame->linesize[1] = (int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 1);
+        CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+    }
+    
+    return frame;
 }
 
 @implementation ScrcpyClient

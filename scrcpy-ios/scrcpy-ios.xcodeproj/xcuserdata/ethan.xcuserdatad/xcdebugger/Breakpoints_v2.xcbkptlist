@@ -14,8 +14,8 @@
             filePath = "../scrcpy/app/src/screen.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "909"
-            endingLineNumber = "909"
+            startingLineNumber = "906"
+            endingLineNumber = "906"
             landmarkName = "sc_screen_handle_event(screen, event)"
             landmarkType = "9">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "../scrcpy/app/src/screen.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "900"
-            endingLineNumber = "900"
+            startingLineNumber = "897"
+            endingLineNumber = "897"
             landmarkName = "sc_screen_handle_event(screen, event)"
             landmarkType = "9">
          </BreakpointContent>
@@ -273,8 +273,8 @@
             filePath = "../scrcpy/app/src/screen.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "824"
-            endingLineNumber = "824"
+            startingLineNumber = "821"
+            endingLineNumber = "821"
             landmarkName = "sc_screen_handle_event(screen, event)"
             landmarkType = "9">
          </BreakpointContent>
@@ -305,9 +305,9 @@
             filePath = "../scrcpy/app/src/screen.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "728"
-            endingLineNumber = "728"
-            landmarkName = "sc_screen_update_frame(screen)"
+            startingLineNumber = "725"
+            endingLineNumber = "725"
+            landmarkName = "update_texture(screen, frame)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -428,6 +428,83 @@
             startingLineNumber = "58"
             endingLineNumber = "58"
             landmarkName = "run_buffering(data)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+         <BreakpointContent
+            uuid = "AA3D5E6F-0FE1-47AD-B831-C73D05E89B30"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "avcodec_alloc_context3"
+            moduleName = "">
+            <Locations>
+               <Location
+                  uuid = "AA3D5E6F-0FE1-47AD-B831-C73D05E89B30 - 7eec3f923d195afa"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "avcodec_alloc_context3"
+                  moduleName = "scrcpy-ios"
+                  usesParentBreakpointCondition = "Yes"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+         <BreakpointContent
+            uuid = "EF91A81E-07A9-44B8-B84A-C1C70CA8EC9D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "update_texture"
+            moduleName = "">
+            <Locations>
+               <Location
+                  uuid = "EF91A81E-07A9-44B8-B84A-C1C70CA8EC9D - 2c638784e46699a5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "update_texture"
+                  moduleName = "scrcpy-ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/screen.c"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "715"
+                  endingLineNumber = "715"
+                  offsetFromSymbolStart = "0">
+               </Location>
+               <Location
+                  uuid = "EF91A81E-07A9-44B8-B84A-C1C70CA8EC9D - a26b6315f5c9d66c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CA::OGL::GLContext::update_texture(unsigned int)"
+                  moduleName = "QuartzCore"
+                  usesParentBreakpointCondition = "Yes"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "50F7F722-BD02-4361-9DC4-0BF0DDC91F95"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scrcpy-ios/ScrcpyClient.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "convert_to_metal_frame(frame)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

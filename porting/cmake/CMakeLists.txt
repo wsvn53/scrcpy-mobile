@@ -69,7 +69,7 @@ add_library( # Sets the name of the library.
         # ../../scrcpy/app/src/sys/win/process.c
         # ../../scrcpy/app/src/sys/win/file.c
 
-        # Replace process.c with porting version
+        # Replace process.c to porting version
         # ../../scrcpy/app/src/sys/unix/process.c
         ../../porting/src/process-porting.c
         # Add process manager
@@ -80,12 +80,15 @@ add_library( # Sets the name of the library.
         # ../../scrcpy/app/src/main.c
         ../../porting/src/main-porting.c
 
-        # Replace video_buffer.c with porting version
+        # Replace video_buffer.c to porting version
         # ../../scrcpy/app/src/video_buffer.c
         ../../porting/src/video_buffer-porting.c
         ../../scrcpy/app/src/opengl.c
         ../../scrcpy/app/src/version.c
-        ../../scrcpy/app/src/decoder.c
+
+        # Replace decoder.c to porting version
+        # ../../scrcpy/app/src/decoder.c
+        ../../porting/src/decoder-porting.c
         ../../scrcpy/app/src/device_msg.c
         ../../scrcpy/app/src/input_manager.c
         ../../scrcpy/app/src/icon.c

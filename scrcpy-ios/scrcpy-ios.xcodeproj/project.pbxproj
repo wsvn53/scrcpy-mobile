@@ -308,7 +308,7 @@
 					"$(SRCROOT)/../scrcpy/x/app",
 				);
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Scrcpy;
+				INFOPLIST_KEY_CFBundleDisplayName = "Scrcpy Beta";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -395,7 +395,7 @@
 					"$(SRCROOT)/../scrcpy/x/app",
 				);
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Scrcpy;
+				INFOPLIST_KEY_CFBundleDisplayName = "Scrcpy Beta";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
