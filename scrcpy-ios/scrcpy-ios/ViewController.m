@@ -9,13 +9,16 @@
 #import "CVCreate.h"
 #import "ScrcpyClient.h"
 #import "KFKeychain.h"
+#import "MBProgressHUD.h"
 
 static NSString * kScrcpyADBHostKeychain = @"kScrcpyADBHostKeychain";
 static NSString * kScrcpyADBPortKeychain = @"kScrcpyADBPortKeychain";
+static NSString * kScrcpyMaxSizeKeychain = @"kScrcpyMaxSizeKeychain";
 
 @interface ViewController ()
 @property (nonatomic, weak)   UITextField *adbHost;
 @property (nonatomic, weak)   UITextField *adbPort;
+@property (nonatomic, weak)   UITextField *maxSize;
 
 @end
 
@@ -24,6 +27,7 @@ static NSString * kScrcpyADBPortKeychain = @"kScrcpyADBPortKeychain";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
+    [self setupClient];
 }
 
 -(void)setupViews {
@@ -51,6 +55,14 @@ static NSString * kScrcpyADBPortKeychain = @"kScrcpyADBPortKeychain";
                 view.placeholder = @"ADB Port";
                 _self.adbPort = view;
             }),
+        CVCreate.create(UITextField.class).size(CGSizeMake(180, 40))
+            .fontSize(16)
+            .border(UIColor.blackColor, 1.f)
+            .text([KFKeychain loadObjectForKey:kScrcpyMaxSizeKeychain])
+            .customView(^(UITextField *view){
+                view.placeholder = @"Max Size";
+                _self.maxSize = view;
+            }),
         CVCreate.UIButton.text(@"Connect").boldFontSize(16)
             .addToView(self.view)
             .size(CGSizeMake(180, 40))
@@ -67,6 +79,43 @@ static NSString * kScrcpyADBPortKeychain = @"kScrcpyADBPortKeychain";
     .heightAnchor(self.view.heightAnchor, -80);
 }
 
+-(void)setupClient {
+    __weak typeof(self) _self = self;
+    
+    ScrcpySharedClient.onADBConnected = ^(NSString *serial) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD HUDForView:_self.view].label.text = @"ADB\nConnected";
+        });
+    };
+    
+    ScrcpySharedClient.onADBUnauthorized = ^(NSString * _Nonnull serial) {
+        NSString *message = [NSString stringWithFormat:@"Device [%@] connected, but unahtorized. Please accept authorization on your device.", serial];
+        [_self performSelectorOnMainThread:@selector(showAlert:) withObject:message waitUntilDone:NO];
+    };
+    
+    ScrcpySharedClient.onScrcpyConnectFailed = ^(NSString * _Nonnull serial) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:_self.view animated:YES];
+            [_self showAlert:@"Start Scrcpy Failed"];
+        });
+    };
+    
+    ScrcpySharedClient.onScrcpyConnected = ^(NSString * _Nonnull serial) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD HUDForView:_self.view].label.text = @"Scrcpy\nConnected";
+        });
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:_self.view animated:YES];
+        });
+    };
+}
+
+-(void)showAlert:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Scrcpy" message:message preferredStyle:(UIAlertControllerStyleAlert)];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleCancel) handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 -(void)start {
     [self.adbPort endEditing:YES];
     [self.adbHost endEditing:YES];
@@ -74,14 +123,26 @@ static NSString * kScrcpyADBPortKeychain = @"kScrcpyADBPortKeychain";
     if (self.adbHost.text.length == 0 || self.adbPort.text.length == 0) {
         return;
     }
+     
+    NSArray *options = @[
+         @"--verbosity=verbose", @"--fullscreen", @"--display-buffer=16",
+         @"--max-fps=60", @"--stay-awake", @"--bit-rate=6M",
+    ];
+    
+    if (self.maxSize.text.length > 0) {
+        options = [options arrayByAddingObject:[NSString stringWithFormat:@"--max-size=%@", self.maxSize.text]];
+    }
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.label.text = @"ADB\nConnecting";
+    hud.label.numberOfLines = 2;
+    hud.minSize = CGSizeMake(120, 120);
     
     [KFKeychain saveObject:self.adbHost.text forKey:kScrcpyADBHostKeychain];
     [KFKeychain saveObject:self.adbPort.text forKey:kScrcpyADBPortKeychain];
+    [KFKeychain saveObject:self.maxSize.text forKey:kScrcpyMaxSizeKeychain];
 
-    [ScrcpySharedClient startWith:self.adbHost.text adbPort:self.adbPort.text options:@[
-         @"--verbosity=verbose", @"-f", @"--display-buffer=16",
-         @"--max-fps=60", @"--stay-awake", @"--bit-rate=4M"
-    ]];
+    [ScrcpySharedClient startWith:self.adbHost.text adbPort:self.adbPort.text options:options];
 }
 
 @end

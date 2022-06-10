@@ -24,6 +24,9 @@
 // Underlying ADB status change callback
 @property (nonatomic, copy)     void (^adbStatusUpdated)(NSString *serial, NSString *status);
 
+// Underlying Scrcpy status change callback
+@property (nonatomic, copy)     void (^scrcpyStatusUpdated)(enum ScrcpyStatus status);
+
 @end
 
 CFRunLoopRunResult CFRunLoopRunInMode_fix(CFRunLoopMode mode, CFTimeInterval seconds, Boolean returnAfterSourceHandled) {
@@ -34,7 +37,13 @@ CFRunLoopRunResult CFRunLoopRunInMode_fix(CFRunLoopMode mode, CFTimeInterval sec
 void adb_connect_status_updated(const char *serial, const char *status) {
     NSString *adbSerial = [NSString stringWithUTF8String:serial];
     NSString *adbStatus = [NSString stringWithUTF8String:status];
-    if (ScrcpySharedClient.adbStatusUpdated) ScrcpySharedClient.adbStatusUpdated(adbSerial, adbStatus);
+    if (ScrcpySharedClient.adbStatusUpdated)
+        ScrcpySharedClient.adbStatusUpdated(adbSerial, adbStatus);
+}
+
+void ScrcpyUpdateStatus(enum ScrcpyStatus status) {
+   if (ScrcpySharedClient.scrcpyStatusUpdated)
+       ScrcpySharedClient.scrcpyStatusUpdated(status);
 }
 
 float screen_scale(void) {
@@ -48,9 +57,9 @@ bool avcodec_enable_hardware_decoding(void) {
     return true;
 }
 
-AVFrame *convert_to_metal_frame(AVFrame *frame) {
+void convert_to_metal_frame(AVFrame *frame) {
     if (avcodec_enable_hardware_decoding() == false) {
-        return frame;
+        return;
     }
     
     CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)frame->data[3];
@@ -63,7 +72,7 @@ AVFrame *convert_to_metal_frame(AVFrame *frame) {
         CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
     }
     
-    return frame;
+    return;
 }
 
 @implementation ScrcpyClient
@@ -112,7 +121,10 @@ AVFrame *convert_to_metal_frame(AVFrame *frame) {
         [_self onADBStatusChanged:serial status:status options:scrcpyOptions];
     };
     adbPort = adbPort.length == 0 ? @"5555" : adbPort;
-    [self adbConnect:adbHost port:adbPort];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self adbConnect:adbHost port:adbPort];
+    });
 }
 
 -(void)onADBStatusChanged:(NSString *)serial
@@ -122,13 +134,33 @@ AVFrame *convert_to_metal_frame(AVFrame *frame) {
     // Prevent multipile called start
     if ([status isEqualToString:@"device"] &&
         self.status != ScrcpyStatusConnected) {
+        if (self.onADBConnected != nil) self.onADBConnected(serial);
+        self.connectedSerial = serial;
         [self performSelectorOnMainThread:@selector(startWithOptions:) withObject:scrcpyOptions waitUntilDone:NO];
     } else if ([status isEqualToString:@"unauthorized"]) {
-        self.onADBUnauthorized(serial);
+        if (self.onADBUnauthorized != nil) self.onADBUnauthorized(serial);
     }
 }
 
 -(void)startWithOptions:(NSArray *)scrcpyOptions {
+    __weak typeof(self) _self = self;
+    self.scrcpyStatusUpdated = ^(enum ScrcpyStatus status) {
+        if (status == ScrcpyStatusConnected && _self.onScrcpyConnected) {
+            _self.onScrcpyConnected(_self.connectedSerial);
+            return;
+        }
+        
+        if (status == ScrcpyStatusDisconnected && _self.onScrcpyDisconnected) {
+            _self.onScrcpyDisconnected(_self.connectedSerial);
+            return;
+        }
+        
+        if (status == ScrcpyStatusConnectingFailed && _self.onScrcpyConnectFailed) {
+            _self.onScrcpyConnectFailed(_self.connectedSerial);
+            return;
+        }
+    };
+    
     CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.1, NO);
 
     // Because after SDL proxied didFinishLauch, PumpEvent will set to FASLE

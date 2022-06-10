@@ -60,9 +60,7 @@ sc_screen_init(struct sc_screen *screen,
 }
 
 __attribute__((weak))
-AVFrame *convert_to_metal_frame(AVFrame *frame) {
-    return frame;
-}
+void convert_to_metal_frame(AVFrame *frame) {}
 
 // Hijack SDL_CreateTexture to enable render hardware decoded frame
 SDL_Texture * SDL_CreateTexture_hijack(SDL_Renderer * renderer,
