@@ -146,7 +146,7 @@ public class Controller {
         // handle keycode 'END' to trigger codec restart
         if (keycode == KeyEvent.KEYCODE_MOVE_END) {
             Ln.w("Keycode: " + String.format("%d == %d", (int)keycode, KeyEvent.KEYCODE_MOVE_END));
-            Device.rotateDevice();
+            device.rotationListener.onRotationChanged(0);
         }
         
         if (keepPowerModeOff && action == KeyEvent.ACTION_UP && (keycode == KeyEvent.KEYCODE_POWER || keycode == KeyEvent.KEYCODE_WAKEUP)) {
