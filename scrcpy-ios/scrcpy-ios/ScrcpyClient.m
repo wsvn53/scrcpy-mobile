@@ -136,6 +136,34 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     // Set ADB Home
     NSArray <NSString *> *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     self.adbHomePath = documentPaths.firstObject;
+    
+    // Add notifcation to responds background mode changed
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(sendRotateCommand)
+                                               name:UIApplicationWillEnterForegroundNotification
+                                             object:nil];
+}
+
+-(void)sendRotateCommand {
+    NSLog(@"-> Send Command Trigger Video Restart");
+    
+    SDL_Keysym keySym;
+    keySym.scancode = SDL_SCANCODE_END;
+    keySym.sym = SDLK_END;
+    keySym.mod = 0;
+    keySym.unused = 1;
+    
+    SDL_KeyboardEvent keyEvent;
+    keyEvent.type = SDL_KEYUP;
+    keyEvent.state = SDL_PRESSED;
+    keyEvent.repeat = '\0';
+    keyEvent.keysym = keySym;
+    
+    SDL_Event event;
+    event.type = keyEvent.type;
+    event.key = keyEvent;
+    
+    SDL_PushEvent(&event);
 }
 
 #pragma mark - Scrcpy Lifetime

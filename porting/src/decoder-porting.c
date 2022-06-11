@@ -5,11 +5,13 @@
 //  Created by Ethan on 2022/6/8.
 //
 
-#define avcodec_alloc_context3(...)     avcodec_alloc_context3_fix(__VA_ARGS__)
+#define avcodec_alloc_context3(...)     avcodec_alloc_context3_hijack(__VA_ARGS__)
+#define avcodec_send_packet(...)        avcodec_send_packet_hijack(__VA_ARGS__)
 
 #include "decoder.c"
 
 #undef avcodec_alloc_context3
+#undef avcodec_send_packet
 
 __attribute__((weak))
 bool avcodec_enable_hardware_decoding(void) {
@@ -17,7 +19,7 @@ bool avcodec_enable_hardware_decoding(void) {
 }
 
 AVCodecContext *avcodec_alloc_context3(const AVCodec *codec);
-AVCodecContext *avcodec_alloc_context3_fix(const AVCodec *codec) {
+AVCodecContext *avcodec_alloc_context3_hijack(const AVCodec *codec) {
     AVCodecContext *context = avcodec_alloc_context3(codec);
     
     if (avcodec_enable_hardware_decoding() == false) {
@@ -37,4 +39,16 @@ AVCodecContext *avcodec_alloc_context3_fix(const AVCodec *codec) {
     
     printf("[WARN] Init hardware decoder FAILED, fallback to foftware decoder.");
     return context;
+}
+
+int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt);
+int avcodec_send_packet_hijack(AVCodecContext *avctx, const AVPacket *avpkt) {
+    int ret = avcodec_send_packet(avctx, avpkt);
+    
+    if (ret == AVERROR_UNKNOWN && avcodec_enable_hardware_decoding()) {
+        // Fix Hardware Decoding Error After Return From Background
+        return 0;
+    }
+    
+    return ret;
 }
