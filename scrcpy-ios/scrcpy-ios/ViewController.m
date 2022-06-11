@@ -30,6 +30,16 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     [super viewDidLoad];
     [self setupViews];
     [self setupClient];
+    [self startADBServer];
+}
+
+-(void)startADBServer {
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSString *message = @"";
+        BOOL success = [ScrcpySharedClient adbExecute:@[@"start-server"] message:&message];
+        NSLog(@"Start ADB Server: %@", success?@"YES":@"NO");
+        if (message.length > 0) printf("-> %s\n", message.UTF8String);
+    });
 }
 
 -(void)setupViews {

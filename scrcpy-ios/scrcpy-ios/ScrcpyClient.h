@@ -38,6 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 // Stop scrcpy
 -(void)stopScrcpy;
 
+// Execute ADB commands
+-(BOOL)adbExecute:(NSArray <NSString *> *)commands message:(NSString **)message;
+
 @end
 
 NS_ASSUME_NONNULL_END
