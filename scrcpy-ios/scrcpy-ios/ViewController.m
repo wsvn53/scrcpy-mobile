@@ -14,11 +14,13 @@
 static NSString * kScrcpyADBHostKeychain = @"kScrcpyADBHostKeychain";
 static NSString * kScrcpyADBPortKeychain = @"kScrcpyADBPortKeychain";
 static NSString * kScrcpyMaxSizeKeychain = @"kScrcpyMaxSizeKeychain";
+static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 
 @interface ViewController ()
 @property (nonatomic, weak)   UITextField *adbHost;
 @property (nonatomic, weak)   UITextField *adbPort;
 @property (nonatomic, weak)   UITextField *maxSize;
+@property (nonatomic, weak)   UITextField *bitRate;
 
 @end
 
@@ -39,7 +41,7 @@ static NSString * kScrcpyMaxSizeKeychain = @"kScrcpyMaxSizeKeychain";
         CVCreate.UILabel.text(@"Scrcpy Beta").boldFontSize(20)
             .textColor(UIColor.blackColor)
             .textAlignment(NSTextAlignmentCenter),
-        CVCreate.create(UITextField.class).size(CGSizeMake(180, 40))
+        CVCreate.create(UITextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border(UIColor.blackColor, 1.f)
             .text([KFKeychain loadObjectForKey:kScrcpyADBHostKeychain])
@@ -47,7 +49,7 @@ static NSString * kScrcpyMaxSizeKeychain = @"kScrcpyMaxSizeKeychain";
                 view.placeholder = @"ADB Host";
                 _self.adbHost = view;
             }),
-        CVCreate.create(UITextField.class).size(CGSizeMake(180, 40))
+        CVCreate.create(UITextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border(UIColor.blackColor, 1.f)
             .text([KFKeychain loadObjectForKey:kScrcpyADBPortKeychain])
@@ -55,7 +57,7 @@ static NSString * kScrcpyMaxSizeKeychain = @"kScrcpyMaxSizeKeychain";
                 view.placeholder = @"ADB Port";
                 _self.adbPort = view;
             }),
-        CVCreate.create(UITextField.class).size(CGSizeMake(180, 40))
+        CVCreate.create(UITextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border(UIColor.blackColor, 1.f)
             .text([KFKeychain loadObjectForKey:kScrcpyMaxSizeKeychain])
@@ -63,9 +65,17 @@ static NSString * kScrcpyMaxSizeKeychain = @"kScrcpyMaxSizeKeychain";
                 view.placeholder = @"Max Size";
                 _self.maxSize = view;
             }),
+        CVCreate.create(UITextField.class).size(CGSizeMake(0, 40))
+            .fontSize(16)
+            .border(UIColor.blackColor, 1.f)
+            .text([KFKeychain loadObjectForKey:kScrcpyBitRateKeychain])
+            .customView(^(UITextField *view){
+                view.placeholder = @"BitRate, Default 4M";
+                _self.bitRate = view;
+            }),
         CVCreate.UIButton.text(@"Connect").boldFontSize(16)
             .addToView(self.view)
-            .size(CGSizeMake(180, 40))
+            .size(CGSizeMake(0, 40))
             .textColor(UIColor.whiteColor)
             .backgroundColor(UIColor.blackColor)
             .cornerRadius(6)
@@ -119,28 +129,35 @@ static NSString * kScrcpyMaxSizeKeychain = @"kScrcpyMaxSizeKeychain";
 -(void)start {
     [self.adbPort endEditing:YES];
     [self.adbHost endEditing:YES];
+    [self.maxSize endEditing:YES];
+    [self.bitRate endEditing:YES];
     
     if (self.adbHost.text.length == 0 || self.adbPort.text.length == 0) {
         return;
     }
      
     NSArray *options = @[
-         @"--verbosity=verbose", @"--fullscreen", @"--display-buffer=16",
-         @"--max-fps=60", @"--stay-awake", @"--bit-rate=6M",
+         @"--verbosity=verbose", @"--fullscreen", @"--display-buffer=32",
+         @"--max-fps=60", @"--stay-awake", @"--turn-screen-off", @"--print-fps",
     ];
     
     if (self.maxSize.text.length > 0) {
         options = [options arrayByAddingObject:[NSString stringWithFormat:@"--max-size=%@", self.maxSize.text]];
     }
     
+    NSString *bitRate = @"4M";
+    if (self.bitRate.text.length > 0) { bitRate = self.bitRate.text; }
+    options = [options arrayByAddingObject:[NSString stringWithFormat:@"--bit-rate=%@", bitRate]];
+    
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text = @"ADB\nConnecting";
     hud.label.numberOfLines = 2;
-    hud.minSize = CGSizeMake(120, 120);
+    hud.minSize = CGSizeMake(125, 125);
     
     [KFKeychain saveObject:self.adbHost.text forKey:kScrcpyADBHostKeychain];
     [KFKeychain saveObject:self.adbPort.text forKey:kScrcpyADBPortKeychain];
     [KFKeychain saveObject:self.maxSize.text forKey:kScrcpyMaxSizeKeychain];
+    [KFKeychain saveObject:self.bitRate.text forKey:kScrcpyBitRateKeychain];
 
     [ScrcpySharedClient startWith:self.adbHost.text adbPort:self.adbPort.text options:options];
 }

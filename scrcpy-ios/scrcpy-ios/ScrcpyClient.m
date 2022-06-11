@@ -14,6 +14,10 @@
 #import <libavutil/frame.h>
 #import <video_buffer.h>
 
+#import <CoreMedia/CoreMedia.h>
+#import <CoreVideo/CoreVideo.h>
+#import <AVFoundation/AVFoundation.h>
+
 @interface ScrcpyClient ()
 // Connecting infomations
 @property (nonatomic, copy) NSString    *connectedSerial;
@@ -53,26 +57,63 @@ float screen_scale(void) {
     return UIScreen.mainScreen.scale;
 }
 
-bool avcodec_enable_hardware_decoding(void) {
+bool ScrcpyEnableHardwareDecoding(void) {
     return true;
 }
 
-void convert_to_metal_frame(AVFrame *frame) {
-    if (avcodec_enable_hardware_decoding() == false) {
+void RenderPixelBufferFrame(CVPixelBufferRef pixelBuffer) {
+    if (pixelBuffer == NULL) { return; }
+    
+    CMSampleTimingInfo timing = {kCMTimeInvalid, kCMTimeInvalid, kCMTimeInvalid};
+    CMVideoFormatDescriptionRef videoInfo = NULL;
+    OSStatus result = CMVideoFormatDescriptionCreateForImageBuffer(NULL, pixelBuffer, &videoInfo);
+    
+    CMSampleBufferRef sampleBuffer = NULL;
+    result = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault,pixelBuffer, true, NULL, NULL, videoInfo, &timing, &sampleBuffer);
+    
+    CFRelease(pixelBuffer);
+    CFRelease(videoInfo);
+    
+    CFArrayRef attachments = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, YES);
+    CFMutableDictionaryRef dict = (CFMutableDictionaryRef)CFArrayGetValueAtIndex(attachments, 0);
+    CFDictionarySetValue(dict, kCMSampleAttachmentKey_DisplayImmediately, kCFBooleanTrue);
+    
+    static AVSampleBufferDisplayLayer *displayLayer = nil;
+    if (displayLayer == nil || displayLayer.superlayer == nil) {
+        displayLayer = [AVSampleBufferDisplayLayer layer];
+        displayLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+        
+        UIWindow *keyWindow = [UIApplication.sharedApplication.windows filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(UIWindow *window, id bindings) {
+            return window.isKeyWindow;
+        }]].firstObject;
+        
+        if ([NSStringFromClass(keyWindow.class) hasPrefix:@"SDL"] == NO)
+            return;
+        
+        displayLayer.frame = keyWindow.rootViewController.view.bounds;
+        [keyWindow.rootViewController.view.layer addSublayer:displayLayer];
+        keyWindow.rootViewController.view.backgroundColor = UIColor.blackColor;
+        // sometimes failed to set background color, so we append to next runloop
+        displayLayer.backgroundColor = UIColor.blackColor.CGColor;
+        NSLog(@"[INFO] Using Hardware Decoding.");
+    }
+    
+    // After become forground from background, may render fail
+    if (displayLayer.status == AVQueuedSampleBufferRenderingStatusFailed) {
+        [displayLayer flush];
+    }
+    
+    // render sampleBuffer now
+    [displayLayer enqueueSampleBuffer:sampleBuffer];
+}
+
+void ScrcpyHandleFrame(AVFrame *frame) {
+    if (ScrcpyEnableHardwareDecoding() == false) {
         return;
     }
     
     CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)frame->data[3];
-    if (CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly) == kCVReturnSuccess) {
-        // Format NV12 CVPixelBuffer after decoded by VideoToolbox
-        frame->data[0] = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
-        frame->data[1] = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1);
-        frame->linesize[0] = (int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0);
-        frame->linesize[1] = (int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 1);
-        CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
-    }
-    
-    return;
+    RenderPixelBufferFrame(pixelBuffer);
 }
 
 @implementation ScrcpyClient

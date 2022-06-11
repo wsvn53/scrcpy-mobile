@@ -9,7 +9,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 
-bool avcodec_enable_hardware_decoding(void);
+bool ScrcpyEnableHardwareDecoding(void);
 SDL_Texture * SDL_CreateTexture_hijack(SDL_Renderer * renderer,
                                        Uint32 format,
                                        int access, int w, int h);
@@ -18,10 +18,12 @@ int SDL_UpdateYUVTexture_hijack(SDL_Texture * texture,
                                 const Uint8 *Yplane, int Ypitch,
                                 const Uint8 *Uplane, int Upitch,
                                 const Uint8 *Vplane, int Vpitch);
+void SDL_RenderPresent_hijack(SDL_Renderer * renderer);
 
 #define sc_screen_init(...)   sc_screen_init_orig(__VA_ARGS__)
 #define SDL_CreateTexture(...)   SDL_CreateTexture_hijack(__VA_ARGS__)
 #define SDL_UpdateYUVTexture(...)   SDL_UpdateYUVTexture_hijack(__VA_ARGS__)
+#define SDL_RenderPresent(...)   SDL_RenderPresent_hijack(__VA_ARGS__)
 #define sc_video_buffer_consume(...)   sc_video_buffer_consume_hijack(__VA_ARGS__)
 
 #include "screen.c"
@@ -29,6 +31,7 @@ int SDL_UpdateYUVTexture_hijack(SDL_Texture * texture,
 #undef sc_screen_init
 #undef SDL_CreateTexture
 #undef SDL_UpdateYUVTexture
+#undef SDL_RenderPresent
 #undef sc_video_buffer_consume
 
 struct sc_screen *
@@ -60,7 +63,7 @@ sc_screen_init(struct sc_screen *screen,
 }
 
 __attribute__((weak))
-void convert_to_metal_frame(AVFrame *frame) {}
+void ScrcpyHandleFrame(AVFrame *frame) {}
 
 // Hijack SDL_CreateTexture to enable render hardware decoded frame
 SDL_Texture * SDL_CreateTexture_hijack(SDL_Renderer * renderer,
@@ -69,7 +72,7 @@ SDL_Texture * SDL_CreateTexture_hijack(SDL_Renderer * renderer,
                                                         int h)
 {
     // Frame format is NV12 after decoded by VideoToolbox in ffmpeg
-    format = avcodec_enable_hardware_decoding() ? SDL_PIXELFORMAT_NV12 : format;
+    format = ScrcpyEnableHardwareDecoding() ? SDL_PIXELFORMAT_NV12 : format;
     printf("SDL_CreateTexture_hijack format: %s\n",
            format == SDL_PIXELFORMAT_NV12 ? "SDL_PIXELFORMAT_NV12" : "SDL_PIXELFORMAT_YV12");
     return SDL_CreateTexture(renderer, format, access, w, h);
@@ -82,10 +85,13 @@ int SDL_UpdateYUVTexture_hijack(SDL_Texture * texture,
                                                  const Uint8 *Uplane, int Upitch,
                                                  const Uint8 *Vplane, int Vpitch)
 {
-    if (avcodec_enable_hardware_decoding()) {
-        return SDL_UpdateNVTexture(texture, rect, Yplane, Ypitch, Uplane, Upitch);
-    }
+    if (ScrcpyEnableHardwareDecoding()) return 0;
     return SDL_UpdateYUVTexture(texture, rect, Yplane, Ypitch, Uplane, Upitch, Vplane, Vpitch);
+}
+
+void SDL_RenderPresent_hijack(SDL_Renderer * renderer) {
+    if (ScrcpyEnableHardwareDecoding()) return;
+    SDL_RenderPresent(renderer);
 }
 
 void
@@ -95,8 +101,6 @@ void
 sc_video_buffer_consume_hijack(struct sc_video_buffer *vb, AVFrame *dst) {
     sc_video_buffer_consume(vb, dst);
     
-    // Convert NV12 pixels
-    if (avcodec_enable_hardware_decoding()) {
-        convert_to_metal_frame(dst);
-    }
+    // Handle hardware frame render
+    if (ScrcpyEnableHardwareDecoding()) ScrcpyHandleFrame(dst);
 }
