@@ -10,6 +10,7 @@
 		AA18E3A9285264BB00A8B07D /* KFKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3A8285264BB00A8B07D /* KFKeychain.m */; };
 		AA18E3AC2852664F00A8B07D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3AB2852664F00A8B07D /* MBProgressHUD.m */; };
 		AA18E3B22853AC7F00A8B07D /* SDL_uikitviewcontroller+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3B12853AC7F00A8B07D /* SDL_uikitviewcontroller+Extend.m */; };
+		AA18E3B52854BCE300A8B07D /* SDLUIKitDelegate+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3B42854BCE300A8B07D /* SDLUIKitDelegate+Extend.m */; };
 		AA6F711C284E6DDD00A09442 /* scrcpy-server in Resources */ = {isa = PBXBuildFile; fileRef = AA6F711B284E6DDD00A09442 /* scrcpy-server */; };
 		AAF222162848B03F00B732AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222152848B03F00B732AE /* ViewController.m */; };
 		AAF222192848B03F00B732AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF222172848B03F00B732AE /* Main.storyboard */; };
@@ -27,6 +28,8 @@
 		AA18E3AB2852664F00A8B07D /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = MBProgressHUD/MBProgressHUD.m; sourceTree = SOURCE_ROOT; };
 		AA18E3B02853AC7F00A8B07D /* SDL_uikitviewcontroller+Extend.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDL_uikitviewcontroller+Extend.h"; sourceTree = "<group>"; };
 		AA18E3B12853AC7F00A8B07D /* SDL_uikitviewcontroller+Extend.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SDL_uikitviewcontroller+Extend.m"; sourceTree = "<group>"; };
+		AA18E3B32854BCE300A8B07D /* SDLUIKitDelegate+Extend.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDLUIKitDelegate+Extend.h"; sourceTree = "<group>"; };
+		AA18E3B42854BCE300A8B07D /* SDLUIKitDelegate+Extend.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SDLUIKitDelegate+Extend.m"; sourceTree = "<group>"; };
 		AA6F711B284E6DDD00A09442 /* scrcpy-server */ = {isa = PBXFileReference; lastKnownFileType = file; name = "scrcpy-server"; path = "../../porting/server/scrcpy-server"; sourceTree = "<group>"; };
 		AAF2220B2848B03F00B732AE /* scrcpy-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scrcpy-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF222142848B03F00B732AE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -84,6 +87,8 @@
 				AAF2222F2848BDE300B732AE /* ScrcpyClient.m */,
 				AA18E3B02853AC7F00A8B07D /* SDL_uikitviewcontroller+Extend.h */,
 				AA18E3B12853AC7F00A8B07D /* SDL_uikitviewcontroller+Extend.m */,
+				AA18E3B32854BCE300A8B07D /* SDLUIKitDelegate+Extend.h */,
+				AA18E3B42854BCE300A8B07D /* SDLUIKitDelegate+Extend.m */,
 				AAF222172848B03F00B732AE /* Main.storyboard */,
 				AAF2221A2848B04100B732AE /* Assets.xcassets */,
 				AAF2221C2848B04100B732AE /* LaunchScreen.storyboard */,
@@ -168,6 +173,7 @@
 				AAF222162848B03F00B732AE /* ViewController.m in Sources */,
 				AA18E3AC2852664F00A8B07D /* MBProgressHUD.m in Sources */,
 				AAF222302848BDE300B732AE /* ScrcpyClient.m in Sources */,
+				AA18E3B52854BCE300A8B07D /* SDLUIKitDelegate+Extend.m in Sources */,
 				AAF2225C284B60CD00B732AE /* CVCreate.m in Sources */,
 				AA18E3A9285264BB00A8B07D /* KFKeychain.m in Sources */,
 				AA18E3B22853AC7F00A8B07D /* SDL_uikitviewcontroller+Extend.m in Sources */,
