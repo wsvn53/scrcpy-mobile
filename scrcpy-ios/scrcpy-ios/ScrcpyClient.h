@@ -17,9 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     NSString    *adbHomePath;
 
 // ADB Callbacks
+@property (nonatomic, copy) void (^onADBConnecting)(NSString *serial);
 @property (nonatomic, copy) void (^onADBConnected)(NSString *serial);
 @property (nonatomic, copy) void (^onADBUnauthorized)(NSString *serial);
 @property (nonatomic, copy) void (^onADBDisconnected)(NSString *serial);
+@property (nonatomic, copy) void (^onADBConnectFailed)(NSString *serial, NSString *message);
 
 // Scrcpy Callbacks
 @property (nonatomic, copy) void (^onScrcpyConnected)(NSString *serial);

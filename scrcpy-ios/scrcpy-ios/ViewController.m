@@ -30,7 +30,9 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 @implementation ViewController
 
 -(void)loadView {
-    self.view = [[UIScrollView alloc] initWithFrame:(CGRectZero)];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:(CGRectZero)];
+    scrollView.alwaysBounceVertical = YES;
+    self.view = scrollView;
 }
 
 - (void)viewDidLoad {
@@ -130,14 +132,14 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
             }),
         CVCreate.UIButton.text(@"Connect").boldFontSize(16)
             .addToView(self.view)
-            .size(CGSizeMake(0, 40))
+            .size(CGSizeMake(0, 45))
             .textColor(UIColor.whiteColor)
             .backgroundColor(UIColor.blackColor)
             .cornerRadius(6)
             .click(self, @selector(start)),
         CVCreate.UIButton.text(@"Copy URL Scheme").boldFontSize(16)
             .addToView(self.view)
-            .size(CGSizeMake(0, 40))
+            .size(CGSizeMake(0, 45))
             .textColor(UIColor.blackColor)
             .backgroundColor(UIColor.whiteColor)
             .border(UIColor.grayColor, 2.f)
@@ -155,18 +157,30 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 -(void)setupClient {
     __weak typeof(self) _self = self;
     
+    ScrcpySharedClient.onADBConnecting = ^(NSString * _Nonnull serial) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_self showHUDWith:@"ADB\nconnecting"];
+        });
+    };
+    
     ScrcpySharedClient.onADBConnected = ^(NSString *serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([MBProgressHUD HUDForView:_self.view] == nil) {
-                [_self showHUDWith:@"ADB\nConnected"];
-            }
-            [MBProgressHUD HUDForView:_self.view].label.text = @"ADB\nConnected";
+            [_self showHUDWith:@"ADB\nconnected"];
+        });
+    };
+    
+    ScrcpySharedClient.onADBConnectFailed = ^(NSString * _Nonnull serial, NSString * _Nonnull message) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:_self.view animated:YES];
+            [_self showAlert:[NSString stringWithFormat:@"ADB Connect Failed:\n%@", message]];
         });
     };
     
     ScrcpySharedClient.onADBUnauthorized = ^(NSString * _Nonnull serial) {
-        NSString *message = [NSString stringWithFormat:@"Device [%@] connected, but unahtorized. Please accept authorization on your device.", serial];
-        [_self performSelectorOnMainThread:@selector(showAlert:) withObject:message waitUntilDone:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *message = [NSString stringWithFormat:@"Device [%@] connected, but unahtorized. Please accept authorization on your device.", serial];
+            [_self performSelectorOnMainThread:@selector(showAlert:) withObject:message waitUntilDone:NO];
+        });
     };
     
     ScrcpySharedClient.onScrcpyConnectFailed = ^(NSString * _Nonnull serial) {
@@ -178,9 +192,9 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     
     ScrcpySharedClient.onScrcpyConnected = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD HUDForView:_self.view].label.text = @"Scrcpy\nConnected";
+            [_self showHUDWith:@"Scrcpy\nconnected"];
         });
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideHUDForView:_self.view animated:YES];
         });
     };
@@ -193,10 +207,13 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 }
 
 -(void)showHUDWith:(NSString *)text {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:self.view];
+    if (hud == nil) {
+        hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.minSize = CGSizeMake(130, 130);
+    }
     hud.label.text = text;
     hud.label.numberOfLines = 2;
-    hud.minSize = CGSizeMake(130, 130);
 }
 
 -(void)stopEditing {
@@ -257,6 +274,10 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     if (self.maxFps.text.length > 0) {
         NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:@"max-fps" value:self.bitRate.text];
         urlComps.queryItems = [urlComps.queryItems arrayByAddingObject:item];
+    }
+    
+    if (urlComps.queryItems.count == 0) {
+        urlComps.queryItems = nil;
     }
     
     NSLog(@"URL: %@", urlComps.URL);

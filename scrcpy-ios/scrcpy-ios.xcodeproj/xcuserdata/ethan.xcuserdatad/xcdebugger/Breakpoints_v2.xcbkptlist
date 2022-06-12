@@ -502,10 +502,10 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "ScrcpyClient()"
-            landmarkType = "2">
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "RenderPixelBufferFrame(pixelBuffer)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -518,10 +518,10 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "ScrcpyClient()"
-            landmarkType = "2">
+            startingLineNumber = "97"
+            endingLineNumber = "97"
+            landmarkName = "RenderPixelBufferFrame(pixelBuffer)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -555,17 +555,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "42757BDF-5D40-4183-B3D3-2E490D1D32FA"
+            uuid = "070F157A-281F-49F2-8A0E-AE6D777A6E1A"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "151"
-            endingLineNumber = "151"
-            landmarkName = "ScrcpyClient()"
-            landmarkType = "2">
+            startingLineNumber = "199"
+            endingLineNumber = "199"
+            landmarkName = "-checkStartScheme"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B2C382CD-2CF2-4069-A3CD-7671A36AF9EE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scrcpy-ios/ScrcpyClient.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "-handleScrcpyURLScheme:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B24BC08D-91B7-4B9D-BD9E-AFDBB3145ACE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scrcpy-ios/UITextField+Spacing.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "13"
+            endingLineNumber = "13"
+            landmarkName = "-textRectForBounds:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

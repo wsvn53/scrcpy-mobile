@@ -200,23 +200,27 @@ void ScrcpyHandleFrame(AVFrame *frame) {
         return;
     }
     
-    NSString *adbHost = self.pendingScheme.host;
-    NSString *adbPort = self.pendingScheme.port.stringValue ? : @"5555";
+    if ([UIApplication.sharedApplication.windows filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.isKeyWindow = %@", @YES]].count == 0) {
+        return;
+    }
+    
+    NSURL *pendingScheme = self.pendingScheme;
+    // Mark here to avoid both forground notification and viewAppear trigger twice
+    self.pendingScheme = nil;
+    
+    NSString *adbHost = pendingScheme.host;
+    NSString *adbPort = pendingScheme.port.stringValue ? : @"5555";
     
     if (adbHost.length == 0) {
         NSLog(@"[ERROR] No adb host found in scheme");
-        self.pendingScheme = nil;
         return;
     }
     
     __block NSArray *scrcpyOptions = self.defaultScrcpyOptions;
-    NSURLComponents *urlComps = [NSURLComponents componentsWithURL:self.pendingScheme resolvingAgainstBaseURL:YES];
+    NSURLComponents *urlComps = [NSURLComponents componentsWithURL:pendingScheme resolvingAgainstBaseURL:YES];
     [urlComps.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *query, NSUInteger idx, BOOL *stop) {
         scrcpyOptions = [self setScrcpyOption:scrcpyOptions name:query.name value:query.value];
     }];
-    
-    // Mark as executed
-    self.pendingScheme = nil;
     
     NSLog(@"-> Scrcpy Options: %@", scrcpyOptions);
     [self startWith:adbHost adbPort:adbPort options:scrcpyOptions];
@@ -361,9 +365,17 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     // Disconnect all before connect
     [self adbDisconnect:nil port:nil];
     
+    // Connecting callback
+    if (self.onADBConnecting) {
+        self.onADBConnecting(serial);
+    }
+    
     NSString *message = nil;
     NSInteger code = [self adbExecute:@[@"connect", serial] message:&message];
     NSLog(@"adb connnect code: %ld, message: %@", code, message);
+    if ([message containsString:@"failed"] && self.onADBConnectFailed) {
+        self.onADBConnectFailed(serial, message);
+    }
     
     [self adbExecute:@[@"get-serialno"] message:&message];
     NSLog(@"adb get-serialno: %@", message);
