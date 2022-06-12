@@ -18,7 +18,7 @@ int main(int argc, char * argv[]) {
     
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     ViewController *mainController = [sb instantiateViewControllerWithIdentifier:@"ViewController"];
-    window.rootViewController = mainController;
+    window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainController];
     [window makeKeyAndVisible];
     
     return 0;

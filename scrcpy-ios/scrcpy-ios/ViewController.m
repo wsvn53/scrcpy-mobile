@@ -11,6 +11,7 @@
 #import "KFKeychain.h"
 #import "MBProgressHUD.h"
 #import "ScrcpyTextField.h"
+#import "config.h"
 
 static NSString * kScrcpyADBHostKeychain = @"kScrcpyADBHostKeychain";
 static NSString * kScrcpyADBPortKeychain = @"kScrcpyADBPortKeychain";
@@ -25,6 +26,7 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 @property (nonatomic, weak)   UITextField *bitRate;
 @property (nonatomic, weak)   UITextField *maxFps;
 
+@property (nonatomic, weak)   UITextField *editingText;
 @end
 
 @implementation ViewController
@@ -59,17 +61,36 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 
 -(void)setupEvents {
     CVCreate.withView(self.view).click(self, @selector(stopEditing));
+    
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardDidShow:)
+                                               name:UIKeyboardDidShowNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardWillHide:)
+                                               name:UIKeyboardWillHideNotification object:nil];
+}
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    UIScrollView *scrollView = (UIScrollView *)self.view;
+    scrollView.contentSize = self.view.subviews.firstObject.frame.size;
 }
 
 -(void)setupViews {
+    self.title = @"Scrcpy Beta";
     self.view.backgroundColor = UIColor.whiteColor;
+    
+    UINavigationBarAppearance *apperance = [[UINavigationBarAppearance alloc] init];
+    apperance.backgroundColor = UIColor.systemGray6Color;
+    apperance.titleTextAttributes = @{
+        NSForegroundColorAttributeName: UIColor.blackColor,
+    };
+    self.navigationController.navigationBar.standardAppearance = apperance;
+    self.navigationController.navigationBar.compactAppearance = apperance;
+    self.navigationController.navigationBar.scrollEdgeAppearance = apperance;
+    [self.navigationController setNeedsStatusBarAppearanceUpdate];
     
     __weak typeof(self) _self = self;
     CVCreate.UIStackView(@[
-        CVCreate.UIView.size(CGSizeMake(0, 50)),
-        CVCreate.UILabel.text(@"Scrcpy Beta").boldFontSize(20)
-            .textColor(UIColor.blackColor)
-            .textAlignment(NSTextAlignmentCenter),
+        CVCreate.UIView.size(CGSizeMake(0, 5)),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
@@ -80,6 +101,7 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.adbHost = view;
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
@@ -92,6 +114,7 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
                 view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.adbPort = view;
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
@@ -104,6 +127,7 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
                 view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.maxSize = view;
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
@@ -116,6 +140,7 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
                 view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.bitRate = view;
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
@@ -128,6 +153,7 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
                 view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.maxFps = view;
             }),
         CVCreate.UIButton.text(@"Connect").boldFontSize(16)
@@ -145,13 +171,15 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
             .border(UIColor.grayColor, 2.f)
             .cornerRadius(6)
             .click(self, @selector(copyURLScheme)),
+        CVCreate.UILabel.fontSize(13.f).textColor(UIColor.grayColor)
+            .text([NSString stringWithFormat:@"Based on scrcpy v%s", SCRCPY_VERSION])
+            .textAlignment(NSTextAlignmentCenter),
         CVCreate.UIView,
     ]).axis(UILayoutConstraintAxisVertical).spacing(20.f)
     .addToView(self.view)
     .centerXAnchor(self.view.centerXAnchor, 0)
-    .centerYAnchor(self.view.centerYAnchor, 0)
-    .widthAnchor(self.view.widthAnchor, -30)
-    .heightAnchor(self.view.heightAnchor, -20);
+    .topAnchor(self.view.topAnchor, 0)
+    .widthAnchor(self.view.widthAnchor, -30);
 }
 
 -(void)setupClient {
@@ -283,6 +311,40 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     NSLog(@"URL: %@", urlComps.URL);
     [[UIPasteboard generalPasteboard] setURL:urlComps.URL];
     [self showAlert:[NSString stringWithFormat:@"Copied URL:\n%@", urlComps.URL.absoluteString]];
+}
+
+-(void)keyboardDidShow:(NSNotification *)notification {
+    CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    NSLog(@"Keyboard Rect: %@", NSStringFromCGRect(keyboardRect));
+    
+    CGRect textFrame = [self.editingText.superview convertRect:self.editingText.frame toView:self.view];
+    NSLog(@"Text Rect: %@", NSStringFromCGRect(textFrame));
+    CGFloat textOffset = CGRectGetMaxY(textFrame) - keyboardRect.origin.y;
+    NSLog(@"Text Offset: %@", @(textOffset));
+    
+    if (textOffset <= 0) {
+        return;
+    }
+
+    UIScrollView *rootView = (UIScrollView *)self.view;
+    rootView.contentOffset = (CGPoint){0, textOffset};
+}
+
+-(void)keyboardWillHide:(NSNotification *)notification {
+    UIScrollView *rootView = (UIScrollView *)self.view;
+    [rootView scrollRectToVisible:(CGRect){0, 0, 1, 1} animated:YES];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self stopEditing];
+    return NO;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    self.editingText = textField;
+    return YES;
 }
 
 @end
