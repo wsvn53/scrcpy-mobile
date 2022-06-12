@@ -240,6 +240,7 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     [self stopEditing];
     
     NSURLComponents *urlComps = [[NSURLComponents alloc] initWithString:@"scrcpy2://"];
+    urlComps.queryItems = [NSArray array];
     urlComps.host = self.adbHost.text;
     urlComps.port = @([self.adbPort.text integerValue]);
     
