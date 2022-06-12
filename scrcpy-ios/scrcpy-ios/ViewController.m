@@ -10,10 +10,12 @@
 #import "ScrcpyClient.h"
 #import "KFKeychain.h"
 #import "MBProgressHUD.h"
+#import "ScrcpyTextField.h"
 
 static NSString * kScrcpyADBHostKeychain = @"kScrcpyADBHostKeychain";
 static NSString * kScrcpyADBPortKeychain = @"kScrcpyADBPortKeychain";
 static NSString * kScrcpyMaxSizeKeychain = @"kScrcpyMaxSizeKeychain";
+static NSString * kScrcpyMaxFpsKeychain = @"kScrcpyMaxFpsKeychain";
 static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 
 @interface ViewController ()
@@ -21,16 +23,27 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 @property (nonatomic, weak)   UITextField *adbPort;
 @property (nonatomic, weak)   UITextField *maxSize;
 @property (nonatomic, weak)   UITextField *bitRate;
+@property (nonatomic, weak)   UITextField *maxFps;
 
 @end
 
 @implementation ViewController
 
+-(void)loadView {
+    self.view = [[UIScrollView alloc] initWithFrame:(CGRectZero)];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
+    [self setupEvents];
     [self setupClient];
     [self startADBServer];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [ScrcpySharedClient checkStartScheme];
 }
 
 -(void)startADBServer {
@@ -42,6 +55,10 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     });
 }
 
+-(void)setupEvents {
+    CVCreate.withView(self.view).click(self, @selector(stopEditing));
+}
+
 -(void)setupViews {
     self.view.backgroundColor = UIColor.whiteColor;
     
@@ -51,37 +68,65 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
         CVCreate.UILabel.text(@"Scrcpy Beta").boldFontSize(20)
             .textColor(UIColor.blackColor)
             .textAlignment(NSTextAlignmentCenter),
-        CVCreate.create(UITextField.class).size(CGSizeMake(0, 40))
+        CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border(UIColor.blackColor, 1.f)
+            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
             .text([KFKeychain loadObjectForKey:kScrcpyADBHostKeychain])
+            .cornerRadius(5.f)
             .customView(^(UITextField *view){
                 view.placeholder = @"ADB Host";
+                view.autocorrectionType = UITextAutocorrectionTypeNo;
+                view.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 _self.adbHost = view;
             }),
-        CVCreate.create(UITextField.class).size(CGSizeMake(0, 40))
+        CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border(UIColor.blackColor, 1.f)
+            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
             .text([KFKeychain loadObjectForKey:kScrcpyADBPortKeychain])
+            .cornerRadius(5.f)
             .customView(^(UITextField *view){
                 view.placeholder = @"ADB Port";
+                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                view.autocorrectionType = UITextAutocorrectionTypeNo;
+                view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 _self.adbPort = view;
             }),
-        CVCreate.create(UITextField.class).size(CGSizeMake(0, 40))
+        CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border(UIColor.blackColor, 1.f)
+            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
             .text([KFKeychain loadObjectForKey:kScrcpyMaxSizeKeychain])
+            .cornerRadius(5.f)
             .customView(^(UITextField *view){
-                view.placeholder = @"Max Size";
+                view.placeholder = @"--max-size, default unlimited";
+                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                view.autocorrectionType = UITextAutocorrectionTypeNo;
+                view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 _self.maxSize = view;
             }),
-        CVCreate.create(UITextField.class).size(CGSizeMake(0, 40))
+        CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border(UIColor.blackColor, 1.f)
+            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
             .text([KFKeychain loadObjectForKey:kScrcpyBitRateKeychain])
+            .cornerRadius(5.f)
             .customView(^(UITextField *view){
-                view.placeholder = @"BitRate, Default 4M";
+                view.placeholder = @"--bit-rate, default 4M";
+                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                view.autocorrectionType = UITextAutocorrectionTypeNo;
+                view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 _self.bitRate = view;
+            }),
+        CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
+            .fontSize(16)
+            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
+            .text([KFKeychain loadObjectForKey:kScrcpyMaxFpsKeychain])
+            .cornerRadius(5.f)
+            .customView(^(UITextField *view){
+                view.placeholder = @"--max-fps, default 60";
+                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                view.autocorrectionType = UITextAutocorrectionTypeNo;
+                view.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                _self.maxFps = view;
             }),
         CVCreate.UIButton.text(@"Connect").boldFontSize(16)
             .addToView(self.view)
@@ -90,13 +135,21 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
             .backgroundColor(UIColor.blackColor)
             .cornerRadius(6)
             .click(self, @selector(start)),
+        CVCreate.UIButton.text(@"Copy URL Scheme").boldFontSize(16)
+            .addToView(self.view)
+            .size(CGSizeMake(0, 40))
+            .textColor(UIColor.blackColor)
+            .backgroundColor(UIColor.whiteColor)
+            .border(UIColor.grayColor, 2.f)
+            .cornerRadius(6)
+            .click(self, @selector(copyURLScheme)),
         CVCreate.UIView,
     ]).axis(UILayoutConstraintAxisVertical).spacing(20.f)
     .addToView(self.view)
     .centerXAnchor(self.view.centerXAnchor, 0)
     .centerYAnchor(self.view.centerYAnchor, 0)
     .widthAnchor(self.view.widthAnchor, -30)
-    .heightAnchor(self.view.heightAnchor, -80);
+    .heightAnchor(self.view.heightAnchor, -20);
 }
 
 -(void)setupClient {
@@ -104,6 +157,9 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     
     ScrcpySharedClient.onADBConnected = ^(NSString *serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if ([MBProgressHUD HUDForView:_self.view] == nil) {
+                [_self showHUDWith:@"ADB\nConnected"];
+            }
             [MBProgressHUD HUDForView:_self.view].label.text = @"ADB\nConnected";
         });
     };
@@ -136,40 +192,75 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     [self presentViewController:alert animated:YES completion:nil];
 }
 
--(void)start {
+-(void)showHUDWith:(NSString *)text {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.label.text = text;
+    hud.label.numberOfLines = 2;
+    hud.minSize = CGSizeMake(130, 130);
+}
+
+-(void)stopEditing {
     [self.adbPort endEditing:YES];
     [self.adbHost endEditing:YES];
     [self.maxSize endEditing:YES];
     [self.bitRate endEditing:YES];
+    [self.maxFps endEditing:YES];
+}
+
+-(void)start {
+    [self stopEditing];
     
     if (self.adbHost.text.length == 0 || self.adbPort.text.length == 0) {
         return;
     }
      
-    NSArray *options = @[
-         @"--verbosity=verbose", @"--fullscreen", @"--display-buffer=32",
-         @"--max-fps=60", @"--stay-awake", @"--turn-screen-off", @"--print-fps",
-    ];
-    
+    NSArray *options = ScrcpySharedClient.defaultScrcpyOptions;
     if (self.maxSize.text.length > 0) {
-        options = [options arrayByAddingObject:[NSString stringWithFormat:@"--max-size=%@", self.maxSize.text]];
+        options = [ScrcpySharedClient setScrcpyOption:options name:@"max-size" value:self.maxSize.text];
     }
     
-    NSString *bitRate = @"4M";
-    if (self.bitRate.text.length > 0) { bitRate = self.bitRate.text; }
-    options = [options arrayByAddingObject:[NSString stringWithFormat:@"--bit-rate=%@", bitRate]];
+    if (self.bitRate.text.length > 0) {
+        options = [ScrcpySharedClient setScrcpyOption:options name:@"bit-rate" value:self.bitRate.text];
+    }
     
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.label.text = @"ADB\nConnecting";
-    hud.label.numberOfLines = 2;
-    hud.minSize = CGSizeMake(125, 125);
+    if (self.maxFps.text.length > 0) {
+        options = [ScrcpySharedClient setScrcpyOption:options name:@"max-fps" value:self.maxFps.text];
+    }
     
     [KFKeychain saveObject:self.adbHost.text forKey:kScrcpyADBHostKeychain];
     [KFKeychain saveObject:self.adbPort.text forKey:kScrcpyADBPortKeychain];
     [KFKeychain saveObject:self.maxSize.text forKey:kScrcpyMaxSizeKeychain];
     [KFKeychain saveObject:self.bitRate.text forKey:kScrcpyBitRateKeychain];
 
+    [self showHUDWith:@"ADB\nConnecting"];
     [ScrcpySharedClient startWith:self.adbHost.text adbPort:self.adbPort.text options:options];
+}
+
+-(void)copyURLScheme {
+    [self stopEditing];
+    
+    NSURLComponents *urlComps = [[NSURLComponents alloc] initWithString:@"scrcpy2://"];
+    urlComps.host = self.adbHost.text;
+    urlComps.port = @([self.adbPort.text integerValue]);
+    
+    if (self.maxSize.text.length > 0) {
+        NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:@"max-size" value:self.maxSize.text];
+        urlComps.queryItems = [urlComps.queryItems arrayByAddingObject:item];
+    }
+    
+    if (self.bitRate.text.length > 0) {
+        NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:@"bit-rate" value:self.bitRate.text];
+        urlComps.queryItems = [urlComps.queryItems arrayByAddingObject:item];
+    }
+    
+    if (self.maxFps.text.length > 0) {
+        NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:@"max-fps" value:self.bitRate.text];
+        urlComps.queryItems = [urlComps.queryItems arrayByAddingObject:item];
+    }
+    
+    NSLog(@"URL: %@", urlComps.URL);
+    [[UIPasteboard generalPasteboard] setURL:urlComps.URL];
+    [self showAlert:[NSString stringWithFormat:@"Copied URL:\n%@", urlComps.URL.absoluteString]];
 }
 
 @end

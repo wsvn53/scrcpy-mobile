@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^onScrcpyConnectFailed)(NSString *serial);
 @property (nonatomic, copy) void (^onScrcpyDisconnected)(NSString *serial);
 
+// Pending URL Scheme
+@property (nonatomic, strong, nullable)   NSURL   *pendingScheme;
+
 // Shared instance
 +(instancetype)sharedClient;
 
@@ -39,7 +42,16 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)stopScrcpy;
 
 // Execute ADB commands
--(BOOL)adbExecute:(NSArray <NSString *> *)commands message:(NSString **)message;
+-(BOOL)adbExecute:(NSArray <NSString *> *)commands message:(NSString *_Nullable*_Nullable)message;
+
+// Check pending scheme and start scrcpy
+-(void)checkStartScheme;
+
+// Default scrcpy options
+-(NSArray *)defaultScrcpyOptions;
+
+// Set scrcpy options
+-(NSArray *)setScrcpyOption:(NSArray *)options name:(NSString *)name value:(NSString *)value;
 
 @end
 

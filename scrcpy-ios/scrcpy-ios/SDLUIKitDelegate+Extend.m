@@ -18,4 +18,14 @@
     beginTaskHandler();
 }
 
+-(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    NSLog(@"> Received URL: %@", url.absoluteURL);
+    // Post connect
+    [NSNotificationCenter.defaultCenter postNotificationName:ScrcpyConnectWithSchemeNotification object:nil userInfo:@{
+        ScrcpyConnectWithSchemeURLKey : url
+    }];
+    return YES;
+}
+
 @end

@@ -18,6 +18,8 @@
 #import <CoreVideo/CoreVideo.h>
 #import <AVFoundation/AVFoundation.h>
 
+#import "SDLUIKitDelegate+Extend.h"
+
 @interface ScrcpyClient ()
 // Connecting infomations
 @property (nonatomic, copy) NSString    *connectedSerial;
@@ -46,7 +48,8 @@ void adb_connect_status_updated(const char *serial, const char *status) {
 }
 
 void ScrcpyUpdateStatus(enum ScrcpyStatus status) {
-   if (ScrcpySharedClient.scrcpyStatusUpdated)
+    ScrcpySharedClient.status = status;
+    if (ScrcpySharedClient.scrcpyStatusUpdated)
        ScrcpySharedClient.scrcpyStatusUpdated(status);
 }
 
@@ -124,9 +127,12 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         client = [[ScrcpyClient alloc] init];
-        [client setup];
     });
     return client;
+}
+
++(void)load {
+    [ScrcpySharedClient setup];
 }
 
 -(void)setup {
@@ -137,36 +143,84 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     NSArray <NSString *> *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     self.adbHomePath = documentPaths.firstObject;
     
-    // Add notifcation to responds background mode changed
+    // Add notification to responds background mode changed
     [NSNotificationCenter.defaultCenter addObserver:self
-                                           selector:@selector(sendRotateCommand)
-                                               name:UIApplicationWillEnterForegroundNotification
+                                           selector:@selector(onApplicationEnterForeground)
+                                               name:UIApplicationDidBecomeActiveNotification
+                                             object:nil];
+    
+    // Add notification to handle URL open
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(handleScrcpyURLScheme:)
+                                               name:ScrcpyConnectWithSchemeNotification
                                              object:nil];
 }
 
--(void)sendRotateCommand {
-    NSLog(@"-> Send Command Trigger Video Restart");
+#pragma mark - Events
+
+-(void)onApplicationEnterForeground {
+    [self checkStartScheme];
     
-    SDL_Keysym keySym;
-    keySym.scancode = SDL_SCANCODE_END;
-    keySym.sym = SDLK_END;
-    keySym.mod = 0;
-    keySym.unused = 1;
-    
-    SDL_KeyboardEvent keyEvent;
-    keyEvent.type = SDL_KEYUP;
-    keyEvent.state = SDL_PRESSED;
-    keyEvent.repeat = '\0';
-    keyEvent.keysym = keySym;
-    
-    SDL_Event event;
-    event.type = keyEvent.type;
-    event.key = keyEvent;
-    
-    SDL_PushEvent(&event);
+    if (self.status == ScrcpyStatusConnected) {
+        NSLog(@"-> Send command to trigger video restart I frame");
+        SDL_Keysym keySym;
+        keySym.scancode = SDL_SCANCODE_END;
+        keySym.sym = SDLK_END;
+        keySym.mod = 0;
+        keySym.unused = 1;
+        
+        SDL_KeyboardEvent keyEvent;
+        keyEvent.type = SDL_KEYUP;
+        keyEvent.state = SDL_PRESSED;
+        keyEvent.repeat = '\0';
+        keyEvent.keysym = keySym;
+        
+        SDL_Event event;
+        event.type = keyEvent.type;
+        event.key = keyEvent;
+        
+        SDL_PushEvent(&event);
+    }
+}
+
+-(void)handleScrcpyURLScheme:(NSNotification *)notification {
+    NSURL *openingURL = notification.userInfo[ScrcpyConnectWithSchemeURLKey];
+    NSLog(@"-> URL Scheme: %@", openingURL);
+    if (openingURL == nil || [openingURL.scheme isEqualToString:@"scrcpy2"] == NO) {
+        NSLog(@"-> Invalid URL Scheme: URL is not supported");
+        return;
+    }
+    self.pendingScheme = openingURL;
 }
 
 #pragma mark - Scrcpy Lifetime
+
+-(void)checkStartScheme {
+    if (self.pendingScheme == nil) {
+        return;
+    }
+    
+    NSString *adbHost = self.pendingScheme.host;
+    NSString *adbPort = self.pendingScheme.port.stringValue ? : @"5555";
+    
+    if (adbHost.length == 0) {
+        NSLog(@"[ERROR] No adb host found in scheme");
+        self.pendingScheme = nil;
+        return;
+    }
+    
+    __block NSArray *scrcpyOptions = self.defaultScrcpyOptions;
+    NSURLComponents *urlComps = [NSURLComponents componentsWithURL:self.pendingScheme resolvingAgainstBaseURL:YES];
+    [urlComps.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *query, NSUInteger idx, BOOL *stop) {
+        scrcpyOptions = [self setScrcpyOption:scrcpyOptions name:query.name value:query.value];
+    }];
+    
+    // Mark as executed
+    self.pendingScheme = nil;
+    
+    NSLog(@"-> Scrcpy Options: %@", scrcpyOptions);
+    [self startWith:adbHost adbPort:adbPort options:scrcpyOptions];
+}
 
 -(void)startWith:(NSString *)adbHost
          adbPort:(NSString *)adbPort
@@ -191,7 +245,7 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     };
     adbPort = adbPort.length == 0 ? @"5555" : adbPort;
     
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self adbConnect:adbHost port:adbPort];
     });
 }
@@ -350,6 +404,44 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     if (message != nil)
         *message = output_message == NULL ? nil : [NSString stringWithUTF8String:output_message];
     return (NSInteger)code;
+}
+
+#pragma mark - Scrcpy Options
+
+-(NSArray *)defaultScrcpyOptions {
+    return @[ @"--verbosity=verbose", @"--fullscreen", @"--display-buffer=32", @"--bit-rate=4M",
+              @"--max-fps=60", @"--stay-awake", @"--turn-screen-off", @"--print-fps", ];
+}
+
+-(NSArray *)availableOptions {
+    return @[ @"max-size", @"bit-rate", @"disable-screensaver", @"display-buffer",
+              @"force-adb-forward", @"max-fps", @"power-off-on-close", @"turn-screen-off",
+              @"show-touches", @"stay-awake", ];
+}
+
+-(NSArray *)setScrcpyOption:(NSArray *)options name:(NSString *)name value:(NSString *)value {
+    // Check available options
+    if ([self.availableOptions containsObject:name] == NO) {
+        NSLog(@"-> Not Supported: %@", name);
+        return options;
+    }
+    
+    // Remove existed defaults options
+    NSArray *existedOptions = [options filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSString *option, id bindings) {
+        return [option containsString:name];
+    }]];
+    
+    NSMutableArray *scrcpyOptions = [NSMutableArray arrayWithArray:options];
+    [scrcpyOptions removeObjectsInArray:existedOptions];
+    
+    // Add new option
+    NSString *newOption = [NSString stringWithFormat:@"--%@", name];
+    if (value.length > 0) {
+        newOption = [newOption stringByAppendingFormat:@"=%@", value];
+    }
+    [scrcpyOptions addObject:newOption];
+    
+    return scrcpyOptions;
 }
 
 @end

@@ -9,6 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define ScrcpyConnectWithSchemeNotification  @"ScrcpyConnectWithSchemeNotification"
+#define ScrcpyConnectWithSchemeURLKey        @"URL"
+
 @interface SDLUIKitDelegate : NSObject<UIApplicationDelegate>
 @end
 

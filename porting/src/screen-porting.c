@@ -10,9 +10,6 @@
 #include <SDL2/SDL_render.h>
 
 bool ScrcpyEnableHardwareDecoding(void);
-SDL_Texture * SDL_CreateTexture_hijack(SDL_Renderer * renderer,
-                                       Uint32 format,
-                                       int access, int w, int h);
 int SDL_UpdateYUVTexture_hijack(SDL_Texture * texture,
                                 const SDL_Rect * rect,
                                 const Uint8 *Yplane, int Ypitch,
@@ -21,7 +18,6 @@ int SDL_UpdateYUVTexture_hijack(SDL_Texture * texture,
 void SDL_RenderPresent_hijack(SDL_Renderer * renderer);
 
 #define sc_screen_init(...)   sc_screen_init_orig(__VA_ARGS__)
-#define SDL_CreateTexture(...)   SDL_CreateTexture_hijack(__VA_ARGS__)
 #define SDL_UpdateYUVTexture(...)   SDL_UpdateYUVTexture_hijack(__VA_ARGS__)
 #define SDL_RenderPresent(...)   SDL_RenderPresent_hijack(__VA_ARGS__)
 #define sc_video_buffer_consume(...)   sc_video_buffer_consume_hijack(__VA_ARGS__)
@@ -29,7 +25,6 @@ void SDL_RenderPresent_hijack(SDL_Renderer * renderer);
 #include "screen.c"
 
 #undef sc_screen_init
-#undef SDL_CreateTexture
 #undef SDL_UpdateYUVTexture
 #undef SDL_RenderPresent
 #undef sc_video_buffer_consume
@@ -65,20 +60,7 @@ sc_screen_init(struct sc_screen *screen,
 __attribute__((weak))
 void ScrcpyHandleFrame(AVFrame *frame) {}
 
-// Hijack SDL_CreateTexture to enable render hardware decoded frame
-SDL_Texture * SDL_CreateTexture_hijack(SDL_Renderer * renderer,
-                                                        Uint32 format,
-                                                        int access, int w,
-                                                        int h)
-{
-    // Frame format is NV12 after decoded by VideoToolbox in ffmpeg
-    format = ScrcpyEnableHardwareDecoding() ? SDL_PIXELFORMAT_NV12 : format;
-    printf("SDL_CreateTexture_hijack format: %s\n",
-           format == SDL_PIXELFORMAT_NV12 ? "SDL_PIXELFORMAT_NV12" : "SDL_PIXELFORMAT_YV12");
-    return SDL_CreateTexture(renderer, format, access, w, h);
-}
-
-// Hijack SDL_SDL_UpdateYUVTexture to render NV12 texture
+// Hijack SDL_UpdateYUVTexture
 int SDL_UpdateYUVTexture_hijack(SDL_Texture * texture,
                                                  const SDL_Rect * rect,
                                                  const Uint8 *Yplane, int Ypitch,
