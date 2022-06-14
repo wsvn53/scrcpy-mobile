@@ -13,16 +13,13 @@
 #undef avcodec_alloc_context3
 #undef avcodec_send_packet
 
-__attribute__((weak))
-bool avcodec_enable_hardware_decoding(void) {
-    return true;
-}
+bool ScrcpyEnableHardwareDecoding(void);
 
 AVCodecContext *avcodec_alloc_context3(const AVCodec *codec);
 AVCodecContext *avcodec_alloc_context3_hijack(const AVCodec *codec) {
     AVCodecContext *context = avcodec_alloc_context3(codec);
     
-    if (avcodec_enable_hardware_decoding() == false) {
+    if (ScrcpyEnableHardwareDecoding() == false) {
         printf("hardware decoding is disabled\n");
         return context;
     }
@@ -45,7 +42,7 @@ int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt);
 int avcodec_send_packet_hijack(AVCodecContext *avctx, const AVPacket *avpkt) {
     int ret = avcodec_send_packet(avctx, avpkt);
     
-    if (ret == AVERROR_UNKNOWN && avcodec_enable_hardware_decoding()) {
+    if (ret == AVERROR_UNKNOWN && ScrcpyEnableHardwareDecoding()) {
         // Fix Hardware Decoding Error After Return From Background
         return 0;
     }

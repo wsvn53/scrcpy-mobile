@@ -67,12 +67,17 @@ int SDL_UpdateYUVTexture_hijack(SDL_Texture * texture,
                                                  const Uint8 *Uplane, int Upitch,
                                                  const Uint8 *Vplane, int Vpitch)
 {
-    if (ScrcpyEnableHardwareDecoding()) return 0;
+    if (ScrcpyEnableHardwareDecoding()) { return 0; }
     return SDL_UpdateYUVTexture(texture, rect, Yplane, Ypitch, Uplane, Upitch, Vplane, Vpitch);
 }
 
+void SDL_UpdateCommandGeneration(SDL_Renderer * renderer);
 void SDL_RenderPresent_hijack(SDL_Renderer * renderer) {
-    if (ScrcpyEnableHardwareDecoding()) return;
+    if (ScrcpyEnableHardwareDecoding()) {
+        // Update renderer_command_generation to fix memory leak when Destory_Texture
+        SDL_UpdateCommandGeneration(renderer);
+        return;
+    }
     SDL_RenderPresent(renderer);
 }
 

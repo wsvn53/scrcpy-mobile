@@ -9,6 +9,16 @@ cd $BUILD_DIR;
 curl -O https://www.libsdl.org/release/SDL2-2.0.22.tar.gz;
 tar xzvf SDL*.tar.gz;
 
+# Add Function SDL_UpdateCommandGeneration
+echo "=> Add Function SDL_UpdateCommandGeneration"
+echo "$(cat << EOF
+void
+SDL_UpdateCommandGeneration(SDL_Renderer *renderer) {
+    renderer->render_command_generation++;
+}
+EOF
+)" >> SDL2-*/src/render/SDL_render.c;
+
 # Build iOS Libraries
 echo "=> Building for iOS..";
 
