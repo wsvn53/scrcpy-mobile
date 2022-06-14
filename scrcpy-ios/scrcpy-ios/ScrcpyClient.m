@@ -225,7 +225,8 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     __block NSArray *scrcpyOptions = self.defaultScrcpyOptions;
     NSURLComponents *urlComps = [NSURLComponents componentsWithURL:pendingScheme resolvingAgainstBaseURL:YES];
     [urlComps.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *query, NSUInteger idx, BOOL *stop) {
-        scrcpyOptions = [self setScrcpyOption:scrcpyOptions name:query.name value:query.value];
+        NSString *value = [query.value isEqualToString:@"true"] ? @"" : query.value;
+        scrcpyOptions = [self setScrcpyOption:scrcpyOptions name:query.name value:value];
     }];
     
     NSLog(@"-> Scrcpy Options: %@", scrcpyOptions);

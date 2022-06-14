@@ -466,7 +466,7 @@
             <Locations>
                <Location
                   uuid = "EF91A81E-07A9-44B8-B84A-C1C70CA8EC9D - 2c638784e46699a5"
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "update_texture"
@@ -502,24 +502,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
-            landmarkName = "RenderPixelBufferFrame(pixelBuffer)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5FA6DC06-2EC9-4D85-B77C-FA5C27B15EC0"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "scrcpy-ios/ScrcpyClient.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
             landmarkName = "RenderPixelBufferFrame(pixelBuffer)"
             landmarkType = "9">
          </BreakpointContent>
@@ -531,22 +515,22 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            symbolName = "sc_input_manager_process_key"
+            symbolName = "SDL_UpdateYUVTexture_hijack"
             moduleName = "">
             <Locations>
                <Location
-                  uuid = "54AE950F-8F79-40A3-BC7F-C7404E57AD19 - ae96ab56d71be158"
+                  uuid = "54AE950F-8F79-40A3-BC7F-C7404E57AD19 - 56047afe9e5d4a58"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "sc_input_manager_process_key"
+                  symbolName = "SDL_UpdateYUVTexture_hijack"
                   moduleName = "scrcpy-ios"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/input_manager.c"
+                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/porting/src/screen-porting.c"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "359"
-                  endingLineNumber = "359"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69"
                   offsetFromSymbolStart = "0">
                </Location>
             </Locations>
@@ -562,8 +546,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "199"
-            endingLineNumber = "199"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
             landmarkName = "-checkStartScheme"
             landmarkType = "7">
          </BreakpointContent>
@@ -578,8 +562,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
             landmarkName = "-handleScrcpyURLScheme:"
             landmarkType = "7">
          </BreakpointContent>
@@ -597,6 +581,86 @@
             startingLineNumber = "13"
             endingLineNumber = "13"
             landmarkName = "-textRectForBounds:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EA8ACACC-2FB5-4E08-B230-1D67DA3C5EB8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scrcpy-ios/ScrcpyClient.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
+            landmarkName = "ScrcpyHandleFrame(frame)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EF5586F2-66FD-4D82-8E00-9545B46437FD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../scrcpy/app/src/screen.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "738"
+            endingLineNumber = "738"
+            landmarkName = "sc_screen_update_frame(screen)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0774F4D2-87AD-41F9-BFDB-8BD08F02070D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scrcpy-ios/ViewController.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
+            landmarkName = "-start"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8BD89DFA-1544-442A-ACEF-81AF31E4AA46"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scrcpy-ios/ViewController.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "326"
+            endingLineNumber = "326"
+            landmarkName = "-start"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7FEAC444-A303-4D7A-99B2-5237695A6B9B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scrcpy-ios/ScrcpyClient.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "287"
+            endingLineNumber = "287"
+            landmarkName = "-startWithOptions:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

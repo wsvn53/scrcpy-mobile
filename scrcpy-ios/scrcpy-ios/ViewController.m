@@ -332,23 +332,35 @@
     NSURLComponents *urlComps = [[NSURLComponents alloc] initWithString:@"scrcpy2://"];
     urlComps.queryItems = [NSArray array];
     urlComps.host = self.adbHost.text;
-    urlComps.port = @([self.adbPort.text integerValue]);
     
-    if (self.maxSize.text.length > 0) {
-        NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:@"max-size" value:self.maxSize.text];
-        urlComps.queryItems = [urlComps.queryItems arrayByAddingObject:item];
+    if (self.adbPort.text.length > 0) {
+        urlComps.port = @([self.adbPort.text integerValue]);
     }
     
-    if (self.bitRate.text.length > 0) {
-        NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:@"bit-rate" value:self.bitRate.text];
-        urlComps.queryItems = [urlComps.queryItems arrayByAddingObject:item];
-    }
+    // Assemble text options
+    NSArray *(^updateURLTextItems)(NSArray *, ScrcpyTextField *) = ^NSArray *(NSArray *items, ScrcpyTextField *t) {
+        if (t.text.length == 0) return items;
+        NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:t.optionKey value:t.text];
+        return [items arrayByAddingObject:item];
+    };
     
-    if (self.maxFps.text.length > 0) {
-        NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:@"max-fps" value:self.bitRate.text];
-        urlComps.queryItems = [urlComps.queryItems arrayByAddingObject:item];
-    }
+    urlComps.queryItems = updateURLTextItems(urlComps.queryItems, self.maxSize);
+    urlComps.queryItems = updateURLTextItems(urlComps.queryItems, self.bitRate);
+    urlComps.queryItems = updateURLTextItems(urlComps.queryItems, self.maxFps);
     
+    // Assemble bool options
+    NSArray *(^updateURLBoolItems)(NSArray *, ScrcpySwitch *) = ^NSArray *(NSArray *items, ScrcpySwitch *s) {
+        if (s.on == NO) return items;
+        NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:s.optionKey value:@"true"];
+        return [items arrayByAddingObject:item];
+    };
+    
+    urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.turnScreenOff);
+    urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.stayAwake);
+    urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.forceAdbForward);
+    urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.turnOffOnClose);
+    
+    // If no options, avoid "?"
     if (urlComps.queryItems.count == 0) {
         urlComps.queryItems = nil;
     }
