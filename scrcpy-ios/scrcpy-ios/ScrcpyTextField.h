@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ScrcpyTextField : UITextField
 
+@property (nonatomic, copy)     NSString *optionKey;
+
+-(void)updateOptionValue;
+
 @end
 
 NS_ASSUME_NONNULL_END

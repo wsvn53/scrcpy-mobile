@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 // ADB trace log
 -(void)enableADBVerbose;
 
+// Start ADB Server
+-(void)startADBServer;
+
 // Start scrcpy
 -(void)startWith:(NSString *)adbHost adbPort:(NSString *)adbPort options:(NSArray *)scrcpyOptions;
 

@@ -33,6 +33,9 @@
 // Underlying Scrcpy status change callback
 @property (nonatomic, copy)     void (^scrcpyStatusUpdated)(enum ScrcpyStatus status);
 
+// ADB Start Queue
+@property (nonatomic, strong)   NSOperationQueue    *adbStartQueue;
+
 @end
 
 CFRunLoopRunResult CFRunLoopRunInMode_fix(CFRunLoopMode mode, CFTimeInterval seconds, Boolean returnAfterSourceHandled) {
@@ -83,6 +86,7 @@ void RenderPixelBufferFrame(CVPixelBufferRef pixelBuffer) {
     
     static AVSampleBufferDisplayLayer *displayLayer = nil;
     if (displayLayer == nil || displayLayer.superlayer == nil) {
+        [displayLayer removeFromSuperlayer];
         displayLayer = [AVSampleBufferDisplayLayer layer];
         displayLayer.videoGravity = AVLayerVideoGravityResizeAspect;
         
@@ -98,7 +102,7 @@ void RenderPixelBufferFrame(CVPixelBufferRef pixelBuffer) {
         keyWindow.rootViewController.view.backgroundColor = UIColor.blackColor;
         // sometimes failed to set background color, so we append to next runloop
         displayLayer.backgroundColor = UIColor.blackColor.CGColor;
-        NSLog(@"[INFO] Using Hardware Decoding.");
+        NSLog(@"[INFO] Using hardware decoding.");
     }
     
     // After become forground from background, may render fail
@@ -138,6 +142,8 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 -(void)setup {
     // ADB Settings
     self.adbDaemonPort = 15037;
+    self.adbStartQueue = [[NSOperationQueue alloc] init];
+    self.adbStartQueue.maxConcurrentOperationCount = 1;
     
     // Set ADB Home
     NSArray <NSString *> *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -249,9 +255,15 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     };
     adbPort = adbPort.length == 0 ? @"5555" : adbPort;
     
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+    // Connecting callback
+    if (self.onADBConnecting) {
+        NSString *serial = [NSString stringWithFormat:@"%@:%@", adbHost, adbPort];
+        self.onADBConnecting(serial);
+    }
+    
+    [self.adbStartQueue addOperationWithBlock:^{
         [self adbConnect:adbHost port:adbPort];
-    });
+    }];
 }
 
 -(void)onADBStatusChanged:(NSString *)serial
@@ -327,6 +339,15 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 
 #pragma mark - ADB Lifetime
 
+-(void)startADBServer {
+    [self.adbStartQueue addOperationWithBlock:^{
+        NSString *message = @"";
+        BOOL success = [self adbExecute:@[@"start-server"] message:&message];
+        NSLog(@"Start ADB Server: %@", success?@"YES":@"NO");
+        if (message.length > 0) printf("-> %s\n", message.UTF8String);
+    }];
+}
+
 -(void)enableADBVerbose {
     adb_enable_trace();
 }
@@ -364,11 +385,6 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     
     // Disconnect all before connect
     [self adbDisconnect:nil port:nil];
-    
-    // Connecting callback
-    if (self.onADBConnecting) {
-        self.onADBConnecting(serial);
-    }
     
     NSString *message = nil;
     NSInteger code = [self adbExecute:@[@"connect", serial] message:&message];
@@ -421,8 +437,8 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 #pragma mark - Scrcpy Options
 
 -(NSArray *)defaultScrcpyOptions {
-    return @[ @"--verbosity=verbose", @"--fullscreen", @"--display-buffer=32", @"--bit-rate=4M",
-              @"--max-fps=60", @"--stay-awake", @"--turn-screen-off", @"--print-fps", ];
+    return @[ @"--verbosity=verbose", @"--fullscreen", @"--display-buffer=32",
+              @"--bit-rate=4M", @"--max-fps=60", @"--print-fps", ];
 }
 
 -(NSArray *)availableOptions {

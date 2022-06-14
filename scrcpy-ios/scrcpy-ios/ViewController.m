@@ -11,22 +11,24 @@
 #import "KFKeychain.h"
 #import "MBProgressHUD.h"
 #import "ScrcpyTextField.h"
+#import "ScrcpySwitch.h"
 #import "config.h"
 
-static NSString * kScrcpyADBHostKeychain = @"kScrcpyADBHostKeychain";
-static NSString * kScrcpyADBPortKeychain = @"kScrcpyADBPortKeychain";
-static NSString * kScrcpyMaxSizeKeychain = @"kScrcpyMaxSizeKeychain";
-static NSString * kScrcpyMaxFpsKeychain = @"kScrcpyMaxFpsKeychain";
-static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
-
 @interface ViewController ()
-@property (nonatomic, weak)   UITextField *adbHost;
-@property (nonatomic, weak)   UITextField *adbPort;
-@property (nonatomic, weak)   UITextField *maxSize;
-@property (nonatomic, weak)   UITextField *bitRate;
-@property (nonatomic, weak)   UITextField *maxFps;
+
+@property (nonatomic, weak)   ScrcpyTextField *adbHost;
+@property (nonatomic, weak)   ScrcpyTextField *adbPort;
+@property (nonatomic, weak)   ScrcpyTextField *maxSize;
+@property (nonatomic, weak)   ScrcpyTextField *bitRate;
+@property (nonatomic, weak)   ScrcpyTextField *maxFps;
+
+@property (nonatomic, weak)   ScrcpySwitch  *turnScreenOff;
+@property (nonatomic, weak)   ScrcpySwitch  *stayAwake;
+@property (nonatomic, weak)   ScrcpySwitch  *forceAdbForward;
+@property (nonatomic, weak)   ScrcpySwitch  *turnOffOnClose;
 
 @property (nonatomic, weak)   UITextField *editingText;
+
 @end
 
 @implementation ViewController
@@ -51,12 +53,7 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 }
 
 -(void)startADBServer {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSString *message = @"";
-        BOOL success = [ScrcpySharedClient adbExecute:@[@"start-server"] message:&message];
-        NSLog(@"Start ADB Server: %@", success?@"YES":@"NO");
-        if (message.length > 0) printf("-> %s\n", message.UTF8String);
-    });
+    [ScrcpySharedClient startADBServer];
 }
 
 -(void)setupEvents {
@@ -94,9 +91,9 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
-            .text([KFKeychain loadObjectForKey:kScrcpyADBHostKeychain])
             .cornerRadius(5.f)
-            .customView(^(UITextField *view){
+            .customView(^(ScrcpyTextField *view){
+                view.optionKey = @"adb-host";
                 view.placeholder = @"ADB Host";
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -107,10 +104,10 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
-            .text([KFKeychain loadObjectForKey:kScrcpyADBPortKeychain])
             .cornerRadius(5.f)
-            .customView(^(UITextField *view){
-                view.placeholder = @"ADB Port";
+            .customView(^(ScrcpyTextField *view){
+                view.optionKey = @"adb-port";
+                view.placeholder = @"ADB Port, Default 5555";
                 view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -120,10 +117,10 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
-            .text([KFKeychain loadObjectForKey:kScrcpyMaxSizeKeychain])
             .cornerRadius(5.f)
-            .customView(^(UITextField *view){
-                view.placeholder = @"--max-size, default unlimited";
+            .customView(^(ScrcpyTextField *view){
+                view.optionKey = @"max-size";
+                view.placeholder = @"--max-size, Default Unlimited";
                 view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -133,10 +130,10 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
-            .text([KFKeychain loadObjectForKey:kScrcpyBitRateKeychain])
             .cornerRadius(5.f)
-            .customView(^(UITextField *view){
-                view.placeholder = @"--bit-rate, default 4M";
+            .customView(^(ScrcpyTextField *view){
+                view.optionKey = @"bit-rate";
+                view.placeholder = @"--bit-rate, Default 4M";
                 view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -146,16 +143,56 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
-            .text([KFKeychain loadObjectForKey:kScrcpyMaxFpsKeychain])
             .cornerRadius(5.f)
-            .customView(^(UITextField *view){
-                view.placeholder = @"--max-fps, default 60";
+            .customView(^(ScrcpyTextField *view){
+                view.optionKey = @"max-fps";
+                view.placeholder = @"--max-fps, Default 60";
                 view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.maxFps = view;
             }),
+        CVCreate.UIStackView(@[
+            CVCreate.UILabel.text(@"Turn Screen Off:")
+                .fontSize(18.f)
+                .textColor(UIColor.blackColor),
+            CVCreate.create(ScrcpySwitch.class)
+                .customView(^(ScrcpySwitch *view){
+                    view.optionKey = @"turn-screen-off";
+                    self.turnScreenOff = view;
+                }),
+        ]).spacing(10.f),
+        CVCreate.UIStackView(@[
+            CVCreate.UILabel.text(@"Stay Awake:")
+                .fontSize(18.f)
+                .textColor(UIColor.blackColor),
+            CVCreate.create(ScrcpySwitch.class)
+                .customView(^(ScrcpySwitch *view){
+                    view.optionKey = @"stay-awake";
+                    self.stayAwake = view;
+                }),
+        ]).spacing(10.f),
+        CVCreate.UIStackView(@[
+            CVCreate.UILabel.text(@"Force ADB Forward:")
+                .fontSize(18.f)
+                .textColor(UIColor.blackColor),
+            CVCreate.create(ScrcpySwitch.class)
+                .customView(^(ScrcpySwitch *view){
+                    view.optionKey = @"force-adb-forward";
+                    self.forceAdbForward = view;
+                }),
+        ]).spacing(10.f),
+        CVCreate.UIStackView(@[
+            CVCreate.UILabel.text(@"Turn Off When Closing:")
+                .fontSize(18.f)
+                .textColor(UIColor.blackColor),
+            CVCreate.create(ScrcpySwitch.class)
+                .customView(^(ScrcpySwitch *view){
+                    view.optionKey = @"power-off-on-close";
+                    self.turnOffOnClose = view;
+                }),
+        ]).spacing(10.f),
         CVCreate.UIButton.text(@"Connect").boldFontSize(16)
             .addToView(self.view)
             .size(CGSizeMake(0, 45))
@@ -187,13 +224,13 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     
     ScrcpySharedClient.onADBConnecting = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_self showHUDWith:@"ADB\nconnecting"];
+            [_self showHUDWith:@"ADB\nConnecting"];
         });
     };
     
     ScrcpySharedClient.onADBConnected = ^(NSString *serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_self showHUDWith:@"ADB\nconnected"];
+            [_self showHUDWith:@"ADB\nConnected"];
         });
     };
     
@@ -220,7 +257,7 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
     
     ScrcpySharedClient.onScrcpyConnected = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_self showHUDWith:@"Scrcpy\nconnected"];
+            [_self showHUDWith:@"Scrcpy\nConnected"];
         });
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideHUDForView:_self.view animated:YES];
@@ -255,29 +292,37 @@ static NSString * kScrcpyBitRateKeychain = @"kScrcpyBitRateKeychain";
 -(void)start {
     [self stopEditing];
     
-    if (self.adbHost.text.length == 0 || self.adbPort.text.length == 0) {
+    if (self.adbHost.text.length == 0) {
         return;
     }
+    
+    [self.adbHost updateOptionValue];
+    [self.adbPort updateOptionValue];
      
     NSArray *options = ScrcpySharedClient.defaultScrcpyOptions;
-    if (self.maxSize.text.length > 0) {
-        options = [ScrcpySharedClient setScrcpyOption:options name:@"max-size" value:self.maxSize.text];
-    }
     
-    if (self.bitRate.text.length > 0) {
-        options = [ScrcpySharedClient setScrcpyOption:options name:@"bit-rate" value:self.bitRate.text];
-    }
+    NSArray * (^updateTextOptions)(NSArray *, ScrcpyTextField *) = ^NSArray * (NSArray *options, ScrcpyTextField *t) {
+        [t updateOptionValue];
+        if (t.text.length == 0) return options;
+        return [ScrcpySharedClient setScrcpyOption:options name:t.optionKey value:t.text];
+    };
     
-    if (self.maxFps.text.length > 0) {
-        options = [ScrcpySharedClient setScrcpyOption:options name:@"max-fps" value:self.maxFps.text];
-    }
+    options = updateTextOptions(options, self.maxSize);
+    options = updateTextOptions(options, self.bitRate);
+    options = updateTextOptions(options, self.maxFps);
     
-    [KFKeychain saveObject:self.adbHost.text forKey:kScrcpyADBHostKeychain];
-    [KFKeychain saveObject:self.adbPort.text forKey:kScrcpyADBPortKeychain];
-    [KFKeychain saveObject:self.maxSize.text forKey:kScrcpyMaxSizeKeychain];
-    [KFKeychain saveObject:self.bitRate.text forKey:kScrcpyBitRateKeychain];
-
-    [self showHUDWith:@"ADB\nConnecting"];
+    NSArray * (^updateSwitchOptions)(NSArray *options, ScrcpySwitch *) = ^NSArray * (NSArray *options, ScrcpySwitch *s) {
+        [s updateOptionValue];
+        if (s.on == NO) return options;
+        return [ScrcpySharedClient setScrcpyOption:options name:s.optionKey value:@""];
+    };
+    
+    options = updateSwitchOptions(options, self.turnScreenOff);
+    options = updateSwitchOptions(options, self.stayAwake);
+    options = updateSwitchOptions(options, self.forceAdbForward);
+    options = updateSwitchOptions(options, self.turnOffOnClose);
+    
+    [self showHUDWith:@"Starting.."];
     [ScrcpySharedClient startWith:self.adbHost.text adbPort:self.adbPort.text options:options];
 }
 
