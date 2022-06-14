@@ -155,8 +155,7 @@
             }),
         CVCreate.UIStackView(@[
             CVCreate.UILabel.text(@"Turn Screen Off:")
-                .fontSize(18.f)
-                .textColor(UIColor.blackColor),
+                .fontSize(16.f).textColor(UIColor.blackColor),
             CVCreate.create(ScrcpySwitch.class)
                 .customView(^(ScrcpySwitch *view){
                     view.optionKey = @"turn-screen-off";
@@ -165,8 +164,7 @@
         ]).spacing(10.f),
         CVCreate.UIStackView(@[
             CVCreate.UILabel.text(@"Stay Awake:")
-                .fontSize(18.f)
-                .textColor(UIColor.blackColor),
+                .fontSize(16.f).textColor(UIColor.blackColor),
             CVCreate.create(ScrcpySwitch.class)
                 .customView(^(ScrcpySwitch *view){
                     view.optionKey = @"stay-awake";
@@ -175,8 +173,7 @@
         ]).spacing(10.f),
         CVCreate.UIStackView(@[
             CVCreate.UILabel.text(@"Force ADB Forward:")
-                .fontSize(18.f)
-                .textColor(UIColor.blackColor),
+                .fontSize(16.f).textColor(UIColor.blackColor),
             CVCreate.create(ScrcpySwitch.class)
                 .customView(^(ScrcpySwitch *view){
                     view.optionKey = @"force-adb-forward";
@@ -185,8 +182,7 @@
         ]).spacing(10.f),
         CVCreate.UIStackView(@[
             CVCreate.UILabel.text(@"Turn Off When Closing:")
-                .fontSize(18.f)
-                .textColor(UIColor.blackColor),
+                .fontSize(16.f).textColor(UIColor.blackColor),
             CVCreate.create(ScrcpySwitch.class)
                 .customView(^(ScrcpySwitch *view){
                     view.optionKey = @"power-off-on-close";
@@ -293,6 +289,7 @@
     [self stopEditing];
     
     if (self.adbHost.text.length == 0) {
+        [self showAlert:@"ADB Host is required"];
         return;
     }
     

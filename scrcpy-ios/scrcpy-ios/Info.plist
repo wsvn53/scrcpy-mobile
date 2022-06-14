@@ -20,6 +20,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Capture Photo For Scanning QRCode</string>
+	<string>Image Scanning</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Background Communication</string>
 </dict>
 </plist>
