@@ -75,16 +75,6 @@
     self.title = @"Scrcpy Beta";
     self.view.backgroundColor = UIColor.whiteColor;
     
-    UINavigationBarAppearance *apperance = [[UINavigationBarAppearance alloc] init];
-    apperance.backgroundColor = UIColor.systemGray6Color;
-    apperance.titleTextAttributes = @{
-        NSForegroundColorAttributeName: UIColor.blackColor,
-    };
-    self.navigationController.navigationBar.standardAppearance = apperance;
-    self.navigationController.navigationBar.compactAppearance = apperance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = apperance;
-    [self.navigationController setNeedsStatusBarAppearanceUpdate];
-    
     __weak typeof(self) _self = self;
     CVCreate.UIStackView(@[
         CVCreate.UIView.size(CGSizeMake(0, 5)),
@@ -97,7 +87,9 @@
                 view.placeholder = @"ADB Host";
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
-                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                if (@available(iOS 13.0, *)) {
+                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                }
                 view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.adbHost = view;
             }),
@@ -108,7 +100,9 @@
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"adb-port";
                 view.placeholder = @"ADB Port, Default 5555";
-                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                if (@available(iOS 13.0, *)) {
+                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                }
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.delegate = (id<UITextFieldDelegate>)_self;
@@ -121,7 +115,9 @@
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"max-size";
                 view.placeholder = @"--max-size, Default Unlimited";
-                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                if (@available(iOS 13.0, *)) {
+                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                }
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.delegate = (id<UITextFieldDelegate>)_self;
@@ -134,7 +130,9 @@
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"bit-rate";
                 view.placeholder = @"--bit-rate, Default 4M";
-                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                if (@available(iOS 13.0, *)) {
+                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                }
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.delegate = (id<UITextFieldDelegate>)_self;
@@ -147,7 +145,9 @@
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"max-fps";
                 view.placeholder = @"--max-fps, Default 60";
-                view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                if (@available(iOS 13.0, *)) {
+                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+                }
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.delegate = (id<UITextFieldDelegate>)_self;
