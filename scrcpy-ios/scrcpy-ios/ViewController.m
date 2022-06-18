@@ -72,7 +72,7 @@
 }
 
 -(void)setupViews {
-    self.title = @"Scrcpy Beta";
+    self.title = @"Scrcpy Remote";
     self.view.backgroundColor = UIColor.whiteColor;
     
     __weak typeof(self) _self = self;
@@ -262,7 +262,7 @@
 }
 
 -(void)showAlert:(NSString *)message {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Scrcpy" message:message preferredStyle:(UIAlertControllerStyleAlert)];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Scrcpy Remote" message:message preferredStyle:(UIAlertControllerStyleAlert)];
     [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleCancel) handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }

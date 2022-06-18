@@ -16,3 +16,9 @@
 [submodule "scrcpy-ios/MBProgressHUD"]
 	path = scrcpy-ios/MBProgressHUD
 	url = https://github.com/jdg/MBProgressHUD.git
+[submodule "scrcpy-ios/CocoaHTTPServer"]
+	path = scrcpy-ios/CocoaHTTPServer
+	url = https://github.com/robbiehanson/CocoaHTTPServer.git
+[submodule "scrcpy-ios/noVNC"]
+	path = scrcpy-ios/noVNC
+	url = https://github.com/novnc/noVNC.git

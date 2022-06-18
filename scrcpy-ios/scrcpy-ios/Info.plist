@@ -19,9 +19,5 @@
 	<string>UIStatusBarStyleLightContent</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>Image Scanning</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Background Communication</string>
 </dict>
 </plist>

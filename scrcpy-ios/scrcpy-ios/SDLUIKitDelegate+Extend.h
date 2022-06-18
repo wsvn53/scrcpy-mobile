@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 #define ScrcpyConnectWithSchemeNotification  @"ScrcpyConnectWithSchemeNotification"
 #define ScrcpyConnectWithSchemeURLKey        @"URL"
 
+#define ScrcpySwitchModeCommand        @"switch"
+#define ScrcpySwitchModeKey            @"mode"
+#define ScrcpyModeVNC                  @"vnc"
+#define ScrcpyModeADB                  @"adb"
+
 @interface SDLUIKitDelegate : NSObject<UIApplicationDelegate>
 @end
 

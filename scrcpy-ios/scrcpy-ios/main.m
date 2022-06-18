@@ -7,8 +7,12 @@
 
 #import <UIKit/UIKit.h>
 #import <SDL2/SDL_main.h>
+#import "KFKeychain.h"
 #import "config.h"
+
+#import "SDLUIKitDelegate+Extend.h"
 #import "ViewController.h"
+#import "VNCViewController.h"
 
 int main(int argc, char * argv[]) {
     NSLog(@"Hello scrcpy v%s", SCRCPY_VERSION);
@@ -16,8 +20,14 @@ int main(int argc, char * argv[]) {
     static UIWindow *window = nil;
     window = window ?: [[UIWindow alloc] init];
     
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    ViewController *mainController = [sb instantiateViewControllerWithIdentifier:@"ViewController"];
+    UIViewController *mainController = nil;
+    NSString *mode = [KFKeychain loadObjectForKey:ScrcpySwitchModeKey];
+    if ([mode isEqualToString:@"adb"]) {
+        mainController = [[ViewController alloc] initWithNibName:nil bundle:nil];
+    } else if (mode.length == 0 || [mode isEqualToString:@"vnc"]) {
+        mainController = [[VNCViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    
     window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainController];
     [window makeKeyAndVisible];
     
