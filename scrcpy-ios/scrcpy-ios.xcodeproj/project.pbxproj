@@ -621,7 +621,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 22061901;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -638,6 +638,7 @@
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Scrcpy Remote";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Background Communication";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "To Discover Nearby Computer";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Image Scanning";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -714,7 +715,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 22061901;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -731,6 +732,7 @@
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Scrcpy Remote";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Background Communication";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "To Discover Nearby Computer";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Image Scanning";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
