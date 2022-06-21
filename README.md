@@ -21,7 +21,7 @@ Scrcpy Mobile is now available on the App Store. You can download from:
 After the App is installed, the default mode is VNC. If you need to switch to ADB WiFi mode, please visit this URL Scheme: 
 [scrcpy2://adb](scrcpy2://adb)
 
-And then please please make sure that the Adnroid devices has enabled the **adb tcpip** mode:
+And then please please make sure that the Android devices has enabled the **adb tcpip** mode:
 
 ```sh
 adb tcpip 5555
