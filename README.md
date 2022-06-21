@@ -4,11 +4,14 @@ Ported scrcpy for mobile platforms, to remotely control Android devices on your 
 
 *Currently only supports controlling Android devices from iOS, Android controlling Android devices will be supported in futrue.*
 
+![screenshots](screenshots/screenshots.png)
+
 ## Features
 
 * Supports scrcpy with ADB over WiFi ;
 * With Hardware decoding, less power and CPU comsumed;
 * Optimized gesture experiences for unstable network from mobile devices;
+* Supports start scrcpy from URL scheme;
 
 ## Installation
 
@@ -18,20 +21,27 @@ Scrcpy Mobile is now available on the App Store. You can download from:
 
 ## Usage 
 
-After the App is installed, the default mode is VNC. If you need to switch to ADB WiFi mode, please visit this URL Scheme: 
-[scrcpy2://adb](scrcpy2://adb)
+**ADB Mode**: After the App is installed, the default mode is VNC. If you need to switch to ADB WiFi mode, please visit this URL Scheme: [scrcpy2://adb](scrcpy2://adb)
 
-And then please please make sure that the Android devices has enabled the **adb tcpip** mode:
+And then please make sure that the Android devices has enabled the **adb tcpip** mode:
 
 ```sh
 adb tcpip 5555
 ```
 
+**VNC Mode**: Visit the URL scheme [scrcpy2://vnc](scrcpy2://vnc) to switch back to VNC mode.
 
+*Note: The VNC mode can only connect the VNC port that be proxied with websockify, and it's based on noVNC which is a web vnc client, so the performance and experience may not good.*
 
-Visit the URL scheme [scrcpy2://vnc](scrcpy2://vnc) to switch back to VNC mode.
+**URL Scheme:** After changed the options, you can click "Copy URL Scheme" to get the URL Scheme string, and you can create a shortcut in Shorcuts.app for connecting to scrcpy quickly.
 
-*Note: The VNC mode can only connect the VNC port that be proxied with websockify.*
+```
+scrcpy2://example.com:5555?bit-rate=4M&max-size=1080
+```
+
+**Telegram:** If you still have any question, you can join telegram channel:
+
+[![telegram](screenshots/telegram.png)Scrcpy Issues](https://t.me/joinchat/I_HBlFpB27RkZTRl)
 
 ## Build
 
