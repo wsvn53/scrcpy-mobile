@@ -41,7 +41,7 @@ scrcpy2://example.com:5555?bit-rate=4M&max-size=1080
 
 **Telegram:** If you still have any question, you can join telegram channel:
 
-[![telegram](screenshots/telegram.png)Scrcpy Issues](https://t.me/joinchat/I_HBlFpB27RkZTRl)
+[![telegram](screenshots/telegram.png)](https://t.me/joinchat/I_HBlFpB27RkZTRl)
 
 ## Build
 
