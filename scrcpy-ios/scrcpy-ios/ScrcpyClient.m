@@ -186,6 +186,13 @@ void ScrcpyHandleFrame(AVFrame *frame) {
         event.key = keyEvent;
         
         SDL_PushEvent(&event);
+        
+        NSLog(@"-> Syncing clipboard");
+        SDL_Event clip_event;
+        clip_event.type = SDL_CLIPBOARDUPDATE;
+
+        BOOL posted = (SDL_PushEvent(&clip_event) > 0);
+        NSLog(@"CLIPBOARD EVENT: Post %@", posted? @"Success" : @"Failed");
     }
 }
 

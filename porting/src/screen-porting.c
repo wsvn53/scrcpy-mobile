@@ -21,6 +21,7 @@ void SDL_RenderPresent_hijack(SDL_Renderer * renderer);
 #define SDL_UpdateYUVTexture(...)   SDL_UpdateYUVTexture_hijack(__VA_ARGS__)
 #define SDL_RenderPresent(...)   SDL_RenderPresent_hijack(__VA_ARGS__)
 #define sc_video_buffer_consume(...)   sc_video_buffer_consume_hijack(__VA_ARGS__)
+#define sc_screen_handle_event(...)    sc_screen_handle_event_hijack(__VA_ARGS__)
 
 #include "screen.c"
 
@@ -28,6 +29,7 @@ void SDL_RenderPresent_hijack(SDL_Renderer * renderer);
 #undef SDL_UpdateYUVTexture
 #undef SDL_RenderPresent
 #undef sc_video_buffer_consume
+#undef sc_screen_handle_event
 
 struct sc_screen *
 sc_screen_current_screen(struct sc_screen *screen) {
@@ -90,4 +92,38 @@ sc_video_buffer_consume_hijack(struct sc_video_buffer *vb, AVFrame *dst) {
     
     // Handle hardware frame render
     if (ScrcpyEnableHardwareDecoding()) ScrcpyHandleFrame(dst);
+}
+
+void
+sc_screen_handle_event(struct sc_screen *screen, SDL_Event *event) {
+    // Handle Clipboard Event to Sync Clipboard to Remote
+    if (event->type == SDL_CLIPBOARDUPDATE) {
+        char *text = SDL_GetClipboardText();
+        if (!text) {
+            LOGW("Could not get clipboard text: %s", SDL_GetError());
+            return;
+        }
+
+        char *text_dup = strdup(text);
+        SDL_free(text);
+        if (!text_dup) {
+            LOGW("Could not strdup input text");
+            return;
+        }
+
+        struct sc_control_msg msg;
+        msg.type = SC_CONTROL_MSG_TYPE_SET_CLIPBOARD;
+        msg.set_clipboard.sequence = SC_SEQUENCE_INVALID;
+        msg.set_clipboard.text = text_dup;
+        msg.set_clipboard.paste = false;
+
+        if (!sc_controller_push_msg(screen->im.controller, &msg)) {
+            free(text_dup);
+            LOGW("Could not request 'set device clipboard'");
+            return;
+        }
+        return;
+    }
+    
+    sc_screen_handle_event_hijack(screen, event);
 }
