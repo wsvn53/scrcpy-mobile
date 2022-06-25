@@ -62,6 +62,13 @@
 
 -(void)setupViews {
     self.title = @"Scrcpy Remote VNC Client";
+    if (@available(iOS 13.0, *)) {
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        [appearance configureWithOpaqueBackground];
+        appearance.backgroundColor = [UIColor systemGray6Color];
+        self.navigationController.navigationBar.standardAppearance = appearance;
+        self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
+    }
     self.view.backgroundColor = UIColor.whiteColor;
     
     __weak typeof(self) _self = self;
@@ -73,7 +80,7 @@
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"vnc-host";
-                view.placeholder = @"VNC Host Address";
+                view.placeholder = @"VNC Host or ADB Host";
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 if (@available(iOS 13.0, *)) {
@@ -88,7 +95,7 @@
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"vnc-port";
-                view.placeholder = @"VNC Port";
+                view.placeholder = @"VNC Port or ADB Port";
                 if (@available(iOS 13.0, *)) {
                     view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 }
@@ -144,12 +151,13 @@
             .cornerRadius(5.f).text(@"Connect")
             .click(self, @selector(startVNCBrowser))
             .size(CGSizeMake(180, 40)),
-        CVCreate.UILabel.text(@"Scrcpy Remote Currently Only Support VNC Port Over WebSocket.")
+        CVCreate.UILabel.text(@"Scrcpy Remote currently only support VNC port over WebSocket. You can setup a websocket port by webcoskify https://github.com/novnc/websockify")
+            .click(self, @selector(openWebsockify))
             .textColor(UIColor.grayColor)
             .fontSize(15.f)
             .textAlignment(NSTextAlignmentCenter)
             .customView(^(UILabel *view){
-                view.numberOfLines = 2;
+                view.numberOfLines = 5;
             }),
         CVCreate.UIView,
     ]).axis(UILayoutConstraintAxisVertical)
@@ -199,20 +207,34 @@
     [self.viewOnly updateOptionValue];
     [self.fullScreen updateOptionValue];
     
-    VNCBrowserViewController *browserController = [[VNCBrowserViewController alloc] initWithNibName:nil bundle:nil];
-    NSURLComponents *vncComps = [NSURLComponents componentsWithString:@"http://127.0.0.1:25900/vnc.html"];
-    vncComps.queryItems = [NSArray array];
+    // Auto check HOST and PORT to switch adb mode
+    if ([self.vncHost.text isEqualToString:@"adb"] ||
+        [self.vncPort.text isEqualToString:@"5555"]) {
+        __weak typeof(self) weakSelf = self;
+        [self switchADBMode:^{
+            [weakSelf finalStartVNCBrowser];
+        }];
+        return;
+    }
     
+    // Final
+    [self finalStartVNCBrowser];
+}
+
+-(void)finalStartVNCBrowser {
     if (self.vncHost.text.length == 0) {
         [self showAlert:@"VNC Host is Required"];
         return;
     }
-    vncComps.queryItems = [vncComps.queryItems arrayByAddingObject:[NSURLQueryItem queryItemWithName:@"host" value:self.vncHost.text]];
     
     if (self.vncPort.text.length == 0) {
         [self showAlert:@"VNC Port is Required"];
         return;
     }
+    
+    NSURLComponents *vncComps = [NSURLComponents componentsWithString:@"http://127.0.0.1:25900/vnc.html"];
+    vncComps.queryItems = [NSArray array];
+    vncComps.queryItems = [vncComps.queryItems arrayByAddingObject:[NSURLQueryItem queryItemWithName:@"host" value:self.vncHost.text]];
     vncComps.queryItems = [vncComps.queryItems arrayByAddingObject:[NSURLQueryItem queryItemWithName:@"port" value:self.vncPort.text]];
     
     if (self.vncPassword.text.length > 0) {
@@ -227,10 +249,17 @@
         vncComps.queryItems = [vncComps.queryItems arrayByAddingObject:[NSURLQueryItem queryItemWithName:@"view_only" value:@"1"]];
     }
     
+    VNCBrowserViewController *browserController = [[VNCBrowserViewController alloc] initWithNibName:nil bundle:nil];
     browserController.showsFullscreen = self.fullScreen.on;
     browserController.vncURL = [vncComps URL].absoluteString;
     browserController.title = [NSString stringWithFormat:@"Remote(%@)", self.vncHost.text];
     [self.navigationController pushViewController:browserController animated:YES];
+}
+
+-(void)openWebsockify {
+    [UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://github.com/novnc/websockify"]
+                                     options:@{}
+                           completionHandler:nil];
 }
 
 -(void)keyboardDidShow:(NSNotification *)notification {
@@ -259,6 +288,20 @@
     [self.vncHost endEditing:YES];
     [self.vncPort endEditing:YES];
     [self.vncPassword endEditing:YES];
+}
+
+-(void)switchADBMode:(void(^)(void))continueCompletion {
+    UIAlertController *switchController = [UIAlertController alertControllerWithTitle:@"Switch ADB Mode" message:@"Switching to ADB Mode?" preferredStyle:UIAlertControllerStyleAlert];
+    [switchController addAction:[UIAlertAction actionWithTitle:@"Yes, Switch ADB Mode" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        // Switch to ADB mode
+        NSURL *adbURL = [NSURL URLWithString:@"scrcpy2://adb"];
+        [UIApplication.sharedApplication openURL:adbURL options:@{} completionHandler:nil];
+    }]];
+    [switchController addAction:[UIAlertAction actionWithTitle:@"No, Continue VNC Mode" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
+        continueCompletion();
+    }]];
+    
+    [self presentViewController:switchController animated:YES completion:nil];
 }
 
 #pragma mark - UITextFieldDelegate

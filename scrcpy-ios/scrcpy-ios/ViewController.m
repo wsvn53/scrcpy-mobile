@@ -75,6 +75,14 @@
     self.title = @"Scrcpy Remote";
     self.view.backgroundColor = UIColor.whiteColor;
     
+    if (@available(iOS 13.0, *)) {
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        [appearance configureWithOpaqueBackground];
+        appearance.backgroundColor = [UIColor systemGray6Color];
+        self.navigationController.navigationBar.standardAppearance = appearance;
+        self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
+    }
+    
     __weak typeof(self) _self = self;
     CVCreate.UIStackView(@[
         CVCreate.UIView.size(CGSizeMake(0, 5)),
@@ -207,6 +215,13 @@
         CVCreate.UILabel.fontSize(13.f).textColor(UIColor.grayColor)
             .text([NSString stringWithFormat:@"Based on scrcpy v%s", SCRCPY_VERSION])
             .textAlignment(NSTextAlignmentCenter),
+        CVCreate.UILabel.fontSize(13.f).textColor(UIColor.grayColor)
+            .text(@"For more help, please visit\nhttps://github.com/wsvn53/scrcpy-mobile")
+            .textAlignment(NSTextAlignmentCenter)
+            .click(self, @selector(openScrcpyMobile))
+            .customView(^(UILabel *view){
+                view.numberOfLines = 2;
+            }),
         CVCreate.UIView,
     ]).axis(UILayoutConstraintAxisVertical).spacing(20.f)
     .addToView(self.view)
@@ -288,6 +303,19 @@
 -(void)start {
     [self stopEditing];
     
+    if ([self.adbHost.text isEqualToString:@"vnc"] ||
+        [self.adbPort.text isEqualToString:@"5900"]) {
+        __weak typeof(self) weakSelf = self;
+        [self switchVNCMode:^{
+            [weakSelf finalStart];
+        }];
+        return;
+    }
+    
+    [self finalStart];
+}
+
+-(void)finalStart {
     if (self.adbHost.text.length == 0) {
         [self showAlert:@"ADB Host is required"];
         return;
@@ -387,6 +415,26 @@
 -(void)keyboardWillHide:(NSNotification *)notification {
     UIScrollView *rootView = (UIScrollView *)self.view;
     [rootView scrollRectToVisible:(CGRect){0, 0, 1, 1} animated:YES];
+}
+
+-(void)openScrcpyMobile {
+    [UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://github.com/wsvn53/scrcpy-mobile"]
+                                     options:@{}
+                           completionHandler:nil];
+}
+
+-(void)switchVNCMode:(void(^)(void))continueCompletion {
+    UIAlertController *switchController = [UIAlertController alertControllerWithTitle:@"Switch Mode" message:@"Switching to VNC Mode?" preferredStyle:UIAlertControllerStyleAlert];
+    [switchController addAction:[UIAlertAction actionWithTitle:@"Yes, Switch VNC Mode" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        // Switch to VNC mode
+        NSURL *adbURL = [NSURL URLWithString:@"scrcpy2://vnc"];
+        [UIApplication.sharedApplication openURL:adbURL options:@{} completionHandler:nil];
+    }]];
+    [switchController addAction:[UIAlertAction actionWithTitle:@"No, Continue ADB Mode" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
+        continueCompletion();
+    }]];
+    
+    [self presentViewController:switchController animated:YES completion:nil];
 }
 
 #pragma mark - UITextFieldDelegate

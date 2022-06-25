@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define ScrcpyModeVNC                  @"vnc"
 #define ScrcpyModeADB                  @"adb"
 
+void ScrcpyReloadViewController(UIWindow *window);
+
 @interface SDLUIKitDelegate : NSObject<UIApplicationDelegate>
 @end
 

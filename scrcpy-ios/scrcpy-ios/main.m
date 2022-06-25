@@ -19,7 +19,13 @@ int main(int argc, char * argv[]) {
     
     static UIWindow *window = nil;
     window = window ?: [[UIWindow alloc] init];
+    ScrcpyReloadViewController(window);
+    [window makeKeyAndVisible];
     
+    return 0;
+}
+
+void ScrcpyReloadViewController(UIWindow *window) {
     UIViewController *mainController = nil;
     NSString *mode = [KFKeychain loadObjectForKey:ScrcpySwitchModeKey];
     if ([mode isEqualToString:@"adb"]) {
@@ -27,9 +33,5 @@ int main(int argc, char * argv[]) {
     } else if (mode.length == 0 || [mode isEqualToString:@"vnc"]) {
         mainController = [[VNCViewController alloc] initWithNibName:nil bundle:nil];
     }
-    
     window.rootViewController = [[UINavigationController alloc] initWithRootViewController:mainController];
-    [window makeKeyAndVisible];
-    
-    return 0;
 }

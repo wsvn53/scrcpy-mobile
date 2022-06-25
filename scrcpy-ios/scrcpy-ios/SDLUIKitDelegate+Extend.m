@@ -54,15 +54,20 @@
     [KFKeychain saveObject:mode forKey:ScrcpySwitchModeKey];
     NSLog(@"-> Scrcpy switched to %@ mode", mode);
     
-    NSString *message = [NSString stringWithFormat:@"Scrcpy is switched to %@ mode. Please restart app again.", mode];
+    UIWindow *keyWindow = nil;
+    for (UIWindow *window in UIApplication.sharedApplication.windows) {
+        keyWindow = window.isKeyWindow ? window : keyWindow;
+    }
+    
+    NSString *message = [NSString stringWithFormat:@"Scrcpy Remote is Switching to %@ Mode!", [mode uppercaseString]];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Scrcpy"
                                                                    message:message
                                                             preferredStyle:(UIAlertControllerStyleAlert)];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleDefault) handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        ScrcpyReloadViewController(keyWindow);
+    }]];
     
-    for (UIWindow *window in UIApplication.sharedApplication.windows) {
-        if (window.isKeyWindow) [window.rootViewController presentViewController:alert animated:YES completion:nil];
-    }
+    [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
 }
 
 @end
