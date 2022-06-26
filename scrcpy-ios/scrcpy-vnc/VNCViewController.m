@@ -161,7 +161,7 @@
             }),
         CVCreate.UIView,
     ]).axis(UILayoutConstraintAxisVertical)
-    .spacing(20.f)
+    .spacing(15.f)
     .distribution(UIStackViewDistributionFill)
     .addToView(self.view)
     .widthAnchor(self.view.widthAnchor, -30)

@@ -40,7 +40,7 @@
 
 CFRunLoopRunResult CFRunLoopRunInMode_fix(CFRunLoopMode mode, CFTimeInterval seconds, Boolean returnAfterSourceHandled) {
     // Upper runloop duration to reduce CPU usage
-    return CFRunLoopRunInMode(mode, 0.0025, returnAfterSourceHandled);
+    return CFRunLoopRunInMode(mode, 0.0018, returnAfterSourceHandled);
 }
 
 void adb_connect_status_updated(const char *serial, const char *status) {
@@ -169,23 +169,7 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     
     if (self.status == ScrcpyStatusConnected) {
         NSLog(@"-> Send command to trigger video restart I frame");
-        SDL_Keysym keySym;
-        keySym.scancode = SDL_SCANCODE_END;
-        keySym.sym = SDLK_END;
-        keySym.mod = 0;
-        keySym.unused = 1;
-        
-        SDL_KeyboardEvent keyEvent;
-        keyEvent.type = SDL_KEYUP;
-        keyEvent.state = SDL_PRESSED;
-        keyEvent.repeat = '\0';
-        keyEvent.keysym = keySym;
-        
-        SDL_Event event;
-        event.type = keyEvent.type;
-        event.key = keyEvent;
-        
-        SDL_PushEvent(&event);
+        [self sendKeycodeEvent:SDL_SCANCODE_END keycode:SDLK_END keymod:0];
         
         NSLog(@"-> Syncing clipboard");
         SDL_Event clip_event;
@@ -445,7 +429,7 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 #pragma mark - Scrcpy Options
 
 -(NSArray *)defaultScrcpyOptions {
-    return @[ @"--verbosity=verbose", @"--fullscreen", @"--display-buffer=32",
+    return @[ @"--verbosity=verbose", @"--shortcut-mod=lctrl+rctrl", @"--fullscreen", @"--display-buffer=32",
               @"--bit-rate=4M", @"--max-fps=60", @"--print-fps", ];
 }
 
@@ -478,6 +462,59 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     [scrcpyOptions addObject:newOption];
     
     return scrcpyOptions;
+}
+
+#pragma mark - Send Keys
+
+-(void)sendKeycodeEvent:(SDL_Scancode)scancode keycode:(SDL_Keycode)keycode keymod:(SDL_Keymod)keymod {
+    SDL_Keysym keySym;
+    keySym.scancode = scancode;
+    keySym.sym = keycode;
+    keySym.mod = keymod;
+    keySym.unused = 1;
+    
+    {
+        SDL_KeyboardEvent keyEvent;
+        keyEvent.type = SDL_KEYDOWN;
+        keyEvent.state = SDL_PRESSED;
+        keyEvent.repeat = '\0';
+        keyEvent.keysym = keySym;
+        
+        SDL_Event event;
+        event.type = keyEvent.type;
+        event.key = keyEvent;
+        
+        SDL_PushEvent(&event);
+    }
+    
+    {
+        SDL_KeyboardEvent keyEvent;
+        keyEvent.type = SDL_KEYUP;
+        keyEvent.state = SDL_PRESSED;
+        keyEvent.repeat = '\0';
+        keyEvent.keysym = keySym;
+        
+        SDL_Event event;
+        event.type = keyEvent.type;
+        event.key = keyEvent;
+        
+        SDL_PushEvent(&event);
+    }
+}
+
+-(void)sendHomeButton {
+    NSLog(@"-> Send Home Button");
+    [self sendKeycodeEvent:SDL_SCANCODE_H keycode:SDLK_h keymod:KMOD_CTRL];
+}
+
+-(void)sendBackButton {
+    NSLog(@"-> Send Back Button");
+    [self sendKeycodeEvent:SDL_SCANCODE_B keycode:SDLK_b keymod:KMOD_CTRL];
+}
+
+-(void)sendMenuButton {
+    NSLog(@"-> Send Menu Button");
+    [self sendKeycodeEvent:SDL_SCANCODE_M keycode:SDLK_m keymod:KMOD_CTRL];
 }
 
 @end

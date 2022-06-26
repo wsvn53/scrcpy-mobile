@@ -58,6 +58,15 @@ NS_ASSUME_NONNULL_BEGIN
 // Set scrcpy options
 -(NSArray *)setScrcpyOption:(NSArray *)options name:(NSString *)name value:(NSString *)value;
 
+// Send Home Button
+-(void)sendHomeButton;
+
+// Send Back Button
+-(void)sendBackButton;
+
+// Send Menu Button
+-(void)sendMenuButton;
+
 @end
 
 NS_ASSUME_NONNULL_END

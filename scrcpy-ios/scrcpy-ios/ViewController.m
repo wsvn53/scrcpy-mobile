@@ -213,17 +213,17 @@
             .cornerRadius(6)
             .click(self, @selector(copyURLScheme)),
         CVCreate.UILabel.fontSize(13.f).textColor(UIColor.grayColor)
-            .text([NSString stringWithFormat:@"Based on scrcpy v%s", SCRCPY_VERSION])
-            .textAlignment(NSTextAlignmentCenter),
-        CVCreate.UILabel.fontSize(13.f).textColor(UIColor.grayColor)
             .text(@"For more help, please visit\nhttps://github.com/wsvn53/scrcpy-mobile")
             .textAlignment(NSTextAlignmentCenter)
             .click(self, @selector(openScrcpyMobile))
             .customView(^(UILabel *view){
                 view.numberOfLines = 2;
             }),
+        CVCreate.UILabel.fontSize(13.f).textColor(UIColor.grayColor)
+            .text([NSString stringWithFormat:@"Based on scrcpy v%s", SCRCPY_VERSION])
+            .textAlignment(NSTextAlignmentCenter),
         CVCreate.UIView,
-    ]).axis(UILayoutConstraintAxisVertical).spacing(20.f)
+    ]).axis(UILayoutConstraintAxisVertical).spacing(15.f)
     .addToView(self.view)
     .centerXAnchor(self.view.centerXAnchor, 0)
     .topAnchor(self.view.topAnchor, 0)

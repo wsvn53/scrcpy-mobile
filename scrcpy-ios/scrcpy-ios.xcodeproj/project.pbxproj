@@ -46,8 +46,6 @@
 		AA2F7330285A36310061552B /* vendor in Resources */ = {isa = PBXBuildFile; fileRef = AA2F732D285A36310061552B /* vendor */; };
 		AA2F7331285A36310061552B /* app in Resources */ = {isa = PBXBuildFile; fileRef = AA2F732E285A36310061552B /* app */; };
 		AA2F7337285B82000061552B /* HTTPFileResponse+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F7336285B82000061552B /* HTTPFileResponse+Extend.m */; };
-		AA2F734E285CC19D0061552B /* VNCWebSocketify.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F734D285CC19D0061552B /* VNCWebSocketify.m */; };
-		AA2F7351285CCF0B0061552B /* VNCUpstreamSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F7350285CCF0B0061552B /* VNCUpstreamSocket.m */; };
 		AA6F711C284E6DDD00A09442 /* scrcpy-server in Resources */ = {isa = PBXBuildFile; fileRef = AA6F711B284E6DDD00A09442 /* scrcpy-server */; };
 		AAF222162848B03F00B732AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222152848B03F00B732AE /* ViewController.m */; };
 		AAF222192848B03F00B732AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF222172848B03F00B732AE /* Main.storyboard */; };
@@ -136,10 +134,6 @@
 		AA2F732E285A36310061552B /* app */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = app; path = noVNC/app; sourceTree = SOURCE_ROOT; };
 		AA2F7335285B82000061552B /* HTTPFileResponse+Extend.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HTTPFileResponse+Extend.h"; sourceTree = "<group>"; };
 		AA2F7336285B82000061552B /* HTTPFileResponse+Extend.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HTTPFileResponse+Extend.m"; sourceTree = "<group>"; };
-		AA2F734C285CC19D0061552B /* VNCWebSocketify.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VNCWebSocketify.h; sourceTree = "<group>"; };
-		AA2F734D285CC19D0061552B /* VNCWebSocketify.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VNCWebSocketify.m; sourceTree = "<group>"; };
-		AA2F734F285CCF0B0061552B /* VNCUpstreamSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VNCUpstreamSocket.h; sourceTree = "<group>"; };
-		AA2F7350285CCF0B0061552B /* VNCUpstreamSocket.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VNCUpstreamSocket.m; sourceTree = "<group>"; };
 		AA6F711B284E6DDD00A09442 /* scrcpy-server */ = {isa = PBXFileReference; lastKnownFileType = file; name = "scrcpy-server"; path = "../../porting/server/scrcpy-server"; sourceTree = "<group>"; };
 		AAF2220B2848B03F00B732AE /* scrcpy-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scrcpy-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF222142848B03F00B732AE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -180,10 +174,6 @@
 				AA2F7336285B82000061552B /* HTTPFileResponse+Extend.m */,
 				AA2F71B7285A2FD70061552B /* VNCBrowserViewController.h */,
 				AA2F71B8285A2FD70061552B /* VNCBrowserViewController.m */,
-				AA2F734C285CC19D0061552B /* VNCWebSocketify.h */,
-				AA2F734D285CC19D0061552B /* VNCWebSocketify.m */,
-				AA2F734F285CCF0B0061552B /* VNCUpstreamSocket.h */,
-				AA2F7350285CCF0B0061552B /* VNCUpstreamSocket.m */,
 			);
 			path = "scrcpy-vnc";
 			sourceTree = "<group>";
@@ -441,7 +431,6 @@
 			files = (
 				AA2F7188285A21820061552B /* MultipartFormDataParser.m in Sources */,
 				AA2F71AC285A225A0061552B /* DispatchQueueLogFormatter.m in Sources */,
-				AA2F734E285CC19D0061552B /* VNCWebSocketify.m in Sources */,
 				AAF222162848B03F00B732AE /* ViewController.m in Sources */,
 				AA2F7185285A21820061552B /* HTTPConnection.m in Sources */,
 				AA2F718D285A21820061552B /* DDRange.m in Sources */,
@@ -470,7 +459,6 @@
 				AA18E3B52854BCE300A8B07D /* SDLUIKitDelegate+Extend.m in Sources */,
 				AA2F718A285A21820061552B /* HTTPAuthenticationRequest.m in Sources */,
 				AAF2225C284B60CD00B732AE /* CVCreate.m in Sources */,
-				AA2F7351285CCF0B0061552B /* VNCUpstreamSocket.m in Sources */,
 				AA2F71B6285A2CC10061552B /* VNCHTTPConnection.m in Sources */,
 				AA2F71AE285A225A0061552B /* DDLog.m in Sources */,
 				AA2F71B9285A2FD70061552B /* VNCBrowserViewController.m in Sources */,
