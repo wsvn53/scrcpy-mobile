@@ -512,9 +512,9 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     [self sendKeycodeEvent:SDL_SCANCODE_B keycode:SDLK_b keymod:KMOD_CTRL];
 }
 
--(void)sendMenuButton {
-    NSLog(@"-> Send Menu Button");
-    [self sendKeycodeEvent:SDL_SCANCODE_M keycode:SDLK_m keymod:KMOD_CTRL];
+-(void)sendSwitchAppButton {
+    NSLog(@"-> Send Switch App Button");
+    [self sendKeycodeEvent:SDL_SCANCODE_S keycode:SDLK_s keymod:KMOD_CTRL];
 }
 
 @end

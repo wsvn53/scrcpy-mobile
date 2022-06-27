@@ -64,8 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Send Back Button
 -(void)sendBackButton;
 
-// Send Menu Button
--(void)sendMenuButton;
+// Send SwitchApp Button
+-(void)sendSwitchAppButton;
 
 @end
 
