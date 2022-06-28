@@ -16,16 +16,21 @@
 // Checked that SDL_uikitviewcontroller not implemented viewDidLoad
 -(void)viewDidLoad {
     [super viewDidLoad];
-    
-    __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [weakSelf addMenubarTriggerZone];
-    });
+    [self addMenubarTriggerZone];
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 -(void)addMenubarTriggerZone {
+    if (self.viewLoaded == NO) {
+        [self performSelector:@selector(addMenubarTriggerZone) withObject:nil afterDelay:0.5];
+        return;
+    }
+    
     CVCreate.UIView.addToView(self.view)
-        .topAnchor(self.view.bottomAnchor, -40)
+        .topAnchor(self.view.bottomAnchor, -50)
         .bottomAnchor(self.view.bottomAnchor, 0)
         .leftAnchor(self.view.leftAnchor, 0)
         .rightAnchor(self.view.rightAnchor, 0)
@@ -48,29 +53,6 @@
     MenubarViewController *menuController = [[MenubarViewController alloc] initWithNibName:nil bundle:nil];
     menuController.modalPresentationStyle = UIModalPresentationCustom;
     [self presentViewController:menuController animated:YES completion:nil];
-    
-//    [menuController addAction:[UIAlertAction actionWithTitle:@"Back Button" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-//        [ScrcpySharedClient sendBackButton];
-//    }]];
-//    [menuController addAction:[UIAlertAction actionWithTitle:@"Home Button" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-//        [ScrcpySharedClient sendHomeButton];
-//    }]];
-//    [menuController addAction:[UIAlertAction actionWithTitle:@"Switch App Button" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-//        [ScrcpySharedClient sendSwitchAppButton];
-//    }]];
-//    [menuController addAction:[UIAlertAction actionWithTitle:@"Disconnect" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-//        [ScrcpySharedClient stopScrcpy];
-//    }]];
-//    [menuController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:nil]];
-//    [self presentViewController:menuController animated:YES completion:nil];
-}
-
--(void)dismissMenu:(UITapGestureRecognizer *)gesture {
-    [UIView animateWithDuration:0.3 animations:^{
-        gesture.view.alpha = 0;
-    } completion:^(BOOL finished) {
-        [gesture.view removeFromSuperview];
-    }];
 }
 
 - (void)viewWillLayoutSubviews {

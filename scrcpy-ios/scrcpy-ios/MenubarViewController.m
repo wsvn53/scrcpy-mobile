@@ -28,70 +28,100 @@
     CVCreate.UIStackView(@[
         CVCreate.UIView,
         CVCreate.UIStackView(@[
-            CVCreate.UIView.size(CGSizeMake(0, 10)),
+            CVCreate.UIView.size(CGSizeMake(70, 10)),
             CVCreate.UIImageView([UIImage imageNamed:@"BackIcon"])
                 .customView(^(UIImageView *view){
                     view.contentMode = UIViewContentModeCenter;
                 }),
-            CVCreate.UILabel.text(@"Back").fontSize(15)
+            CVCreate.UILabel.text(@"Back").fontSize(13)
                 .textColor(UIColor.whiteColor)
                 .textAlignment(NSTextAlignmentCenter),
             CVCreate.UIView,
         ]).axis(UILayoutConstraintAxisVertical)
-            .click(ScrcpySharedClient, @selector(sendBackButton)),
+            .click(self, @selector(sendBackButton:)),
         CVCreate.UIView,
         CVCreate.UIStackView(@[
-            CVCreate.UIView.size(CGSizeMake(0, 10)),
+            CVCreate.UIView.size(CGSizeMake(70, 10)),
             CVCreate.UIImageView([UIImage imageNamed:@"HomeIcon"])
                 .customView(^(UIImageView *view){
                     view.contentMode = UIViewContentModeCenter;
                 }),
-            CVCreate.UILabel.text(@"Home").fontSize(15)
+            CVCreate.UILabel.text(@"Home").fontSize(13)
                 .textColor(UIColor.whiteColor)
                 .textAlignment(NSTextAlignmentCenter),
             CVCreate.UIView,
         ]).axis(UILayoutConstraintAxisVertical)
-            .click(ScrcpySharedClient, @selector(sendHomeButton)),
+            .click(self, @selector(sendHomeButton:)),
         CVCreate.UIView,
         CVCreate.UIStackView(@[
-            CVCreate.UIView.size(CGSizeMake(0, 10)),
+            CVCreate.UIView.size(CGSizeMake(70, 10)),
             CVCreate.UIImageView([UIImage imageNamed:@"SwitchAppIcon"])
                 .customView(^(UIImageView *view){
                     view.contentMode = UIViewContentModeCenter;
                 }),
-            CVCreate.UILabel.text(@"Switch").fontSize(14)
+            CVCreate.UILabel.text(@"Switch").fontSize(13)
                 .textColor(UIColor.whiteColor)
                 .textAlignment(NSTextAlignmentCenter),
             CVCreate.UIView,
         ]).axis(UILayoutConstraintAxisVertical)
-            .click(ScrcpySharedClient, @selector(sendSwitchAppButton)),
+            .click(self, @selector(sendSwitchAppButton:)),
         CVCreate.UIView,
         CVCreate.UIStackView(@[
-            CVCreate.UIView.size(CGSizeMake(0, 10)),
+            CVCreate.UIView.size(CGSizeMake(70, 10)),
             CVCreate.UIImageView([UIImage imageNamed:@"DisconnectIcon"])
                 .customView(^(UIImageView *view){
                     view.contentMode = UIViewContentModeCenter;
                 }),
-            CVCreate.UILabel.text(@"Stop").fontSize(15)
+            CVCreate.UILabel.text(@"Stop").fontSize(13)
                 .textColor(UIColor.whiteColor)
                 .textAlignment(NSTextAlignmentCenter),
             CVCreate.UIView,
         ]).axis(UILayoutConstraintAxisVertical)
-            .click(ScrcpySharedClient, @selector(stopScrcpy)),
+            .click(self, @selector(sendDisconnectButton:)),
         CVCreate.UIView,
     ]).axis(UILayoutConstraintAxisHorizontal)
-    .distribution(UIStackViewDistributionFillEqually)
-    .backgroundColor([UIColor colorWithWhite:0 alpha:0.9])
+    .distribution(UIStackViewDistributionEqualCentering)
+    .backgroundColor([UIColor colorWithWhite:0 alpha:0.8])
     .size(CGSizeMake(0, 80))
     .addToView(self.view)
+    .click(self, @selector(doNothing))
     .centerXAnchor(self.view.centerXAnchor, 0)
     .widthAnchor(self.view.widthAnchor, 0)
     .bottomAnchor(self.view.bottomAnchor, 0);
 }
 
+-(void)doNothing {}
+
 -(void)dismiss:(UITapGestureRecognizer *)gesture {
-    if (gesture.view != self.view) { return; }
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)clickAnimated:(UITapGestureRecognizer *)tap {
+    [UIView animateWithDuration:0.3 delay:0 options:0 animations:^{
+        tap.view.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.5];
+    } completion:^(BOOL finished) {
+        tap.view.backgroundColor = UIColor.clearColor;
+    }];
+}
+
+-(void)sendBackButton:(UITapGestureRecognizer *)tap {
+    [self clickAnimated:tap];
+    [ScrcpySharedClient sendBackButton];
+}
+
+-(void)sendHomeButton:(UITapGestureRecognizer *)tap {
+    [self clickAnimated:tap];
+    [ScrcpySharedClient sendHomeButton];
+}
+
+-(void)sendSwitchAppButton:(UITapGestureRecognizer *)tap {
+    [self clickAnimated:tap];
+    [ScrcpySharedClient sendSwitchAppButton];
+}
+
+-(void)sendDisconnectButton:(UITapGestureRecognizer *)tap {
+    [self clickAnimated:tap];
+    [ScrcpySharedClient stopScrcpy];
 }
 
 @end
