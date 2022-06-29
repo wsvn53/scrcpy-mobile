@@ -9,11 +9,57 @@
 #import "CVCreate.h"
 #import "ScrcpyClient.h"
 
+@interface MenubarBackgroundView : UIView
+// Proxy touches to target SDL view
+@property (nonatomic, weak)  UIView *targetSDLView;
+
+@end
+
+@implementation MenubarBackgroundView
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    for (UITouch *touch in touches) {
+        if (touch.view != self) return;
+    }
+    [self.targetSDLView touchesBegan:touches withEvent:event];
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    for (UITouch *touch in touches) {
+        if (touch.view != self) return;
+    }
+    [self.targetSDLView touchesEnded:touches withEvent:event];
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    for (UITouch *touch in touches) {
+        if (touch.view != self) return;
+    }
+    [self.targetSDLView touchesCancelled:touches withEvent:event];
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    for (UITouch *touch in touches) {
+        if (touch.view != self) return;
+    }
+    [self.targetSDLView touchesMoved:touches withEvent:event];
+}
+
+@end
+
 @interface MenubarViewController ()
 
 @end
 
 @implementation MenubarViewController
+
+-(void)loadView {
+    self.view = [[MenubarBackgroundView alloc] initWithFrame:(CGRectZero)];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,6 +68,7 @@
 
 -(void)setupViews {
     self.view.backgroundColor = [UIColor clearColor];
+    ((MenubarBackgroundView *)self.view).targetSDLView = self.presentingViewController.view;
     
     CVCreate.withView(self.view).click(self, @selector(dismiss:));
     
@@ -81,7 +128,7 @@
         CVCreate.UIView,
     ]).axis(UILayoutConstraintAxisHorizontal)
     .distribution(UIStackViewDistributionEqualCentering)
-    .backgroundColor([UIColor colorWithWhite:0 alpha:0.8])
+    .backgroundColor([UIColor colorWithWhite:0 alpha:0.85])
     .size(CGSizeMake(0, 80))
     .addToView(self.view)
     .click(self, @selector(doNothing))
