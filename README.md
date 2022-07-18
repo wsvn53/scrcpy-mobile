@@ -13,6 +13,7 @@ Ported [scrcpy](https://github.com/Genymobile/scrcpy) for mobile platforms, to r
 * Optimized gesture experiences for unstable network from mobile devices;
 * Supports start scrcpy from URL scheme;
 * With Android navigation buttons: Back, Home, Switch App; 
+* Sync clipboard contents between iPhone and remote Android devices;
 
 ## Installation
 

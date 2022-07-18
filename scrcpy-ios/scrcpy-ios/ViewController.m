@@ -231,47 +231,47 @@
 }
 
 -(void)setupClient {
-    __weak typeof(self) _self = self;
+    __weak typeof(self) weakSelf = self;
     
     ScrcpySharedClient.onADBConnecting = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_self showHUDWith:@"ADB\nConnecting"];
+            [weakSelf showHUDWith:@"ADB\nConnecting"];
         });
     };
     
     ScrcpySharedClient.onADBConnected = ^(NSString *serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_self showHUDWith:@"ADB\nConnected"];
+            [weakSelf showHUDWith:@"ADB\nConnected"];
         });
     };
     
     ScrcpySharedClient.onADBConnectFailed = ^(NSString * _Nonnull serial, NSString * _Nonnull message) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:_self.view animated:YES];
-            [_self showAlert:[NSString stringWithFormat:@"ADB Connect Failed:\n%@", message]];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [weakSelf showAlert:[NSString stringWithFormat:@"ADB Connect Failed:\n%@", message]];
         });
     };
     
     ScrcpySharedClient.onADBUnauthorized = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSString *message = [NSString stringWithFormat:@"Device [%@] connected, but unahtorized. Please accept authorization on your device.", serial];
-            [_self performSelectorOnMainThread:@selector(showAlert:) withObject:message waitUntilDone:NO];
+            [weakSelf performSelectorOnMainThread:@selector(showAlert:) withObject:message waitUntilDone:NO];
         });
     };
     
     ScrcpySharedClient.onScrcpyConnectFailed = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:_self.view animated:YES];
-            [_self showAlert:@"Start Scrcpy Failed"];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [weakSelf showAlert:@"Start Scrcpy Failed"];
         });
     };
     
     ScrcpySharedClient.onScrcpyConnected = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_self showHUDWith:@"Scrcpy\nConnected"];
+            [weakSelf showHUDWith:@"Scrcpy\nConnected"];
         });
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:_self.view animated:YES];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         });
     };
 }

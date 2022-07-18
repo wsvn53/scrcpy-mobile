@@ -40,7 +40,7 @@
 
 CFRunLoopRunResult CFRunLoopRunInMode_fix(CFRunLoopMode mode, CFTimeInterval seconds, Boolean returnAfterSourceHandled) {
     // Upper runloop duration to reduce CPU usage
-    return CFRunLoopRunInMode(mode, 0.002, returnAfterSourceHandled);
+    return CFRunLoopRunInMode(mode, 0.001, returnAfterSourceHandled);
 }
 
 void adb_connect_status_updated(const char *serial, const char *status) {
@@ -429,7 +429,7 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 #pragma mark - Scrcpy Options
 
 -(NSArray *)defaultScrcpyOptions {
-    return @[ @"--verbosity=verbose", @"--shortcut-mod=lctrl+rctrl", @"--fullscreen", @"--display-buffer=32",
+    return @[ @"--verbosity=info", @"--shortcut-mod=lctrl+rctrl", @"--fullscreen", @"--display-buffer=32",
               @"--bit-rate=4M", @"--max-fps=60", @"--print-fps", ];
 }
 
