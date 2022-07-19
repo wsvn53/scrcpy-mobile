@@ -19,7 +19,7 @@ static NSString *ScrcpyMenubarGuideDidShow = @"ScrcpyMenubarGuideDidShow";
 // Checked that SDL_uikitviewcontroller not implemented viewDidLoad
 -(void)viewDidLoad {
     [super viewDidLoad];
-    [self addMenubarTriggerView];
+    [self performSelector:@selector(addMenubarTriggerView) withObject:nil afterDelay:1.f];
 }
 
 -(void)showMenubarGuide {

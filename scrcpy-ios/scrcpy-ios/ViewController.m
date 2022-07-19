@@ -7,6 +7,7 @@
 
 #import "ViewController.h"
 #import "PairViewController.h"
+#import "LogsViewController.h"
 #import "CVCreate.h"
 #import "ScrcpyClient.h"
 #import "KFKeychain.h"
@@ -14,6 +15,7 @@
 #import "ScrcpyTextField.h"
 #import "ScrcpySwitch.h"
 #import "config.h"
+#import "LogManager.h"
 
 @interface ViewController ()
 
@@ -54,6 +56,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // Enable log redirect
+    [LogManager.sharedManager startHandleLog];
+    
     [self setupViews];
     [self setupEvents];
     [self setupClient];
@@ -418,16 +424,20 @@
     UIAlertController *menuController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
     __weak typeof(self) weakSelf = self;
     [menuController addAction:[UIAlertAction actionWithTitle:@"Pair With Pairing Code" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction *action) {
-        NSLog(@"Pair Device");
+        NSLog(@"Start Pair Device Controller");
         PairViewController *pairController = [[PairViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *pairNav = [[UINavigationController alloc] initWithRootViewController:pairController];
         [weakSelf presentViewController:pairNav animated:YES completion:nil];
+    }]];
+    [menuController addAction:[UIAlertAction actionWithTitle:@"Show Scrcpy Detail Logs" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        LogsViewController *logsController = [[LogsViewController alloc] initWithNibName:nil bundle:nil];
+        UINavigationController *logsrNav = [[UINavigationController alloc] initWithRootViewController:logsController];
+        [weakSelf presentViewController:logsrNav animated:YES completion:nil];
     }]];
     [menuController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
         NSLog(@"Cancel");
     }]];
     [self presentViewController:menuController animated:YES completion:nil];
-
 }
 
 -(void)keyboardDidShow:(NSNotification *)notification {

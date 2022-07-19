@@ -429,7 +429,7 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 #pragma mark - Scrcpy Options
 
 -(NSArray *)defaultScrcpyOptions {
-    return @[ @"--verbosity=info", @"--shortcut-mod=lctrl+rctrl", @"--fullscreen", @"--display-buffer=32",
+    return @[ @"--verbosity=debug", @"--shortcut-mod=lctrl+rctrl", @"--fullscreen", @"--display-buffer=32",
               @"--bit-rate=4M", @"--max-fps=60", @"--print-fps", ];
 }
 

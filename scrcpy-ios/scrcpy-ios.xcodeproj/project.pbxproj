@@ -47,6 +47,8 @@
 		AA2F7337285B82000061552B /* HTTPFileResponse+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F7336285B82000061552B /* HTTPFileResponse+Extend.m */; };
 		AA34259E286A10710005EB46 /* MenubarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA34259D286A10710005EB46 /* MenubarViewController.m */; };
 		AA67A87C2885A3F4006C6612 /* PairViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA67A87B2885A3F4006C6612 /* PairViewController.m */; };
+		AA67A87F2886F646006C6612 /* LogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA67A87E2886F646006C6612 /* LogManager.m */; };
+		AA67A88228870E9C006C6612 /* LogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA67A88128870E9C006C6612 /* LogsViewController.m */; };
 		AA6F711C284E6DDD00A09442 /* scrcpy-server in Resources */ = {isa = PBXBuildFile; fileRef = AA6F711B284E6DDD00A09442 /* scrcpy-server */; };
 		AAF222162848B03F00B732AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222152848B03F00B732AE /* ViewController.m */; };
 		AAF222192848B03F00B732AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF222172848B03F00B732AE /* Main.storyboard */; };
@@ -56,6 +58,9 @@
 		AAF222302848BDE300B732AE /* ScrcpyClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2222F2848BDE300B732AE /* ScrcpyClient.m */; };
 		AAF2225C284B60CD00B732AE /* CVCreate.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2225A284B60CD00B732AE /* CVCreate.m */; };
 /* End PBXBuildFile section */
+/* Begin PBXCopyFilesBuildPhase section */
+		
+/* End PBXCopyFilesBuildPhase section */
 /* Begin PBXFileReference section */
 		AA18E3A7285264BB00A8B07D /* KFKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KFKeychain.h; path = "Keychain-iOS-ObjC/KFKeychain.h"; sourceTree = SOURCE_ROOT; };
 		AA18E3A8285264BB00A8B07D /* KFKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KFKeychain.m; path = "Keychain-iOS-ObjC/KFKeychain.m"; sourceTree = SOURCE_ROOT; };
@@ -138,6 +143,10 @@
 		AA34259D286A10710005EB46 /* MenubarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenubarViewController.m; sourceTree = "<group>"; };
 		AA67A87A2885A3F4006C6612 /* PairViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PairViewController.h; sourceTree = "<group>"; };
 		AA67A87B2885A3F4006C6612 /* PairViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PairViewController.m; sourceTree = "<group>"; };
+		AA67A87D2886F645006C6612 /* LogManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogManager.h; sourceTree = "<group>"; };
+		AA67A87E2886F646006C6612 /* LogManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogManager.m; sourceTree = "<group>"; };
+		AA67A88028870E9C006C6612 /* LogsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogsViewController.h; sourceTree = "<group>"; };
+		AA67A88128870E9C006C6612 /* LogsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogsViewController.m; sourceTree = "<group>"; };
 		AA6F711B284E6DDD00A09442 /* scrcpy-server */ = {isa = PBXFileReference; lastKnownFileType = file; name = "scrcpy-server"; path = "../../porting/server/scrcpy-server"; sourceTree = "<group>"; };
 		AAF2220B2848B03F00B732AE /* scrcpy-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scrcpy-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF222142848B03F00B732AE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -338,6 +347,8 @@
 				AAF222152848B03F00B732AE /* ViewController.m */,
 				AA67A87A2885A3F4006C6612 /* PairViewController.h */,
 				AA67A87B2885A3F4006C6612 /* PairViewController.m */,
+				AA67A88028870E9C006C6612 /* LogsViewController.h */,
+				AA67A88128870E9C006C6612 /* LogsViewController.m */,
 				AA2F70D92855CD550061552B /* ScrcpyTextField.h */,
 				AA2F70DA2855CD550061552B /* ScrcpyTextField.m */,
 				AA2F70DC2858CE710061552B /* ScrcpySwitch.h */,
@@ -350,6 +361,8 @@
 				AA18E3B42854BCE300A8B07D /* SDLUIKitDelegate+Extend.m */,
 				AA34259C286A10710005EB46 /* MenubarViewController.h */,
 				AA34259D286A10710005EB46 /* MenubarViewController.m */,
+				AA67A87D2886F645006C6612 /* LogManager.h */,
+				AA67A87E2886F646006C6612 /* LogManager.m */,
 				AAF222172848B03F00B732AE /* Main.storyboard */,
 				AAF2221A2848B04100B732AE /* Assets.xcassets */,
 				AAF2221C2848B04100B732AE /* LaunchScreen.storyboard */,
@@ -425,15 +438,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		
-		
-		
 /* End PBXResourcesBuildPhase section */
+/* Begin PBXShellScriptBuildPhase section */
+		
+		
+/* End PBXShellScriptBuildPhase section */
 /* Begin PBXSourcesBuildPhase section */
 		AAF222072848B03F00B732AE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA67A87F2886F646006C6612 /* LogManager.m in Sources */,
 				AA2F7188285A21820061552B /* MultipartFormDataParser.m in Sources */,
 				AA2F71AC285A225A0061552B /* DispatchQueueLogFormatter.m in Sources */,
 				AAF222162848B03F00B732AE /* ViewController.m in Sources */,
@@ -461,6 +476,7 @@
 				AA2F718B285A21820061552B /* DDNumber.m in Sources */,
 				AA2F7186285A21820061552B /* WebSocket.m in Sources */,
 				AA2F718E285A21820061552B /* HTTPServer.m in Sources */,
+				AA67A88228870E9C006C6612 /* LogsViewController.m in Sources */,
 				AA2F71B2285A225A0061552B /* GCDAsyncSocket.m in Sources */,
 				AA2F71B1285A225A0061552B /* DDFileLogger.m in Sources */,
 				AA18E3B52854BCE300A8B07D /* SDLUIKitDelegate+Extend.m in Sources */,
@@ -614,9 +630,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "$inherited";
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../scrcpy/app/src",
@@ -650,13 +668,12 @@
 					"$(SRCROOT)/../external/adb-mobile/output",
 					"$(SRCROOT)/../output/iphone",
 				);
-				MARKETING_VERSION = 1.3;
-				OTHER_LDFLAGS = "-ObjC -ladb -lscrcpy -lSDL2 -lavfilter -lavdevice -lavcodec -lavformat -lavutil -lswresample -lswscale -framework AVFoundation -framework VideoToolbox -framework CoreMedia -framework AudioToolbox -framework AVFAudio -framework CoreMotion -framework CoreHaptics -framework GameController -lbz2 -liconv -lz -lc++ -framework UIKit -framework Metal -framework QuartzCore -framework CoreGraphics -framework CoreBluetooth -ObjC  $(inherited) ";
+				MARKETING_VERSION = 1.4;
+				OTHER_LDFLAGS = "-ObjC -ladb -lscrcpy -lSDL2 -lavfilter -lavdevice -lavcodec -lavformat -lavutil -lswresample -lswscale -framework AVFoundation -framework VideoToolbox -framework CoreMedia -framework AudioToolbox -framework AVFAudio -framework CoreMotion -framework CoreHaptics -framework GameController -lbz2 -liconv -lz -lc++ -framework UIKit -framework Metal -framework QuartzCore -framework CoreGraphics -framework CoreBluetooth -ObjC $(inherited)  ";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mobile.scrcpy-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				FRAMEWORK_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -666,7 +683,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -702,7 +719,7 @@
 					"$(SRCROOT)/../external/adb-mobile/output",
 					"$(SRCROOT)/../output/iphone",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-ladb",
