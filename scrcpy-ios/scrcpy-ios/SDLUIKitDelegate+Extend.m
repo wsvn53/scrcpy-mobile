@@ -42,15 +42,15 @@
     NSArray *modeItems = [comps.queryItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.name == %@", ScrcpySwitchModeKey]];
     if (modeItems.lastObject != nil) {
         NSURLQueryItem *modeItem = (NSURLQueryItem *)modeItems.lastObject;
-        [self saveScecpyMode:modeItem.value];
+        [self saveScrcpyMode:modeItem.value];
         return;
     }
     
     // URL likes scrcpy2://adb|vnc
-    [self saveScecpyMode:switchURL.host];
+    [self saveScrcpyMode:switchURL.host];
 }
 
--(void)saveScecpyMode:(NSString *)mode {
+-(void)saveScrcpyMode:(NSString *)mode {
     [KFKeychain saveObject:mode forKey:ScrcpySwitchModeKey];
     NSLog(@"-> Scrcpy switched to %@ mode", mode);
     

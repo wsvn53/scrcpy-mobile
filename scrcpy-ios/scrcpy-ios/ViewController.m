@@ -6,6 +6,7 @@
 //
 
 #import "ViewController.h"
+#import "PairViewController.h"
 #import "CVCreate.h"
 #import "ScrcpyClient.h"
 #import "KFKeychain.h"
@@ -32,6 +33,18 @@
 @end
 
 @implementation ViewController
+
+#ifdef DEBUG
++(void)reload {
+    for (UIWindow *window in UIApplication.sharedApplication.windows) {
+        UINavigationController *nav = (UINavigationController *)window.rootViewController;
+        if ([nav isKindOfClass:UINavigationController.class] == NO) {
+            continue;
+        }
+        [nav setViewControllers:@[[ViewController new]] animated:YES];
+    }
+}
+#endif
 
 -(void)loadView {
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:(CGRectZero)];
@@ -82,6 +95,11 @@
         self.navigationController.navigationBar.standardAppearance = appearance;
         self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     }
+    
+    // More button
+    UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"More"] style:(UIBarButtonItemStylePlain) target:self action:@selector(showMoreMenu:)];
+    moreItem.tintColor = UIColor.blackColor;
+    self.navigationItem.rightBarButtonItem = moreItem;
     
     __weak typeof(self) _self = self;
     CVCreate.UIStackView(@[
@@ -393,6 +411,23 @@
     NSLog(@"URL: %@", urlComps.URL);
     [[UIPasteboard generalPasteboard] setURL:urlComps.URL];
     [self showAlert:[NSString stringWithFormat:@"Copied URL:\n%@", urlComps.URL.absoluteString]];
+}
+
+-(void)showMoreMenu:(UIBarButtonItem *)sender {
+    NSLog(@"Show More Menu");
+    UIAlertController *menuController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
+    __weak typeof(self) weakSelf = self;
+    [menuController addAction:[UIAlertAction actionWithTitle:@"Pair With Pairing Code" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction *action) {
+        NSLog(@"Pair Device");
+        PairViewController *pairController = [[PairViewController alloc] initWithNibName:nil bundle:nil];
+        UINavigationController *pairNav = [[UINavigationController alloc] initWithRootViewController:pairController];
+        [weakSelf presentViewController:pairNav animated:YES completion:nil];
+    }]];
+    [menuController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Cancel");
+    }]];
+    [self presentViewController:menuController animated:YES completion:nil];
+
 }
 
 -(void)keyboardDidShow:(NSNotification *)notification {
