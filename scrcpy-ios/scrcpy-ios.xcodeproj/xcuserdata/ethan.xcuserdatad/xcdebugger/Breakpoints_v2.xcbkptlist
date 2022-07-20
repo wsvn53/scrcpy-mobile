@@ -578,8 +578,8 @@
             filePath = "scrcpy-ios/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "345"
-            endingLineNumber = "345"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
             landmarkName = "-finalStart"
             landmarkType = "7">
          </BreakpointContent>
@@ -594,8 +594,8 @@
             filePath = "scrcpy-ios/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "351"
-            endingLineNumber = "351"
+            startingLineNumber = "377"
+            endingLineNumber = "377"
             landmarkName = "-finalStart"
             landmarkType = "7">
          </BreakpointContent>

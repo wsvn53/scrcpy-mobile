@@ -9,6 +9,7 @@
 #import "CVCreate.h"
 #import "ScrcpyTextField.h"
 #import "ScrcpyClient.h"
+#import "MBProgressHUD.h"
 
 @interface PairViewController ()
 // TextFields
@@ -203,24 +204,43 @@
         return;
     }
     
-    NSString *pairingMessage = nil;
+    [self showHUDWith:@"Pairing.."];
     
-    NSString *pairingAddress = self.pairingAddress.text;
-    if ([pairingAddress containsString:@":"] == NO) {
-        pairingAddress = [NSString stringWithFormat:@"%@:%@", pairingAddress, self.pairingPort.text];
-    }
-    BOOL success = [ScrcpySharedClient adbExecute:@[
-        @"pair", pairingAddress, self.pairingCode.text,
-    ] message:&pairingMessage];
-    
-    NSLog(@"Result: %@, %@", @(success), pairingMessage);
-    pairingMessage = [NSString stringWithFormat:@"ADB Pairing\n%@",
-                      pairingMessage];
-    [self showAlert:pairingMessage];
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSString *pairingMessage = nil;
+        
+        NSString *pairingAddress = self.pairingAddress.text;
+        if ([pairingAddress containsString:@":"] == NO) {
+            pairingAddress = [NSString stringWithFormat:@"%@:%@", pairingAddress, self.pairingPort.text];
+        }
+        BOOL success = [ScrcpySharedClient adbExecute:@[
+            @"pair", pairingAddress, self.pairingCode.text,
+        ] message:&pairingMessage];
+        
+        NSLog(@"Result: %@, %@", @(success), pairingMessage);
+        pairingMessage = [NSString stringWithFormat:@"ADB Pairing\n%@",
+                          pairingMessage];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [weakSelf showAlert:pairingMessage];
+        });
+    });
 }
 
 -(void)cancelPairing {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)showHUDWith:(NSString *)text {
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:self.view];
+    if (hud == nil) {
+        hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.minSize = CGSizeMake(130, 130);
+    }
+    hud.label.text = text;
+    hud.label.numberOfLines = 2;
 }
 
 -(void)showAlert:(NSString *)message {
