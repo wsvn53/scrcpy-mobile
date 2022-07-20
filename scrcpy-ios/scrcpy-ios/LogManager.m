@@ -7,7 +7,7 @@
 
 #import "LogManager.h"
 
-#define kRecentLogsLimit   1024*1024
+#define kRecentLogsLimit   512*1024
 
 @interface LogManager ()
 
@@ -45,6 +45,12 @@
 
 -(NSString *)recentLogs {
     NSFileHandle *logHandle = [NSFileHandle fileHandleForReadingAtPath:self.logPath];
+    NSDictionary *attrs = [NSFileManager.defaultManager attributesOfItemAtPath:self.logPath error:nil];
+    NSInteger fileSize = [attrs[NSFileSize] integerValue];
+    NSLog(@"LogPath: %@, Size: %@", self.logPath, @(fileSize));
+    if (fileSize > kRecentLogsLimit) {
+        [logHandle seekToFileOffset:fileSize-kRecentLogsLimit];
+    }
     NSData *logData = [logHandle readDataOfLength:kRecentLogsLimit];
     return [[NSString alloc] initWithData:logData encoding:NSUTF8StringEncoding];
 }

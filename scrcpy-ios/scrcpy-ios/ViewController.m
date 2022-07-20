@@ -58,7 +58,9 @@
     [super viewDidLoad];
     
     // Enable log redirect
+#ifndef DEBUG
     [LogManager.sharedManager startHandleLog];
+#endif
     
     [self setupViews];
     [self setupEvents];
@@ -429,7 +431,7 @@
         UINavigationController *pairNav = [[UINavigationController alloc] initWithRootViewController:pairController];
         [weakSelf presentViewController:pairNav animated:YES completion:nil];
     }]];
-    [menuController addAction:[UIAlertAction actionWithTitle:@"Show Scrcpy Detail Logs" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    [menuController addAction:[UIAlertAction actionWithTitle:@"Show Scrcpy Logs" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         LogsViewController *logsController = [[LogsViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *logsrNav = [[UINavigationController alloc] initWithRootViewController:logsController];
         [weakSelf presentViewController:logsrNav animated:YES completion:nil];

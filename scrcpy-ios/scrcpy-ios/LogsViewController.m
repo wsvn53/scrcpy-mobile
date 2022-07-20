@@ -40,6 +40,14 @@
     self.title = @"Scrcpy Logs";
     self.view.backgroundColor = UIColor.whiteColor;
     
+    if (@available(iOS 13.0, *)) {
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        [appearance configureWithOpaqueBackground];
+        appearance.backgroundColor = [UIColor systemGray6Color];
+        self.navigationController.navigationBar.standardAppearance = appearance;
+        self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
+    }
+    
     // Refresh Logs
     UIBarButtonItem *refreshItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Refresh"]
                                                                     style:(UIBarButtonItemStylePlain)
@@ -54,7 +62,7 @@
     self.navigationItem.rightBarButtonItem = refreshItem;
     self.navigationItem.leftBarButtonItem = shareItem;
     
-    CVCreate.UITextView.fontSize(15).textColor(UIColor.blackColor)
+    CVCreate.UITextView.fontSize(13).textColor(UIColor.blackColor)
         .text(LogManager.sharedManager.recentLogs)
         .addToView(self.view)
         .leftAnchor(self.view.leftAnchor, 5)
