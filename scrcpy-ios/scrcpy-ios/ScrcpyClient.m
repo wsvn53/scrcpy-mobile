@@ -8,8 +8,6 @@
 #import "ScrcpyClient.h"
 #import "scrcpy-porting.h"
 #import "adb_public.h"
-#import <SDL2/SDL_events.h>
-#import <SDL2/SDL_system.h>
 #import <UIKit/UIKit.h>
 #import <libavutil/frame.h>
 #import <video_buffer.h>

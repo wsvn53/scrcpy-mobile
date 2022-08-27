@@ -52,94 +52,77 @@
 @end
 
 @interface MenubarViewController ()
-
 @end
 
 @implementation MenubarViewController
-
--(void)loadView {
-    self.view = [[MenubarBackgroundView alloc] initWithFrame:(CGRectZero)];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
 }
 
+-(void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    NSLog(@"self.view.frame = %@", NSStringFromCGRect(self.view.frame));
+}
+
 -(void)setupViews {
     self.view.backgroundColor = [UIColor clearColor];
-    ((MenubarBackgroundView *)self.view).targetSDLView = self.presentingViewController.view;
+    MenubarBackgroundView *backView = [[MenubarBackgroundView alloc] initWithFrame:(CGRectZero)];
+    backView.targetSDLView = self.presentingViewController.view;
+    CVCreate.withView(backView).addToView(self.view)
+        .widthAnchor(self.view.widthAnchor, 0)
+        .heightAnchor(self.view.heightAnchor, 0)
+        .centerXAnchor(self.view.centerXAnchor, 0)
+        .centerYAnchor(self.view.centerYAnchor, 0)
+        .click(self, @selector(dismiss:));
     
-    CVCreate.withView(self.view).click(self, @selector(dismiss:));
+    NSArray *(^CreateMenuItem)(NSString *, NSString *) = ^NSArray *(NSString *iconName, NSString *title) {
+        return @[
+            CVCreate.UIView.size(CGSizeMake(70, 10)),
+            CVCreate.UIImageView([UIImage imageNamed:iconName])
+                .customView(^(UIImageView *view){
+                    view.contentMode = UIViewContentModeCenter;
+                }),
+            CVCreate.UILabel.text(title).fontSize(13)
+                .textColor(UIColor.whiteColor)
+                .textAlignment(NSTextAlignmentCenter),
+            CVCreate.UIView,
+        ];
+    };
     
     CVCreate.UIStackView(@[
         CVCreate.UIView,
-        CVCreate.UIStackView(@[
-            CVCreate.UIView.size(CGSizeMake(70, 10)),
-            CVCreate.UIImageView([UIImage imageNamed:@"BackIcon"])
-                .customView(^(UIImageView *view){
-                    view.contentMode = UIViewContentModeCenter;
-                }),
-            CVCreate.UILabel.text(@"Back").fontSize(13)
-                .textColor(UIColor.whiteColor)
-                .textAlignment(NSTextAlignmentCenter),
-            CVCreate.UIView,
-        ]).axis(UILayoutConstraintAxisVertical)
+        CVCreate.UIStackView(CreateMenuItem(@"BackIcon", @"Back")).axis(UILayoutConstraintAxisVertical)
             .click(self, @selector(sendBackButton:)),
         CVCreate.UIView,
-        CVCreate.UIStackView(@[
-            CVCreate.UIView.size(CGSizeMake(70, 10)),
-            CVCreate.UIImageView([UIImage imageNamed:@"HomeIcon"])
-                .customView(^(UIImageView *view){
-                    view.contentMode = UIViewContentModeCenter;
-                }),
-            CVCreate.UILabel.text(@"Home").fontSize(13)
-                .textColor(UIColor.whiteColor)
-                .textAlignment(NSTextAlignmentCenter),
-            CVCreate.UIView,
-        ]).axis(UILayoutConstraintAxisVertical)
+        CVCreate.UIStackView(CreateMenuItem(@"HomeIcon", @"Home")).axis(UILayoutConstraintAxisVertical)
             .click(self, @selector(sendHomeButton:)),
         CVCreate.UIView,
-        CVCreate.UIStackView(@[
-            CVCreate.UIView.size(CGSizeMake(70, 10)),
-            CVCreate.UIImageView([UIImage imageNamed:@"SwitchAppIcon"])
-                .customView(^(UIImageView *view){
-                    view.contentMode = UIViewContentModeCenter;
-                }),
-            CVCreate.UILabel.text(@"Switch").fontSize(13)
-                .textColor(UIColor.whiteColor)
-                .textAlignment(NSTextAlignmentCenter),
-            CVCreate.UIView,
-        ]).axis(UILayoutConstraintAxisVertical)
+        CVCreate.UIStackView(CreateMenuItem(@"SwitchAppIcon", @"Switch")).axis(UILayoutConstraintAxisVertical)
             .click(self, @selector(sendSwitchAppButton:)),
         CVCreate.UIView,
-        CVCreate.UIStackView(@[
-            CVCreate.UIView.size(CGSizeMake(70, 10)),
-            CVCreate.UIImageView([UIImage imageNamed:@"DisconnectIcon"])
-                .customView(^(UIImageView *view){
-                    view.contentMode = UIViewContentModeCenter;
-                }),
-            CVCreate.UILabel.text(@"Stop").fontSize(13)
-                .textColor(UIColor.whiteColor)
-                .textAlignment(NSTextAlignmentCenter),
-            CVCreate.UIView,
-        ]).axis(UILayoutConstraintAxisVertical)
+        CVCreate.UIStackView(CreateMenuItem(@"KeyboardIcon", @"Keyboard")).axis(UILayoutConstraintAxisVertical)
+            .click(self, @selector(showKeyboard:)),
+        CVCreate.UIView,
+        CVCreate.UIStackView(CreateMenuItem(@"DisconnectIcon", @"Stop")).axis(UILayoutConstraintAxisVertical)
             .click(self, @selector(sendDisconnectButton:)),
         CVCreate.UIView,
     ]).axis(UILayoutConstraintAxisHorizontal)
     .distribution(UIStackViewDistributionEqualCentering)
     .backgroundColor([UIColor colorWithWhite:0 alpha:0.85])
     .size(CGSizeMake(0, 80))
-    .addToView(self.view)
+    .addToView(backView)
     .click(self, @selector(doNothing))
-    .centerXAnchor(self.view.centerXAnchor, 0)
-    .widthAnchor(self.view.widthAnchor, 0)
-    .bottomAnchor(self.view.bottomAnchor, 0);
+    .centerXAnchor(backView.centerXAnchor, 0)
+    .widthAnchor(backView.widthAnchor, 0)
+    .bottomAnchor(backView.bottomAnchor, 0);
 }
 
 -(void)doNothing {}
 
 -(void)dismiss:(UITapGestureRecognizer *)gesture {
+    SDL_StopTextInput();
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -164,6 +147,11 @@
 -(void)sendSwitchAppButton:(UITapGestureRecognizer *)tap {
     [self clickAnimated:tap];
     [ScrcpySharedClient sendSwitchAppButton];
+}
+
+-(void)showKeyboard:(UITapGestureRecognizer *)tap {
+    NSLog(@"Showing keyboard");
+    SDL_StartTextInput();
 }
 
 -(void)sendDisconnectButton:(UITapGestureRecognizer *)tap {

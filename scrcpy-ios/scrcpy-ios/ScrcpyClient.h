@@ -6,6 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <SDL2/SDL_events.h>
+#import <SDL2/SDL_system.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -66,6 +68,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Send SwitchApp Button
 -(void)sendSwitchAppButton;
+
+// Send Key Events
+-(void)sendKeycodeEvent:(SDL_Scancode)scancode keycode:(SDL_Keycode)keycode keymod:(SDL_Keymod)keymod;
 
 @end
 

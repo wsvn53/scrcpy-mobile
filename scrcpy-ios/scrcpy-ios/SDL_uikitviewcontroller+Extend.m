@@ -25,7 +25,7 @@ static NSString *ScrcpyMenubarGuideDidShow = @"ScrcpyMenubarGuideDidShow";
 -(void)showMenubarGuide {
     BOOL guideDidShow = [[NSUserDefaults standardUserDefaults] boolForKey:ScrcpyMenubarGuideDidShow];
     if (guideDidShow) {
-        NSLog(@"Menubar Guide Did Show");
+        NSLog(@"Menubar guide has already shown.");
         return;
     }
     
