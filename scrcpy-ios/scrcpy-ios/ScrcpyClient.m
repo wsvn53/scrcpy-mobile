@@ -164,7 +164,10 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 
 -(void)onApplicationEnterForeground {
     [self checkStartScheme];
-    
+    [self onStartOrResume];
+}
+
+-(void)onStartOrResume {
     if (self.status == ScrcpyStatusConnected) {
         NSLog(@"-> Send command to trigger video restart I frame");
         [self sendKeycodeEvent:SDL_SCANCODE_END keycode:SDLK_END keymod:0];
@@ -276,6 +279,7 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     self.scrcpyStatusUpdated = ^(enum ScrcpyStatus status) {
         if (status == ScrcpyStatusConnected && _self.onScrcpyConnected) {
             _self.onScrcpyConnected(_self.connectedSerial);
+            [_self onStartOrResume];
             return;
         }
         
