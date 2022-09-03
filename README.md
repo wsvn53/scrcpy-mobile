@@ -12,7 +12,9 @@ Ported [scrcpy](https://github.com/Genymobile/scrcpy) for mobile platforms, to r
 * With Hardware decoding, less power and CPU comsumed;
 * Optimized gesture experiences for unstable network from mobile devices;
 * Supports start scrcpy from URL scheme;
+* Supports pair Android device with Pairing Code;
 * With Android navigation buttons: Back, Home, Switch App; 
+* Supports toggle iOS keyboard and send keys to remote device;
 * Sync clipboard contents between iPhone and remote Android devices;
 
 ## Installation
@@ -38,6 +40,17 @@ adb tcpip 5555
 ```
 
 After authorized on your Android devices, scrcpy will continue to connect.
+
+**Or Pair with Pairing Code:**
+
+This only works on Android 10+ devices:
+
+- Click "..." menu icon on the top-left corner of Scrcpy Remote main window;
+- Click "Pair With Pairing Code";
+- Then on the Android device, go to: 
+  - `Settings` -> `System` -> `Developer Options` -> `Enable Wireless Debugging` -> `Pair device with pairing code`
+
+Then just follow the tips on Android device to start pair.
 
 #### VNC Mode: 
 

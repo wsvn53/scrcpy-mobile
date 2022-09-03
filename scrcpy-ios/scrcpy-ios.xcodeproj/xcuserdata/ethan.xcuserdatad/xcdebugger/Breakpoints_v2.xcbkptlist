@@ -514,8 +514,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
             landmarkName = "-checkStartScheme"
             landmarkType = "7">
          </BreakpointContent>
@@ -530,8 +530,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
+            startingLineNumber = "185"
+            endingLineNumber = "185"
             landmarkName = "-handleScrcpyURLScheme:"
             landmarkType = "7">
          </BreakpointContent>
@@ -610,8 +610,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "276"
-            endingLineNumber = "276"
+            startingLineNumber = "279"
+            endingLineNumber = "279"
             landmarkName = "-startWithOptions:"
             landmarkType = "7">
          </BreakpointContent>
