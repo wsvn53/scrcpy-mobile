@@ -118,7 +118,7 @@
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"adb-host";
-                view.placeholder = @"ADB Host";
+                view.placeholder = NSLocalizedString(@"ADB Host", nil);
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 if (@available(iOS 13.0, *)) {
@@ -133,7 +133,7 @@
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"adb-port";
-                view.placeholder = @"ADB Port, Default 5555";
+                view.placeholder = NSLocalizedString(@"ADB Port, Default 5555", nil);
                 if (@available(iOS 13.0, *)) {
                     view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 }
@@ -148,7 +148,7 @@
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"max-size";
-                view.placeholder = @"--max-size, Default Unlimited";
+                view.placeholder = NSLocalizedString(@"--max-size, Default Unlimited", nil);
                 if (@available(iOS 13.0, *)) {
                     view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 }
@@ -163,7 +163,7 @@
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"bit-rate";
-                view.placeholder = @"--bit-rate, Default 4M";
+                view.placeholder = NSLocalizedString(@"--bit-rate, Default 4M", nil);
                 if (@available(iOS 13.0, *)) {
                     view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 }
@@ -178,7 +178,7 @@
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"max-fps";
-                view.placeholder = @"--max-fps, Default 60";
+                view.placeholder = NSLocalizedString(@"--max-fps, Default 60", nil);
                 if (@available(iOS 13.0, *)) {
                     view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 }
@@ -188,7 +188,7 @@
                 _self.maxFps = view;
             }),
         CVCreate.UIStackView(@[
-            CVCreate.UILabel.text(@"Turn Screen Off:")
+            CVCreate.UILabel.text(NSLocalizedString(@"Turn Screen Off:", nil))
                 .fontSize(16.f).textColor(UIColor.blackColor),
             CVCreate.create(ScrcpySwitch.class)
                 .customView(^(ScrcpySwitch *view){
@@ -197,7 +197,7 @@
                 }),
         ]).spacing(10.f),
         CVCreate.UIStackView(@[
-            CVCreate.UILabel.text(@"Stay Awake:")
+            CVCreate.UILabel.text(NSLocalizedString(@"Stay Awake:", nil))
                 .fontSize(16.f).textColor(UIColor.blackColor),
             CVCreate.create(ScrcpySwitch.class)
                 .customView(^(ScrcpySwitch *view){
@@ -206,7 +206,7 @@
                 }),
         ]).spacing(10.f),
         CVCreate.UIStackView(@[
-            CVCreate.UILabel.text(@"Force ADB Forward:")
+            CVCreate.UILabel.text(NSLocalizedString(@"Force ADB Forward:", nil))
                 .fontSize(16.f).textColor(UIColor.blackColor),
             CVCreate.create(ScrcpySwitch.class)
                 .customView(^(ScrcpySwitch *view){
@@ -215,7 +215,7 @@
                 }),
         ]).spacing(10.f),
         CVCreate.UIStackView(@[
-            CVCreate.UILabel.text(@"Turn Off When Closing:")
+            CVCreate.UILabel.text(NSLocalizedString(@"Turn Off When Closing:", nil))
                 .fontSize(16.f).textColor(UIColor.blackColor),
             CVCreate.create(ScrcpySwitch.class)
                 .customView(^(ScrcpySwitch *view){
@@ -223,14 +223,14 @@
                     self.turnOffOnClose = view;
                 }),
         ]).spacing(10.f),
-        CVCreate.UIButton.text(@"Connect").boldFontSize(16)
+        CVCreate.UIButton.text(NSLocalizedString(@"Connect", nil)).boldFontSize(16)
             .addToView(self.view)
             .size(CGSizeMake(0, 45))
             .textColor(UIColor.whiteColor)
             .backgroundColor(UIColor.blackColor)
             .cornerRadius(6)
             .click(self, @selector(start)),
-        CVCreate.UIButton.text(@"Copy URL Scheme").boldFontSize(16)
+        CVCreate.UIButton.text(NSLocalizedString(@"Copy URL Scheme", nil)).boldFontSize(16)
             .addToView(self.view)
             .size(CGSizeMake(0, 45))
             .textColor(UIColor.blackColor)
@@ -239,7 +239,7 @@
             .cornerRadius(6)
             .click(self, @selector(copyURLScheme)),
         CVCreate.UILabel.fontSize(13.f).textColor(UIColor.grayColor)
-            .text(@"For more help, please visit\nhttps://github.com/wsvn53/scrcpy-mobile")
+            .text(NSLocalizedString(@"For more help, please visit\nhttps://github.com/wsvn53/scrcpy-mobile", nil))
             .textAlignment(NSTextAlignmentCenter)
             .click(self, @selector(openScrcpyMobile))
             .customView(^(UILabel *view){
@@ -261,26 +261,26 @@
     
     ScrcpySharedClient.onADBConnecting = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf showHUDWith:@"ADB\nConnecting"];
+            [weakSelf showHUDWith:NSLocalizedString(@"ADB\nConnecting", nil)];
         });
     };
     
     ScrcpySharedClient.onADBConnected = ^(NSString *serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf showHUDWith:@"ADB\nConnected"];
+            [weakSelf showHUDWith:NSLocalizedString(@"ADB\nConnected", nil)];
         });
     };
     
     ScrcpySharedClient.onADBConnectFailed = ^(NSString * _Nonnull serial, NSString * _Nonnull message) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-            [weakSelf showAlert:[NSString stringWithFormat:@"ADB Connect Failed:\n%@", message]];
+            [weakSelf showAlert:[NSString stringWithFormat:NSLocalizedString(@"ADB Connect Failed:\n%@", nil), message]];
         });
     };
     
     ScrcpySharedClient.onADBUnauthorized = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSString *message = [NSString stringWithFormat:@"Device [%@] connected, but unahtorized. Please accept authorization on your device.", serial];
+            NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Device [%@] connected, but unahtorized. Please accept authorization on your device.", nil), serial];
             [weakSelf performSelectorOnMainThread:@selector(showAlert:) withObject:message waitUntilDone:NO];
         });
     };
@@ -288,13 +288,13 @@
     ScrcpySharedClient.onScrcpyConnectFailed = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-            [weakSelf showAlert:@"Start Scrcpy Failed"];
+            [weakSelf showAlert:NSLocalizedString(@"Start Scrcpy Failed", nil)];
         });
     };
     
     ScrcpySharedClient.onScrcpyConnected = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf showHUDWith:@"Scrcpy\nConnected"];
+            [weakSelf showHUDWith:NSLocalizedString(@"Scrcpy\nConnected", nil)];
         });
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
@@ -343,7 +343,7 @@
 
 -(void)finalStart {
     if (self.adbHost.text.length == 0) {
-        [self showAlert:@"ADB Host is required"];
+        [self showAlert:NSLocalizedString(@"ADB Host is required", nil)];
         return;
     }
     
@@ -373,7 +373,7 @@
     options = updateSwitchOptions(options, self.forceAdbForward);
     options = updateSwitchOptions(options, self.turnOffOnClose);
     
-    [self showHUDWith:@"Starting.."];
+    [self showHUDWith:NSLocalizedString(@"Starting..", nil)];
     [ScrcpySharedClient startWith:self.adbHost.text adbPort:self.adbPort.text options:options];
 }
 
@@ -418,25 +418,25 @@
     
     NSLog(@"URL: %@", urlComps.URL);
     [[UIPasteboard generalPasteboard] setURL:urlComps.URL];
-    [self showAlert:[NSString stringWithFormat:@"Copied URL:\n%@", urlComps.URL.absoluteString]];
+    [self showAlert:[NSString stringWithFormat:NSLocalizedString(@"Copied URL:\n%@", nil), urlComps.URL.absoluteString]];
 }
 
 -(void)showMoreMenu:(UIBarButtonItem *)sender {
     NSLog(@"Show More Menu");
     UIAlertController *menuController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
     __weak typeof(self) weakSelf = self;
-    [menuController addAction:[UIAlertAction actionWithTitle:@"Pair With Pairing Code" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction *action) {
+    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Pair With Pairing Code", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction *action) {
         NSLog(@"Start Pair Device Controller");
         PairViewController *pairController = [[PairViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *pairNav = [[UINavigationController alloc] initWithRootViewController:pairController];
         [weakSelf presentViewController:pairNav animated:YES completion:nil];
     }]];
-    [menuController addAction:[UIAlertAction actionWithTitle:@"Show Scrcpy Logs" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Show Scrcpy Logs", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         LogsViewController *logsController = [[LogsViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *logsrNav = [[UINavigationController alloc] initWithRootViewController:logsController];
         [weakSelf presentViewController:logsrNav animated:YES completion:nil];
     }]];
-    [menuController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
+    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
         NSLog(@"Cancel");
     }]];
     [self presentViewController:menuController animated:YES completion:nil];
@@ -471,13 +471,13 @@
 }
 
 -(void)switchVNCMode:(void(^)(void))continueCompletion {
-    UIAlertController *switchController = [UIAlertController alertControllerWithTitle:@"Switch Mode" message:@"Switching to VNC Mode?" preferredStyle:UIAlertControllerStyleAlert];
-    [switchController addAction:[UIAlertAction actionWithTitle:@"Yes, Switch VNC Mode" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *switchController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Switch Mode", nil) message:NSLocalizedString(@"Switching to VNC Mode?", nil) preferredStyle:UIAlertControllerStyleAlert];
+    [switchController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, Switch VNC Mode", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         // Switch to VNC mode
         NSURL *adbURL = [NSURL URLWithString:@"scrcpy2://vnc"];
         [UIApplication.sharedApplication openURL:adbURL options:@{} completionHandler:nil];
     }]];
-    [switchController addAction:[UIAlertAction actionWithTitle:@"No, Continue ADB Mode" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
+    [switchController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, Continue ADB Mode", nil) style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
         continueCompletion();
     }]];
     

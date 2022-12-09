@@ -93,10 +93,10 @@
     
     CVCreate.UIStackView(@[
         CVCreate.UIView,
-        CVCreate.UIStackView(CreateMenuItem(@"BackIcon", @"Back")).axis(UILayoutConstraintAxisVertical)
+        CVCreate.UIStackView(CreateMenuItem(@"BackIcon", NSLocalizedString(@"Back", nil))).axis(UILayoutConstraintAxisVertical)
             .click(self, @selector(sendBackButton:)),
         CVCreate.UIView,
-        CVCreate.UIStackView(CreateMenuItem(@"HomeIcon", @"Home")).axis(UILayoutConstraintAxisVertical)
+        CVCreate.UIStackView(CreateMenuItem(@"HomeIcon", NSLocalizedString(@"Home", nil))).axis(UILayoutConstraintAxisVertical)
             .click(self, @selector(sendHomeButton:)),
         CVCreate.UIView,
         CVCreate.UIStackView(CreateMenuItem(@"SwitchAppIcon", @"Switch")).axis(UILayoutConstraintAxisVertical)

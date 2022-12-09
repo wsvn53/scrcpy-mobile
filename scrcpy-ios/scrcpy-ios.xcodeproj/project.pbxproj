@@ -51,6 +51,7 @@
 		AA67A87F2886F646006C6612 /* LogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA67A87E2886F646006C6612 /* LogManager.m */; };
 		AA67A88228870E9C006C6612 /* LogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA67A88128870E9C006C6612 /* LogsViewController.m */; };
 		AA6F711C284E6DDD00A09442 /* scrcpy-server in Resources */ = {isa = PBXBuildFile; fileRef = AA6F711B284E6DDD00A09442 /* scrcpy-server */; };
+		AAA8D397294390BA00909F29 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AAA8D399294390BA00909F29 /* Localizable.strings */; };
 		AAF222162848B03F00B732AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222152848B03F00B732AE /* ViewController.m */; };
 		AAF222192848B03F00B732AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF222172848B03F00B732AE /* Main.storyboard */; };
 		AAF2221B2848B04100B732AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAF2221A2848B04100B732AE /* Assets.xcassets */; };
@@ -147,6 +148,8 @@
 		AA67A88028870E9C006C6612 /* LogsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogsViewController.h; sourceTree = "<group>"; };
 		AA67A88128870E9C006C6612 /* LogsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogsViewController.m; sourceTree = "<group>"; };
 		AA6F711B284E6DDD00A09442 /* scrcpy-server */ = {isa = PBXFileReference; lastKnownFileType = file; name = "scrcpy-server"; path = "../../porting/server/scrcpy-server"; sourceTree = "<group>"; };
+		AAA8D398294390BA00909F29 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AAA8D39A294390D100909F29 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		AAF2220B2848B03F00B732AE /* scrcpy-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scrcpy-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF222142848B03F00B732AE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		AAF222152848B03F00B732AE /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -370,6 +373,7 @@
 				AAF2221F2848B04100B732AE /* Info.plist */,
 				AA6F711B284E6DDD00A09442 /* scrcpy-server */,
 				AAF222202848B04100B732AE /* main.m */,
+				AAA8D399294390BA00909F29 /* Localizable.strings */,
 			);
 			path = "scrcpy-ios";
 			sourceTree = "<group>";
@@ -415,6 +419,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = AAF222022848B03F00B732AE;
 			productRefGroup = AAF2220C2848B03F00B732AE /* Products */;
@@ -435,6 +440,7 @@
 				AA2F7330285A36310061552B /* vendor in Resources */,
 				AA2F732F285A36310061552B /* core in Resources */,
 				AAF2221E2848B04100B732AE /* LaunchScreen.storyboard in Resources */,
+				AAA8D397294390BA00909F29 /* Localizable.strings in Resources */,
 				AA2F7331285A36310061552B /* app in Resources */,
 				AA6F711C284E6DDD00A09442 /* scrcpy-server in Resources */,
 				AAF2221B2848B04100B732AE /* Assets.xcassets in Resources */,
@@ -498,6 +504,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		AAA8D399294390BA00909F29 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AAA8D398294390BA00909F29 /* en */,
+				AAA8D39A294390D100909F29 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		AAF222172848B03F00B732AE /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -521,6 +536,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -579,6 +595,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -634,7 +651,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -656,14 +673,12 @@
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "To Discover Nearby Computer";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Image Scanning";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeRight UIInterfaceOrientationLandscapeLeft";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -673,7 +688,7 @@
 					"$(SRCROOT)/../external/adb-mobile/output",
 					"$(SRCROOT)/../output/iphone",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-ladb",
@@ -732,7 +747,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -752,14 +767,12 @@
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "To Discover Nearby Computer";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Image Scanning";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeRight UIInterfaceOrientationLandscapeLeft";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -769,7 +782,7 @@
 					"$(SRCROOT)/../external/adb-mobile/output",
 					"$(SRCROOT)/../output/iphone",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-ladb",

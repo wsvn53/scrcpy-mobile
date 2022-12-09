@@ -53,7 +53,7 @@
 
 -(void)setupViews {
     self.view.backgroundColor = UIColor.whiteColor;
-    self.title = @"ADB Pair With Android";
+    self.title = NSLocalizedString(@"ADB Pair With Android", nil);
     
     if (@available(iOS 13.0, *)) {
         UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
@@ -67,19 +67,19 @@
     CVCreate.UIStackView(@[
         CVCreate.UIView.size(CGSizeMake(0, 5)),
         CVCreate.UILabel.boldFontSize(15).textColor(UIColor.darkGrayColor)
-            .text(@"How To Pair With Android Devices:"),
+            .text(NSLocalizedString(@"How To Pair With Android Devices:", nil)),
         CVCreate.UILabel.fontSize(15).textColor(UIColor.darkGrayColor)
             .customView(^(UILabel *view){ view.numberOfLines = 10; })
-            .text(@"1. Go to Settings -> System -> Developer Options\n2. Enable Wireless Debugging\n3. Pair device with pairing code"),
+            .text(NSLocalizedString(@"1. Go to Settings -> System -> Developer Options\n2. Enable Wireless Debugging\n3. Pair device with pairing code", nil)),
         CVCreate.UILabel.boldFontSize(15).textColor(UIColor.darkGrayColor)
-            .text(@"Note: This feature only available on Android 11 and above!")
+            .text(NSLocalizedString(@"Note: This feature only available on Android 11 and above!", nil))
             .customView(^(UILabel *view){ view.numberOfLines = 2; }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
-                view.placeholder = @"ADB Pairing IP Address";
+                view.placeholder = NSLocalizedString(@"ADB Pairing IP Address", nil);
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 if (@available(iOS 13.0, *)) {
@@ -93,7 +93,7 @@
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
-                view.placeholder = @"ADB Pairing Port";
+                view.placeholder = NSLocalizedString(@"ADB Pairing Port", nil);
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 if (@available(iOS 13.0, *)) {
@@ -107,7 +107,7 @@
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
-                view.placeholder = @"ADB Pairing Code";
+                view.placeholder = NSLocalizedString(@"ADB Pairing Code", nil);
                 if (@available(iOS 13.0, *)) {
                     view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 }
@@ -116,14 +116,14 @@
                 view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.pairingCode = view;
             }),
-        CVCreate.UIButton.text(@"Start Pairing").boldFontSize(16)
+        CVCreate.UIButton.text(NSLocalizedString(@"Start Pairing", nil)).boldFontSize(16)
             .addToView(self.view)
             .size(CGSizeMake(0, 45))
             .textColor(UIColor.whiteColor)
             .backgroundColor(UIColor.blackColor)
             .cornerRadius(6)
             .click(self, @selector(startPairing)),
-        CVCreate.UIButton.text(@"Cancel").boldFontSize(16)
+        CVCreate.UIButton.text(NSLocalizedString(@"Cancel", nil)).boldFontSize(16)
             .addToView(self.view)
             .size(CGSizeMake(0, 45))
             .textColor(UIColor.blackColor)
@@ -189,22 +189,22 @@
     [self stopEditing];
     
     if ([self.pairingAddress.text length] == 0) {
-        [self showAlert:@"Pairing Address is Empty!"];
+        [self showAlert:NSLocalizedString(@"Pairing Address is Empty!", nil)];
         return;
     }
     
     if ([self.pairingAddress.text containsString:@":"] == NO &&
         [self.pairingPort.text length] == 0) {
-        [self showAlert:@"Pairing Port is Empty"];
+        [self showAlert:NSLocalizedString(@"Pairing Port is Empty", nil)];
         return;
     }
     
     if ([self.pairingCode.text length] == 0) {
-        [self showAlert:@"Pairing Code is Empty!"];
+        [self showAlert:NSLocalizedString(@"Pairing Code is Empty!", nil)];
         return;
     }
     
-    [self showHUDWith:@"Pairing.."];
+    [self showHUDWith:NSLocalizedString(@"Pairing..", nil)];
     
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
