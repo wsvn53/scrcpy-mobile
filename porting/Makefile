@@ -23,5 +23,5 @@ scrcpy-server:
 		curl -o scrcpy.zip -L https://github.com/Genymobile/scrcpy/archive/refs/tags/v$$SCRCPY_VERSION.zip && \
 		unzip scrcpy.zip && find src -name "*.java" -exec cp -v {} scrcpy-$$SCRCPY_VERSION/server/{} \; && \
 		cd scrcpy-$$SCRCPY_VERSION && meson x --buildtype=release --strip -Db_lto=true -Dcompile_app=false -Dcompile_server=true && \
-		vim server/scripts/build-wrapper.sh -c ':/exit' -c 'normal dd' -c ':wq' & \
+		sed -i 's#exit 0##g' server/scripts/build-wrapper.sh && \
 		ninja -Cx -v
