@@ -147,6 +147,7 @@ public class Controller {
         if (keycode == KeyEvent.KEYCODE_MOVE_END) {
             Ln.w("Keycode: " + String.format("%d == %d", (int)keycode, KeyEvent.KEYCODE_MOVE_END));
             device.rotationListener.onRotationChanged(0);
+            return true;
         }
         
         if (keepPowerModeOff && action == KeyEvent.ACTION_UP && (keycode == KeyEvent.KEYCODE_POWER || keycode == KeyEvent.KEYCODE_WAKEUP)) {
