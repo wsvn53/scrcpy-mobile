@@ -424,6 +424,12 @@
 -(void)showMoreMenu:(UIBarButtonItem *)sender {
     NSLog(@"Show More Menu");
     UIAlertController *menuController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
+    menuController.popoverPresentationController.sourceView = self.navigationController.navigationBar;
+    CGRect sourceRect = self.navigationController.navigationBar.frame;
+    sourceRect.origin.x = sourceRect.size.width - 50;
+    sourceRect.size.width = 40;
+    sourceRect.size.height = 40;
+    menuController.popoverPresentationController.sourceRect = sourceRect;
     __weak typeof(self) weakSelf = self;
     [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Pair With Pairing Code", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction *action) {
         NSLog(@"Start Pair Device Controller");
