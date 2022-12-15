@@ -78,23 +78,23 @@ void sc_thread_clean() {
     std::map<pid_t, std::thread *> pending_clean;
     for (auto &th : sc_thread_map) {
         auto t = th.second;
-        if (t != nullptr && t->joinable()) {
-            continue;
-        }
-        pending_clean[th.first] = th.second;
+        printf("> check thread %p status %d\n", t, t != nullptr && t->joinable());
+        if (t == nullptr) pending_clean[th.first] = th.second;
     }
-    
+
+    printf("> cleaning %d/%d threads\n", pending_clean.size(), sc_thread_map.size());
     for (auto &th : pending_clean) {
         sc_thread_map.erase(th.first);
     }
+    printf("> thread count after clean: %d\n", sc_thread_map.size());
 }
 
 void sc_store_thread(pid_t pid, std::thread *thread) {
+    // clean finished thread
+    sc_thread_clean();
+
     // Store thread
     sc_thread_map.emplace(pid, thread);
-    
-    // Check finished thread and clean
-    sc_thread_clean();
 }
 
 void sc_remove_thread(pid_t pid) {
