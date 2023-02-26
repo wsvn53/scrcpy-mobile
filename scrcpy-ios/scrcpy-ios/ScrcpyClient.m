@@ -62,7 +62,11 @@ float screen_scale(void) {
 }
 
 bool ScrcpyEnableHardwareDecoding(void) {
+#if TARGET_IPHONE_SIMULATOR
+    return false;
+#else
     return true;
+#endif
 }
 
 void RenderPixelBufferFrame(CVPixelBufferRef pixelBuffer) {
