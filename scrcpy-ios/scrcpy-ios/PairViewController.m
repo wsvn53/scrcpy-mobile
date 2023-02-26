@@ -23,22 +23,6 @@
 
 @implementation PairViewController
 
-#ifdef DEBUG
-+(void)reload {
-    NSLog(@"Reload %@", self);
-    for (UIWindow *window in UIApplication.sharedApplication.windows) {
-        if ([window.rootViewController isKindOfClass:UINavigationController.class]) {
-            if (window.rootViewController.presentedViewController) {
-                [window.rootViewController.presentedViewController dismissViewControllerAnimated:YES completion:nil];
-            }
-            PairViewController *vc = [[PairViewController alloc] initWithNibName:nil bundle:nil];
-            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-            [window.rootViewController presentViewController:nav animated:YES completion:nil];
-        }
-    }
-}
-#endif
-
 -(void)loadView {
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:(CGRectZero)];
     scrollView.alwaysBounceVertical = YES;

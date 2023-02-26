@@ -5,7 +5,6 @@
 	};
 	objectVersion = 55;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		AA18E3A9285264BB00A8B07D /* KFKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3A8285264BB00A8B07D /* KFKeychain.m */; };
 		AA18E3AC2852664F00A8B07D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3AB2852664F00A8B07D /* MBProgressHUD.m */; };
@@ -51,6 +50,7 @@
 		AA67A87F2886F646006C6612 /* LogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA67A87E2886F646006C6612 /* LogManager.m */; };
 		AA67A88228870E9C006C6612 /* LogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA67A88128870E9C006C6612 /* LogsViewController.m */; };
 		AA6F711C284E6DDD00A09442 /* scrcpy-server in Resources */ = {isa = PBXBuildFile; fileRef = AA6F711B284E6DDD00A09442 /* scrcpy-server */; };
+		AA9CAC24295A94AB00DD2AB1 /* KeysViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9CAC23295A94AB00DD2AB1 /* KeysViewController.m */; };
 		AAA8D397294390BA00909F29 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AAA8D399294390BA00909F29 /* Localizable.strings */; };
 		AAF222162848B03F00B732AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF222152848B03F00B732AE /* ViewController.m */; };
 		AAF222192848B03F00B732AE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF222172848B03F00B732AE /* Main.storyboard */; };
@@ -60,7 +60,6 @@
 		AAF222302848BDE300B732AE /* ScrcpyClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2222F2848BDE300B732AE /* ScrcpyClient.m */; };
 		AAF2225C284B60CD00B732AE /* CVCreate.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2225A284B60CD00B732AE /* CVCreate.m */; };
 /* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		AA18E3A7285264BB00A8B07D /* KFKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KFKeychain.h; path = "Keychain-iOS-ObjC/KFKeychain.h"; sourceTree = SOURCE_ROOT; };
 		AA18E3A8285264BB00A8B07D /* KFKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KFKeychain.m; path = "Keychain-iOS-ObjC/KFKeychain.m"; sourceTree = SOURCE_ROOT; };
@@ -148,6 +147,8 @@
 		AA67A88028870E9C006C6612 /* LogsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogsViewController.h; sourceTree = "<group>"; };
 		AA67A88128870E9C006C6612 /* LogsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogsViewController.m; sourceTree = "<group>"; };
 		AA6F711B284E6DDD00A09442 /* scrcpy-server */ = {isa = PBXFileReference; lastKnownFileType = file; name = "scrcpy-server"; path = "../../porting/server/scrcpy-server"; sourceTree = "<group>"; };
+		AA9CAC22295A94AB00DD2AB1 /* KeysViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeysViewController.h; sourceTree = "<group>"; };
+		AA9CAC23295A94AB00DD2AB1 /* KeysViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeysViewController.m; sourceTree = "<group>"; };
 		AAA8D398294390BA00909F29 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AAA8D39A294390D100909F29 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		AAF2220B2848B03F00B732AE /* scrcpy-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scrcpy-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,7 +164,6 @@
 		AAF2225A284B60CD00B732AE /* CVCreate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CVCreate.m; path = "chainable-view/CVCreate.m"; sourceTree = SOURCE_ROOT; };
 		AAF2225B284B60CD00B732AE /* CVCreate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CVCreate.h; path = "chainable-view/CVCreate.h"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		AAF222082848B03F00B732AE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -173,7 +173,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
-
 /* Begin PBXGroup section */
 		AA2F7155285A21700061552B /* scrcpy-vnc */ = {
 			isa = PBXGroup;
@@ -349,6 +348,8 @@
 				AAF2225A284B60CD00B732AE /* CVCreate.m */,
 				AAF222142848B03F00B732AE /* ViewController.h */,
 				AAF222152848B03F00B732AE /* ViewController.m */,
+				AA9CAC22295A94AB00DD2AB1 /* KeysViewController.h */,
+				AA9CAC23295A94AB00DD2AB1 /* KeysViewController.m */,
 				AA67A87A2885A3F4006C6612 /* PairViewController.h */,
 				AA67A87B2885A3F4006C6612 /* PairViewController.m */,
 				AA67A88028870E9C006C6612 /* LogsViewController.h */,
@@ -379,15 +380,14 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
-
 /* Begin PBXNativeTarget section */
 		AAF2220A2848B03F00B732AE /* scrcpy-ios */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AAF222242848B04100B732AE /* Build configuration list for PBXNativeTarget "scrcpy-ios" */;
 			buildPhases = (
-				AAF222072848B03F00B732AE /* Sources */,
-				AAF222082848B03F00B732AE /* Frameworks */,
-				AAF222092848B03F00B732AE /* Resources */,
+				AAF222072848B03F00B732AE,
+				AAF222082848B03F00B732AE,
+				AAF222092848B03F00B732AE,
 			);
 			buildRules = (
 			);
@@ -399,7 +399,6 @@
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
-
 /* Begin PBXProject section */
 		AAF222032848B03F00B732AE /* Project object */ = {
 			isa = PBXProject;
@@ -430,7 +429,6 @@
 			);
 		};
 /* End PBXProject section */
-
 /* Begin PBXResourcesBuildPhase section */
 		AAF222092848B03F00B732AE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
@@ -448,8 +446,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		
 /* End PBXResourcesBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		AAF222072848B03F00B732AE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -493,6 +491,7 @@
 				AA2F71AE285A225A0061552B /* DDLog.m in Sources */,
 				AA2F71B9285A2FD70061552B /* VNCBrowserViewController.m in Sources */,
 				AA18E3A9285264BB00A8B07D /* KFKeychain.m in Sources */,
+				AA9CAC24295A94AB00DD2AB1 /* KeysViewController.m in Sources */,
 				AA2F7181285A21820061552B /* HTTPFileResponse.m in Sources */,
 				AA2F717E285A21820061552B /* HTTPErrorResponse.m in Sources */,
 				AA18E3B22853AC7F00A8B07D /* SDL_uikitviewcontroller+Extend.m in Sources */,
@@ -502,7 +501,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
 /* Begin PBXVariantGroup section */
 		AAA8D399294390BA00909F29 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
@@ -530,7 +528,6 @@
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		AAF222222848B04100B732AE /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -654,8 +651,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PREPROCESSOR_DEFINITIONS = $inherited;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "$inherited HOTCODE=1 HotcodeReload(...)=";
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../scrcpy/app/src",
@@ -688,56 +685,15 @@
 					"$(SRCROOT)/../external/adb-mobile/output",
 					"$(SRCROOT)/../output/iphone",
 				);
-				MARKETING_VERSION = 1.7;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-ladb",
-					"-lscrcpy",
-					"-lSDL2",
-					"-lavfilter",
-					"-lavdevice",
-					"-lavcodec",
-					"-lavformat",
-					"-lavutil",
-					"-lswresample",
-					"-lswscale",
-					"-framework",
-					AVFoundation,
-					"-framework",
-					VideoToolbox,
-					"-framework",
-					CoreMedia,
-					"-framework",
-					AudioToolbox,
-					"-framework",
-					AVFAudio,
-					"-framework",
-					CoreMotion,
-					"-framework",
-					CoreHaptics,
-					"-framework",
-					GameController,
-					"-lbz2",
-					"-liconv",
-					"-lz",
-					"-lc++",
-					"-framework",
-					UIKit,
-					"-framework",
-					Metal,
-					"-framework",
-					QuartzCore,
-					"-framework",
-					CoreGraphics,
-					"-framework",
-					CoreBluetooth,
-					"-ObjC",
-					"$(inherited)",
-				);
+				MARKETING_VERSION = 1.8;
+				OTHER_LDFLAGS = "-ObjC -ladb -lscrcpy -lSDL2 -lavfilter -lavdevice -lavcodec -lavformat -lavutil -lswresample -lswscale -framework AVFoundation -framework VideoToolbox -framework CoreMedia -framework AudioToolbox -framework AVFAudio -framework CoreMotion -framework CoreHaptics -framework GameController -lbz2 -liconv -lz -lc++ -framework UIKit -framework Metal -framework QuartzCore -framework CoreGraphics -framework CoreBluetooth -ObjC $(inherited)  ";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mobile.scrcpy-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				ENABLE_TESTABILITY = "YES";
+				
+				
 			};
 			name = Debug;
 		};
@@ -782,7 +738,7 @@
 					"$(SRCROOT)/../external/adb-mobile/output",
 					"$(SRCROOT)/../output/iphone",
 				);
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 1.8;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-ladb",
@@ -835,7 +791,6 @@
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
-
 /* Begin XCConfigurationList section */
 		AAF222062848B03F00B732AE /* Build configuration list for PBXProject "scrcpy-ios" */ = {
 			isa = XCConfigurationList;

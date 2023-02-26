@@ -14,7 +14,10 @@
     // For more time execute in background
     static void (^beginTaskHandler)(void) = nil;
     beginTaskHandler = ^{
-        [UIApplication.sharedApplication beginBackgroundTaskWithName:@"scrcpy" expirationHandler:beginTaskHandler];
+        __block UIBackgroundTaskIdentifier taskIdentifier = [UIApplication.sharedApplication beginBackgroundTaskWithName:@"scrcpy" expirationHandler:^{
+            [UIApplication.sharedApplication endBackgroundTask:taskIdentifier];
+            beginTaskHandler();
+        }];
     };
     beginTaskHandler();
 }

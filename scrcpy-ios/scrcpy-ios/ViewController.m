@@ -7,6 +7,7 @@
 
 #import "ViewController.h"
 #import "PairViewController.h"
+#import "KeysViewController.h"
 #import "LogsViewController.h"
 #import "CVCreate.h"
 #import "ScrcpyClient.h"
@@ -35,18 +36,6 @@
 @end
 
 @implementation ViewController
-
-#ifdef DEBUG
-+(void)reload {
-    for (UIWindow *window in UIApplication.sharedApplication.windows) {
-        UINavigationController *nav = (UINavigationController *)window.rootViewController;
-        if ([nav isKindOfClass:UINavigationController.class] == NO) {
-            continue;
-        }
-        [nav setViewControllers:@[[ViewController new]] animated:YES];
-    }
-}
-#endif
 
 -(void)loadView {
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:(CGRectZero)];
@@ -436,6 +425,12 @@
         PairViewController *pairController = [[PairViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *pairNav = [[UINavigationController alloc] initWithRootViewController:pairController];
         [weakSelf presentViewController:pairNav animated:YES completion:nil];
+    }]];
+    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import/Export ADB Keys", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Import/Export ADB Keys");
+        KeysViewController *keysController = [[KeysViewController alloc] initWithNibName:nil bundle:nil];
+        UINavigationController *keysNav = [[UINavigationController alloc] initWithRootViewController:keysController];
+        [weakSelf presentViewController:keysNav animated:YES completion:nil];
     }]];
     [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Show Scrcpy Logs", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         LogsViewController *logsController = [[LogsViewController alloc] initWithNibName:nil bundle:nil];
