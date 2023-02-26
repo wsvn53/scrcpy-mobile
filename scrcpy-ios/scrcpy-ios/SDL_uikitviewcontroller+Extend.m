@@ -91,7 +91,12 @@ static NSString *ScrcpyMenubarGuideDidShow = @"ScrcpyMenubarGuideDidShow";
             [view addGestureRecognizer:menuGesture];
         });
     
-    [self showMenubarGuide];
+    // Check Always Show Navigation Buttons Setting
+    if (ScrcpySharedClient.shouldAlwaysShowNavButtons) {
+        [self showMenubarView];
+    } else {
+        [self showMenubarGuide];
+    }
 }
 
 -(void)onLongPress:(UITapGestureRecognizer *)gesture {

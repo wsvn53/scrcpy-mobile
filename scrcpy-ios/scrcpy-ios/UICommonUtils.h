@@ -9,6 +9,7 @@
 #define UICommonUtils_h
 
 #import <UIKit/UIKit.h>
+#import "ScrcpySwitch.h"
 
 static inline void ShowAlertFrom(UIViewController *fromController,
                                  NSString *message,
@@ -44,6 +45,18 @@ static inline CVCreate *CreateLightButton(NSString *title, id target, SEL action
         .border(UIColor.grayColor, 2.f)
         .cornerRadius(6)
         .click(target, action);
+}
+
+static inline CVCreate *CreateScrcpySwitch(NSString *title, NSString *optionKey, void (^bindBlock)(ScrcpySwitch *view)) {
+    return CVCreate.UIStackView(@[
+        CVCreate.UILabel.text(title)
+            .fontSize(16.f).textColor(UIColor.blackColor),
+        CVCreate.create(ScrcpySwitch.class)
+            .customView(^(ScrcpySwitch *view){
+                view.optionKey = optionKey;
+                bindBlock(view);
+            }),
+    ]).spacing(10.f);
 }
 
 #endif /* UICommonUtils_h */

@@ -8,6 +8,7 @@
 "Stay Awake:" = "保持屏幕唤醒：";
 "Force ADB Forward:" = "强制使用 ADB Forward 模式：";
 "Turn Off When Closing:" = "断开连接后关闭屏幕：";
+"Always Show Navigation Buttons:" = "始终显示导航按键：";
 "Connect" = "开始连接";
 "Copy URL Scheme" = "复制当前 URL Scheme";
 "For more help, please visit\nhttps://github.com/wsvn53/scrcpy-mobile" = "获取更多帮助，请访问\nhttps://github.com/wsvn53/scrcpy-mobile";
@@ -58,15 +59,17 @@
 "ADB Private Key(adbkey):" = "ADB 私钥(adbkey):";
 "ADB Public Key(adbkey.pub):" = "ADB 公钥(adbkey.pub):";
 "Save Privatekey & Pubkey" = "保存 adbkey 私钥和公钥";
+"Import ADB Key Pair From File" = "从文件导入 ADB 密钥对";
 "Generate New ADB Key Pair" = "生成新的 ADB 密钥对";
 "Load ADB Key Failed: %@" = "加载 ADB 密钥失败：%@";
 "Load ADB PubKey Failed: %@" = "加载 ADB 公钥失败：%@";
-"New ADB key pairs GENERATED.\nPlease RESTART the app for the new key pair to take effect." = "ADB key 生成成功。\n请重启 app 以使新的 ADB Key 生效。";
+"New ADB key pair GENERATED.\nPlease RESTART the app for the new key pair to take effect." = "ADB key 生成成功。\n请重启 app 以使新的 ADB Key 生效。";
 "Save [adbkey] ERROR: %@" = "保存 adbkey 错误：%@";
 "Save [adbkey.pub] ERROR: %@" = "保存 adbkey.pub 错误：%@";
 "ADB Key Pairs Saved" = "ADB 密钥对已保存";
 "Please note that after regenerating the ADB key pairs, you may need to RE-AUTHORIZE on your remote phone." = "请注意：生成新的 ADB 密钥对后，你可能需要重新在远程设备上授权连接。";
 "Yes, Continue" = "继续生成";
 "No, Stop Generate" = "取消生成";
-"ADB Key has been modified but not saved, do you confirm to exit?" = "ADB 密钥对已修改但尚未保存，是否确认退出？";
+"ADB Key has been MODIFIED but not saved, do you confirm to exit?" = "ADB 密钥对已修改但尚未保存，是否确认退出？";
 "ADB Key Pairs Exported" = "ADB 密钥对已导出";
+"ADB Key Pair Saved! Please restart app to take effect." = "ADB 密钥对保存成功！请重启 app 生效。";

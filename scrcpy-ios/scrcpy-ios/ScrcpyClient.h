@@ -33,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 // Pending URL Scheme
 @property (nonatomic, strong, nullable)   NSURL   *pendingScheme;
 
+// Switch Alwayse Show Navigation Buttons
+@property (nonatomic, assign)   BOOL    shouldAlwaysShowNavButtons;
+
 // Shared instance
 +(instancetype)sharedClient;
 

@@ -123,6 +123,12 @@
 
 -(void)dismiss:(UITapGestureRecognizer *)gesture {
     SDL_StopTextInput();
+    
+    if (ScrcpySharedClient.shouldAlwaysShowNavButtons) {
+        NSLog(@"Ignored dismiss, because of shouldAlwaysShowNavButtons has set to YES");
+        return;
+    }
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

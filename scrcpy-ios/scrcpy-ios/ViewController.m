@@ -17,6 +17,7 @@
 #import "ScrcpySwitch.h"
 #import "config.h"
 #import "LogManager.h"
+#import "UICommonUtils.h"
 
 @interface ViewController ()
 
@@ -30,6 +31,7 @@
 @property (nonatomic, weak)   ScrcpySwitch  *stayAwake;
 @property (nonatomic, weak)   ScrcpySwitch  *forceAdbForward;
 @property (nonatomic, weak)   ScrcpySwitch  *turnOffOnClose;
+@property (nonatomic, weak)   ScrcpySwitch  *showNavButtons;
 
 @property (nonatomic, weak)   UITextField *editingText;
 
@@ -176,57 +178,23 @@
                 view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.maxFps = view;
             }),
-        CVCreate.UIStackView(@[
-            CVCreate.UILabel.text(NSLocalizedString(@"Turn Screen Off:", nil))
-                .fontSize(16.f).textColor(UIColor.blackColor),
-            CVCreate.create(ScrcpySwitch.class)
-                .customView(^(ScrcpySwitch *view){
-                    view.optionKey = @"turn-screen-off";
-                    self.turnScreenOff = view;
-                }),
-        ]).spacing(10.f),
-        CVCreate.UIStackView(@[
-            CVCreate.UILabel.text(NSLocalizedString(@"Stay Awake:", nil))
-                .fontSize(16.f).textColor(UIColor.blackColor),
-            CVCreate.create(ScrcpySwitch.class)
-                .customView(^(ScrcpySwitch *view){
-                    view.optionKey = @"stay-awake";
-                    self.stayAwake = view;
-                }),
-        ]).spacing(10.f),
-        CVCreate.UIStackView(@[
-            CVCreate.UILabel.text(NSLocalizedString(@"Force ADB Forward:", nil))
-                .fontSize(16.f).textColor(UIColor.blackColor),
-            CVCreate.create(ScrcpySwitch.class)
-                .customView(^(ScrcpySwitch *view){
-                    view.optionKey = @"force-adb-forward";
-                    self.forceAdbForward = view;
-                }),
-        ]).spacing(10.f),
-        CVCreate.UIStackView(@[
-            CVCreate.UILabel.text(NSLocalizedString(@"Turn Off When Closing:", nil))
-                .fontSize(16.f).textColor(UIColor.blackColor),
-            CVCreate.create(ScrcpySwitch.class)
-                .customView(^(ScrcpySwitch *view){
-                    view.optionKey = @"power-off-on-close";
-                    self.turnOffOnClose = view;
-                }),
-        ]).spacing(10.f),
-        CVCreate.UIButton.text(NSLocalizedString(@"Connect", nil)).boldFontSize(16)
-            .addToView(self.view)
-            .size(CGSizeMake(0, 45))
-            .textColor(UIColor.whiteColor)
-            .backgroundColor(UIColor.blackColor)
-            .cornerRadius(6)
-            .click(self, @selector(start)),
-        CVCreate.UIButton.text(NSLocalizedString(@"Copy URL Scheme", nil)).boldFontSize(16)
-            .addToView(self.view)
-            .size(CGSizeMake(0, 45))
-            .textColor(UIColor.blackColor)
-            .backgroundColor(UIColor.whiteColor)
-            .border(UIColor.grayColor, 2.f)
-            .cornerRadius(6)
-            .click(self, @selector(copyURLScheme)),
+        CreateScrcpySwitch(NSLocalizedString(@"Turn Screen Off:", nil), @"turn-screen-off", ^(ScrcpySwitch *view){
+                self.turnScreenOff = view;
+            }),
+        CreateScrcpySwitch(NSLocalizedString(@"Stay Awake:", nil), @"stay-awake", ^(ScrcpySwitch *view){
+                self.stayAwake = view;
+            }),
+        CreateScrcpySwitch(NSLocalizedString(@"Force ADB Forward:", nil), @"force-adb-forward", ^(ScrcpySwitch *view){
+                self.forceAdbForward = view;
+            }),
+        CreateScrcpySwitch(NSLocalizedString(@"Turn Off When Closing:", nil), @"power-off-on-close", ^(ScrcpySwitch *view){
+                self.turnOffOnClose = view;
+            }),
+        CreateScrcpySwitch(NSLocalizedString(@"Always Show Navigation Buttons:", nil), @"show-nav-buttons", ^(ScrcpySwitch *view){
+                self.showNavButtons = view;
+            }),
+        CreateDarkButton(NSLocalizedString(@"Connect", nil), self, @selector(start)),
+        CreateLightButton(NSLocalizedString(@"Copy URL Scheme", nil), self, @selector(copyURLScheme)),
         CVCreate.UILabel.fontSize(13.f).textColor(UIColor.grayColor)
             .text(NSLocalizedString(@"For more help, please visit\nhttps://github.com/wsvn53/scrcpy-mobile", nil))
             .textAlignment(NSTextAlignmentCenter)
@@ -361,6 +329,9 @@
     options = updateSwitchOptions(options, self.stayAwake);
     options = updateSwitchOptions(options, self.forceAdbForward);
     options = updateSwitchOptions(options, self.turnOffOnClose);
+    options = updateSwitchOptions(options, self.showNavButtons);
+    
+    ScrcpySharedClient.shouldAlwaysShowNavButtons = self.showNavButtons.on;
     
     [self showHUDWith:NSLocalizedString(@"Starting..", nil)];
     [ScrcpySharedClient startWith:self.adbHost.text adbPort:self.adbPort.text options:options];
@@ -399,6 +370,7 @@
     urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.stayAwake);
     urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.forceAdbForward);
     urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.turnOffOnClose);
+    urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.showNavButtons);
     
     // If no options, avoid "?"
     if (urlComps.queryItems.count == 0) {
