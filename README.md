@@ -16,6 +16,7 @@ Ported [scrcpy](https://github.com/Genymobile/scrcpy) for mobile platforms, to r
 * With Android navigation buttons: Back, Home, Switch App; 
 * Supports toggle iOS keyboard and send keys to remote device;
 * Sync clipboard contents between iPhone and remote Android devices;
+* Support adbkey management: generate, modify, import, export;
 
 ## Installation
 

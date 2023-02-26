@@ -10,6 +10,8 @@
 #import "ScrcpyTextField.h"
 #import "ScrcpyClient.h"
 #import "MBProgressHUD.h"
+#import "UICommonUtils.h"
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 int adb_auth_key_generate(const char* filename);
 
@@ -51,14 +53,14 @@ int adb_auth_key_generate(const char* filename);
         self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     }
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Export", nil) style:(UIBarButtonItemStylePlain) target:self action:@selector(exportADBKey)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Export", nil) style:(UIBarButtonItemStylePlain) target:self action:@selector(onExportADBKey)];
     self.navigationItem.rightBarButtonItem.tintColor = UIColor.blackColor;
     
     CVCreate.UIStackView(@[
         CVCreate.UIView.size(CGSizeMake(0, 5)),
         CVCreate.UILabel.boldFontSize(15).text(NSLocalizedString(@"ADB Private Key(adbkey):", nil)).textColor(UIColor.darkGrayColor),
         CVCreate.withView(self.keyTextView).fontSize(15)
-            .size((CGSize){0, 220})
+            .size((CGSize){0, 200})
             .text([self loadADBKey])
             .cornerRadius(5.f)
             .backgroundColor(UIColor.whiteColor)
@@ -67,36 +69,16 @@ int adb_auth_key_generate(const char* filename);
         CVCreate.UIView.size((CGSize){0, 1}),
         CVCreate.UILabel.boldFontSize(15).text(NSLocalizedString(@"ADB Public Key(adbkey.pub):", nil)).textColor(UIColor.darkGrayColor),
         CVCreate.withView(self.pubkeyTextView).fontSize(15)
-            .size((CGSize){0, 220})
+            .size((CGSize){0, 200})
             .text([self loadADBPubKey])
             .cornerRadius(5.f)
             .backgroundColor(UIColor.whiteColor)
             .textColor(UIColor.darkGrayColor)
             .border(UIColor.lightGrayColor, 1.f),
-        CVCreate.UIView.size((CGSize){0, 1}),
-        CVCreate.UIButton.text(NSLocalizedString(@"Save Privatekey & Pubkey", nil)).boldFontSize(16)
-            .addToView(self.view)
-            .size(CGSizeMake(0, 45))
-            .textColor(UIColor.whiteColor)
-            .backgroundColor(UIColor.blackColor)
-            .cornerRadius(6)
-            .click(self, @selector(saveADBKey)),
-        CVCreate.UIButton.text(NSLocalizedString(@"Generate New ADB Key Pair", nil)).boldFontSize(16)
-            .addToView(self.view)
-            .size(CGSizeMake(0, 45))
-            .textColor(UIColor.blackColor)
-            .backgroundColor(UIColor.whiteColor)
-            .border(UIColor.grayColor, 2.f)
-            .cornerRadius(6)
-            .click(self, @selector(generateADBKeyPair)),
-        CVCreate.UIButton.text(NSLocalizedString(@"Cancel", nil)).boldFontSize(16)
-            .addToView(self.view)
-            .size(CGSizeMake(0, 45))
-            .textColor(UIColor.blackColor)
-            .backgroundColor(UIColor.whiteColor)
-            .border(UIColor.grayColor, 2.f)
-            .cornerRadius(6)
-            .click(self, @selector(cancel)),
+        CreateDarkButton(NSLocalizedString(@"Save Privatekey & Pubkey", nil), self, @selector(onSaveADBKeyPair)),
+        CreateLightButton(NSLocalizedString(@"Import ADB Key Pair From File", nil), self, @selector(onImportADBKeyPair)),
+        CreateLightButton(NSLocalizedString(@"Generate New ADB Key Pair", nil), self, @selector(onGenerateADBKeyPair)),
+        CreateLightButton(NSLocalizedString(@"Cancel", nil), self, @selector(cancel)),
     ])
     .axis(UILayoutConstraintAxisVertical)
     .spacing(15.f)
@@ -129,25 +111,7 @@ int adb_auth_key_generate(const char* filename);
     });
 }
 
-#pragma mark - Utils
-
--(void)showAlert:(NSString *)message {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Scrcpy Remote" message:message preferredStyle:(UIAlertControllerStyleAlert)];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleCancel) handler:nil]];
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
 #pragma mark - ADB Key Management
-
--(void)exportADBKey {
-    // Export ADB Key to Local File
-    UIDocumentPickerViewController *pickerController = [[UIDocumentPickerViewController alloc] initWithURLs:@[
-        [NSURL fileURLWithPath:[self adbKeyPath]],
-        [NSURL fileURLWithPath:[self adbPubKeyPath]],
-    ] inMode:(UIDocumentPickerModeExportToService)];
-    pickerController.delegate = (id<UIDocumentPickerDelegate>)self;
-    [self presentViewController:pickerController animated:YES completion:nil];
-}
 
 -(NSString *)adbKeyPath {
     return [ScrcpyClient.sharedClient.adbHomePath stringByAppendingPathComponent:@".android/adbkey"];
@@ -161,7 +125,7 @@ int adb_auth_key_generate(const char* filename);
     NSError *error = nil;
     NSString *adbKey = [NSString stringWithContentsOfFile:[self adbKeyPath] encoding:NSUTF8StringEncoding error:&error];
     if (error != nil) {
-        [self showAlert:[NSString stringWithFormat:NSLocalizedString(@"Load ADB Key Failed: %@", nil), error]];
+        ShowAlertFrom(self, [NSString stringWithFormat:NSLocalizedString(@"Load ADB Key Failed: %@", nil), error], nil, nil);
         return @"";
     }
     return adbKey;
@@ -171,10 +135,35 @@ int adb_auth_key_generate(const char* filename);
     NSError *error = nil;
     NSString *adbKey = [NSString stringWithContentsOfFile:[self adbPubKeyPath] encoding:NSUTF8StringEncoding error:&error];
     if (error != nil) {
-        [self showAlert:[NSString stringWithFormat:NSLocalizedString(@"Load ADB PubKey Failed: %@", nil), error]];
+        ShowAlertFrom(self, [NSString stringWithFormat:NSLocalizedString(@"Load ADB PubKey Failed: %@", nil), error], nil, nil);
         return @"";
     }
     return adbKey;
+}
+
+-(void)saveADBKey {
+    NSError *saveError = nil;
+    [self endEditing];
+    
+    if ([[self loadADBKey] isEqualToString:self.keyTextView.text] == NO) {
+        [self.keyTextView.text writeToFile:[self adbKeyPath] atomically:YES encoding:NSUTF8StringEncoding error:&saveError];
+    }
+    
+    if (saveError != nil) {
+        ShowAlertFrom(self, [NSString stringWithFormat:NSLocalizedString(@"Save [adbkey] ERROR: %@", nil), saveError], nil, nil);
+        return;
+    }
+    
+    if ([[self loadADBPubKey] isEqualToString:self.pubkeyTextView.text] == NO) {
+        [self.pubkeyTextView.text writeToFile:[self adbPubKeyPath] atomically:YES encoding:NSUTF8StringEncoding error:&saveError];
+    }
+    
+    if (saveError != nil) {
+        ShowAlertFrom(self, [NSString stringWithFormat:NSLocalizedString(@"Save [adbkey.pub] ERROR: %@", nil), saveError], nil, nil);
+        return;
+    }
+    
+    ShowAlertFrom(self, NSLocalizedString(@"ADB Key Pair Saved! Please restart app to take effect.", nil), nil, nil);
 }
 
 -(void)generateNewADBKey {
@@ -191,57 +180,48 @@ int adb_auth_key_generate(const char* filename);
             weak_self.pubkeyTextView.text = [self loadADBPubKey];
             
             // Required restart app
-            [weak_self showAlert:NSLocalizedString(@"New ADB key pairs GENERATED.\nPlease RESTART the app for the new key pair to take effect.", nil)];
+            ShowAlertFrom(weak_self, NSLocalizedString(@"New ADB key pair GENERATED.\nPlease RESTART the app for the new key pair to take effect.", nil), nil, nil);
         });
     });
 }
 
-#pragma mark - Actions
-
--(void)saveADBKey {
-    NSLog(@"Saving ADB Key");
-    
-    NSError *saveError = nil;
-    [self.keyTextView endEditing:YES];
-    [self.pubkeyTextView endEditing:YES];
-    
-    if ([[self loadADBKey] isEqualToString:self.keyTextView.text] == NO) {
-        [self.keyTextView.text writeToFile:[self adbKeyPath] atomically:YES encoding:NSUTF8StringEncoding error:&saveError];
+-(void)importADBKeyFromFiless:(NSArray *)files {
+    NSLog(@"Importing ADB Key Pair From Files: %@", files);
+    for (NSURL *file in files) {
+        BOOL isDir = NO;
+        [NSFileManager.defaultManager fileExistsAtPath:file.path isDirectory:&isDir];
+        if (isDir) {
+            NSLog(@"-> Ignore, path %@ is directory", file.path);
+            continue;
+        }
+        NSString *content = [NSString stringWithContentsOfFile:file.path encoding:NSUTF8StringEncoding error:nil];
+        if ([content containsString:@"BEGIN PRIVATE KEY"]) {
+            NSLog(@"-> Loading as adbkey: %@", file.path);
+            self.keyTextView.text = content;
+        }
+        
+        if ([file.pathExtension isEqualToString:@"pub"]) {
+            NSLog(@"-> Loading as adbkey.pub: %@", file.path);
+            self.pubkeyTextView.text = content;
+        }
+        
+        [self saveADBKey];
     }
-    
-    if (saveError != nil) {
-        [self showAlert:[NSString stringWithFormat:NSLocalizedString(@"Save [adbkey] ERROR: %@", nil), saveError]];
-        return;
-    }
-    
-    if ([[self loadADBPubKey] isEqualToString:self.pubkeyTextView.text] == NO) {
-        [self.pubkeyTextView.text writeToFile:[self adbPubKeyPath] atomically:YES encoding:NSUTF8StringEncoding error:&saveError];
-    }
-    
-    if (saveError != nil) {
-        [self showAlert:[NSString stringWithFormat:NSLocalizedString(@"Save [adbkey.pub] ERROR: %@", nil), saveError]];
-        return;
-    }
-    
-    MBProgressHUD *hudView = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hudView.mode = MBProgressHUDModeText;
-    hudView.label.text = NSLocalizedString(@"ADB Key Pairs Saved", nil);
-    hudView.label.numberOfLines = 2;
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [hudView hideAnimated:YES];
-    });
 }
 
--(void)generateADBKeyPair {
+#pragma mark - Actions
+
+-(void)onSaveADBKeyPair {
+    NSLog(@"Saving ADB Key");
+    [self saveADBKey];
+}
+
+-(void)onGenerateADBKeyPair {
     NSLog(@"Generating New ADB Key");
     
-    UIAlertController *confirmAlert = [UIAlertController alertControllerWithTitle:@"Scrcpy Remote" message:NSLocalizedString(@"Please note that after regenerating the ADB key pairs, you may need to RE-AUTHORIZE on your remote phone.", nil) preferredStyle:(UIAlertControllerStyleAlert)];
-    [confirmAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, Continue", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    ShowAlertFrom(self, NSLocalizedString(@"Please note that after regenerating the ADB key pair, you may need to RE-AUTHORIZE on your remote phone.", nil), [UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, Continue", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         [self generateNewADBKey];
-    }]];
-    [confirmAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, Stop Generate", nil) style:(UIAlertActionStyleCancel) handler:nil]];
-    [self presentViewController:confirmAlert animated:YES completion:nil];
+    }], [UIAlertAction actionWithTitle:NSLocalizedString(@"No, Stop Generate", nil) style:(UIAlertActionStyleCancel) handler:nil]);
 }
 
 -(void)cancel {
@@ -254,14 +234,9 @@ int adb_auth_key_generate(const char* filename);
     }
     
     // ADB Key Changed, Confirm to Exit
-    UIAlertController *confirmAlert = [UIAlertController alertControllerWithTitle:@"Scrcpy Remote" message:NSLocalizedString(@"ADB Key has been modified but not saved, do you confirm to exit?", nil) preferredStyle:(UIAlertControllerStyleAlert)];
-    __weak typeof(self) weak_self = self;
-    [confirmAlert addAction:[UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        [weak_self dismissViewControllerAnimated:YES completion:nil];
-    }]];
-    [confirmAlert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:nil]];
-    
-    [self presentViewController:confirmAlert animated:YES completion:nil];
+    ShowAlertFrom(self, NSLocalizedString(@"ADB Key has been MODIFIED but not saved, do you confirm to exit?", nil), [UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }], [UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:nil]);
 }
 
 -(void)endEditing {
@@ -269,17 +244,40 @@ int adb_auth_key_generate(const char* filename);
     [self.pubkeyTextView endEditing:YES];
 }
 
+-(void)onExportADBKey {
+    // Export ADB Key to Local File
+    UIDocumentPickerViewController *pickerController = [[UIDocumentPickerViewController alloc] initWithURLs:@[
+        [NSURL fileURLWithPath:[self adbKeyPath]],
+        [NSURL fileURLWithPath:[self adbPubKeyPath]],
+    ] inMode:(UIDocumentPickerModeExportToService)];
+    pickerController.delegate = (id<UIDocumentPickerDelegate>)self;
+    [self presentViewController:pickerController animated:YES completion:nil];
+}
+
+-(void)onImportADBKeyPair {
+    NSLog(@"Importing ADB Key Pair");
+    UIDocumentPickerViewController *importController = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[ @"public.item" ] inMode:(UIDocumentPickerModeImport)];
+    importController.allowsMultipleSelection = YES;
+    importController.delegate = (id<UIDocumentPickerDelegate>)self;
+    [self presentViewController:importController animated:YES completion:nil];
+}
+
 #pragma mark - UIDocumentPickerDelegate
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray <NSURL *>*)urls {
     NSLog(@"Picked URLs: %@", urls);
-    MBProgressHUD *tipsView = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    tipsView.mode = MBProgressHUDModeText;
-    tipsView.label.text = NSLocalizedString(@"ADB Key Pairs Exported", nil);
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [tipsView hideAnimated:YES];
-    });
+    if (controller.documentPickerMode == UIDocumentPickerModeExportToService) {
+        MBProgressHUD *tipsView = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        tipsView.mode = MBProgressHUDModeText;
+        tipsView.label.text = NSLocalizedString(@"ADB Key Pair Exported", nil);
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [tipsView hideAnimated:YES];
+        });
+    } else if (controller.documentPickerMode == UIDocumentPickerModeImport) {
+        [self importADBKeyFromFiless:urls];
+    }
 }
 
 @end

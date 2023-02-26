@@ -69,6 +69,7 @@
 		AA18E3B12853AC7F00A8B07D /* SDL_uikitviewcontroller+Extend.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SDL_uikitviewcontroller+Extend.m"; sourceTree = "<group>"; };
 		AA18E3B32854BCE300A8B07D /* SDLUIKitDelegate+Extend.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SDLUIKitDelegate+Extend.h"; sourceTree = "<group>"; };
 		AA18E3B42854BCE300A8B07D /* SDLUIKitDelegate+Extend.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SDLUIKitDelegate+Extend.m"; sourceTree = "<group>"; };
+		AA233CEF29AB15B400A50FF5 /* UICommonUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UICommonUtils.h; sourceTree = "<group>"; };
 		AA2F70D92855CD550061552B /* ScrcpyTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrcpyTextField.h; sourceTree = "<group>"; };
 		AA2F70DA2855CD550061552B /* ScrcpyTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScrcpyTextField.m; sourceTree = "<group>"; };
 		AA2F70DC2858CE710061552B /* ScrcpySwitch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrcpySwitch.h; sourceTree = "<group>"; };
@@ -340,6 +341,7 @@
 		AAF2220D2848B03F00B732AE /* scrcpy-ios */ = {
 			isa = PBXGroup;
 			children = (
+				AA233CEF29AB15B400A50FF5 /* UICommonUtils.h */,
 				AA18E3AA2852664F00A8B07D /* MBProgressHUD.h */,
 				AA18E3AB2852664F00A8B07D /* MBProgressHUD.m */,
 				AA18E3A7285264BB00A8B07D /* KFKeychain.h */,
@@ -446,8 +448,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		
 /* End PBXResourcesBuildPhase section */
+/* Begin PBXShellScriptBuildPhase section */
+		
+/* End PBXShellScriptBuildPhase section */
 /* Begin PBXSourcesBuildPhase section */
 		AAF222072848B03F00B732AE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -651,8 +655,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
-				GCC_PREPROCESSOR_DEFINITIONS = "$inherited HOTCODE=1 HotcodeReload(...)=";
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "$inherited";
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../scrcpy/app/src",
@@ -664,6 +669,7 @@
 					"$(SRCROOT)/CocoaHTTPServer/Vendor/CocoaAsyncSocket",
 					"$(SRCROOT)/CocoaHTTPServer/Vendor/CocoaLumberjack",
 				);
+				
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Scrcpy Remote";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Background Communication";
@@ -687,13 +693,11 @@
 				);
 				MARKETING_VERSION = 1.8;
 				OTHER_LDFLAGS = "-ObjC -ladb -lscrcpy -lSDL2 -lavfilter -lavdevice -lavcodec -lavformat -lavutil -lswresample -lswscale -framework AVFoundation -framework VideoToolbox -framework CoreMedia -framework AudioToolbox -framework AVFAudio -framework CoreMotion -framework CoreHaptics -framework GameController -lbz2 -liconv -lz -lc++ -framework UIKit -framework Metal -framework QuartzCore -framework CoreGraphics -framework CoreBluetooth -ObjC $(inherited)  ";
+				
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mobile.scrcpy-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				ENABLE_TESTABILITY = "YES";
-				
-				
 			};
 			name = Debug;
 		};
