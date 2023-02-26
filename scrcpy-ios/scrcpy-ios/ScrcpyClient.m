@@ -217,8 +217,14 @@ void ScrcpyHandleFrame(AVFrame *frame) {
     __block NSArray *scrcpyOptions = self.defaultScrcpyOptions;
     NSURLComponents *urlComps = [NSURLComponents componentsWithURL:pendingScheme resolvingAgainstBaseURL:YES];
     [urlComps.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem *query, NSUInteger idx, BOOL *stop) {
+        // if value == true, set value to "" in order to match commandline style scrcpy option like --turn-screen-off
         NSString *value = [query.value isEqualToString:@"true"] ? @"" : query.value;
         scrcpyOptions = [self setScrcpyOption:scrcpyOptions name:query.name value:value];
+        
+        if ([query.name isEqualToString:@"show-nav-buttons"]) {
+            self.shouldAlwaysShowNavButtons = [query.value boolValue];
+        }
+        
     }];
     
     NSLog(@"-> Scrcpy Options: %@", scrcpyOptions);
