@@ -1,5 +1,7 @@
 package com.genymobile.scrcpy;
 
+import com.genymobile.scrcpy.wrappers.InputManager;
+
 import android.os.Build;
 import android.os.SystemClock;
 import android.view.InputDevice;
@@ -12,11 +14,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Controller {
+public class Controller implements AsyncProcessor {
 
     private static final int DEFAULT_DEVICE_ID = 0;
 
+    // control_msg.h values of the pointerId field in inject_touch_event message
+    private static final int POINTER_ID_MOUSE = -1;
+    private static final int POINTER_ID_VIRTUAL_MOUSE = -3;
+
     private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
+
+    private Thread thread;
 
     private final Device device;
     private final DesktopConnection connection;
@@ -57,7 +65,7 @@ public class Controller {
         }
     }
 
-    public void control() throws IOException {
+    private void control() throws IOException {
         // on start, power on the device
         if (powerOn && !Device.isScreenOn()) {
             device.pressReleaseKeycode(KeyEvent.KEYCODE_POWER, Device.INJECT_MODE_ASYNC);
@@ -72,9 +80,37 @@ public class Controller {
             SystemClock.sleep(500);
         }
 
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             handleEvent();
         }
+    }
+
+    public void start() {
+        thread = new Thread(() -> {
+            try {
+                control();
+            } catch (IOException e) {
+                // this is expected on close
+            } finally {
+                Ln.d("Controller stopped");
+            }
+        });
+        thread.start();
+        sender.start();
+    }
+
+    public void stop() {
+        if (thread != null) {
+            thread.interrupt();
+        }
+        sender.stop();
+    }
+
+    public void join() throws InterruptedException {
+        if (thread != null) {
+            thread.join();
+        }
+        sender.join();
     }
 
     public DeviceMessageSender getSender() {
@@ -96,7 +132,7 @@ public class Controller {
                 break;
             case ControlMessage.TYPE_INJECT_TOUCH_EVENT:
                 if (device.supportsInputEvents()) {
-                    injectTouch(msg.getAction(), msg.getPointerId(), msg.getPosition(), msg.getPressure(), msg.getButtons());
+                    injectTouch(msg.getAction(), msg.getPointerId(), msg.getPosition(), msg.getPressure(), msg.getActionButton(), msg.getButtons());
                 }
                 break;
             case ControlMessage.TYPE_INJECT_SCROLL_EVENT:
@@ -183,7 +219,7 @@ public class Controller {
         return successCount;
     }
 
-    private boolean injectTouch(int action, long pointerId, Position position, float pressure, int buttons) {
+    private boolean injectTouch(int action, long pointerId, Position position, float pressure, int actionButton, int buttons) {
         long now = SystemClock.uptimeMillis();
 
         Point point = device.getPhysicalPoint(position);
@@ -200,10 +236,23 @@ public class Controller {
         Pointer pointer = pointersState.get(pointerIndex);
         pointer.setPoint(point);
         pointer.setPressure(pressure);
-        pointer.setUp(action == MotionEvent.ACTION_UP);
+
+        int source;
+        if (pointerId == POINTER_ID_MOUSE || pointerId == POINTER_ID_VIRTUAL_MOUSE) {
+            // real mouse event (forced by the client when --forward-on-click)
+            pointerProperties[pointerIndex].toolType = MotionEvent.TOOL_TYPE_MOUSE;
+            source = InputDevice.SOURCE_MOUSE;
+            pointer.setUp(buttons == 0);
+        } else {
+            // POINTER_ID_GENERIC_FINGER, POINTER_ID_VIRTUAL_FINGER or real touch from device
+            pointerProperties[pointerIndex].toolType = MotionEvent.TOOL_TYPE_FINGER;
+            source = InputDevice.SOURCE_TOUCHSCREEN;
+            // Buttons must not be set for touch events
+            buttons = 0;
+            pointer.setUp(action == MotionEvent.ACTION_UP);
+        }
 
         int pointerCount = pointersState.update(pointerProperties, pointerCoords);
-
         if (pointerCount == 1) {
             if (action == MotionEvent.ACTION_DOWN) {
                 lastTouchDown = now;
@@ -218,22 +267,70 @@ public class Controller {
             }
         }
 
-        // Right-click and middle-click only work if the source is a mouse
-        boolean nonPrimaryButtonPressed = (buttons & ~MotionEvent.BUTTON_PRIMARY) != 0;
-        int source = nonPrimaryButtonPressed ? InputDevice.SOURCE_MOUSE : InputDevice.SOURCE_TOUCHSCREEN;
-        if (source != InputDevice.SOURCE_MOUSE) {
-            // Buttons must not be set for touch events
-            buttons = 0;
+        /* If the input device is a mouse (on API >= 23):
+         *   - the first button pressed must first generate ACTION_DOWN;
+         *   - all button pressed (including the first one) must generate ACTION_BUTTON_PRESS;
+         *   - all button released (including the last one) must generate ACTION_BUTTON_RELEASE;
+         *   - the last button released must in addition generate ACTION_UP.
+         *
+         * Otherwise, Chrome does not work properly: <https://github.com/Genymobile/scrcpy/issues/3635>
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && source == InputDevice.SOURCE_MOUSE) {
+            if (action == MotionEvent.ACTION_DOWN) {
+                if (actionButton == buttons) {
+                    // First button pressed: ACTION_DOWN
+                    MotionEvent downEvent = MotionEvent.obtain(lastTouchDown, now, MotionEvent.ACTION_DOWN, pointerCount, pointerProperties,
+                            pointerCoords, 0, buttons, 1f, 1f, DEFAULT_DEVICE_ID, 0, source, 0);
+                    if (!device.injectEvent(downEvent, Device.INJECT_MODE_ASYNC)) {
+                        return false;
+                    }
+                }
+
+                // Any button pressed: ACTION_BUTTON_PRESS
+                MotionEvent pressEvent = MotionEvent.obtain(lastTouchDown, now, MotionEvent.ACTION_BUTTON_PRESS, pointerCount, pointerProperties,
+                        pointerCoords, 0, buttons, 1f, 1f, DEFAULT_DEVICE_ID, 0, source, 0);
+                if (!InputManager.setActionButton(pressEvent, actionButton)) {
+                    return false;
+                }
+                if (!device.injectEvent(pressEvent, Device.INJECT_MODE_ASYNC)) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (action == MotionEvent.ACTION_UP) {
+                // Any button released: ACTION_BUTTON_RELEASE
+                MotionEvent releaseEvent = MotionEvent.obtain(lastTouchDown, now, MotionEvent.ACTION_BUTTON_RELEASE, pointerCount, pointerProperties,
+                        pointerCoords, 0, buttons, 1f, 1f, DEFAULT_DEVICE_ID, 0, source, 0);
+                if (!InputManager.setActionButton(releaseEvent, actionButton)) {
+                    return false;
+                }
+                if (!device.injectEvent(releaseEvent, Device.INJECT_MODE_ASYNC)) {
+                    return false;
+                }
+
+                if (buttons == 0) {
+                    // Last button released: ACTION_UP
+                    MotionEvent upEvent = MotionEvent.obtain(lastTouchDown, now, MotionEvent.ACTION_UP, pointerCount, pointerProperties,
+                            pointerCoords, 0, buttons, 1f, 1f, DEFAULT_DEVICE_ID, 0, source, 0);
+                    if (!device.injectEvent(upEvent, Device.INJECT_MODE_ASYNC)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         }
 
         MotionEvent event = MotionEvent
-                .obtain(lastTouchDown, lastTouchCont, action, pointerCount, pointerProperties, pointerCoords, 0, buttons, 1f, 1f, DEFAULT_DEVICE_ID, 0, source,
+                .obtain(lastTouchDown, now, action, pointerCount, pointerProperties, pointerCoords, 0, buttons, 1f, 1f, DEFAULT_DEVICE_ID, 0, source,
                         0);
         lastTouchCont += 16;
         return device.injectEvent(event, Device.INJECT_MODE_ASYNC);
     }
 
-    private boolean injectScroll(Position position, int hScroll, int vScroll, int buttons) {
+    private boolean injectScroll(Position position, float hScroll, float vScroll, int buttons) {
         long now = SystemClock.uptimeMillis();
         Point point = device.getPhysicalPoint(position);
         if (point == null) {
@@ -260,12 +357,9 @@ public class Controller {
      * Schedule a call to set power mode to off after a small delay.
      */
     private static void schedulePowerModeOff() {
-        EXECUTOR.schedule(new Runnable() {
-            @Override
-            public void run() {
-                Ln.i("Forcing screen off");
-                Device.setScreenPowerMode(Device.POWER_MODE_OFF);
-            }
+        EXECUTOR.schedule(() -> {
+            Ln.i("Forcing screen off");
+            Device.setScreenPowerMode(Device.POWER_MODE_OFF);
         }, 200, TimeUnit.MILLISECONDS);
     }
 

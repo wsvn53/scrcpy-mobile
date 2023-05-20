@@ -15,7 +15,11 @@ add_library( # Sets the name of the library.
         ../../porting/src/controller-porting.c
 
         ../../scrcpy/app/src/recorder.c
-        ../../scrcpy/app/src/demuxer.c
+
+        # av_alloc_context has been moved to demuxer since v2.0
+        # ../../scrcpy/app/src/demuxer.c
+        ../../porting/src/demuxer-porting.c
+
         ../../scrcpy/app/src/cli.c
         ../../scrcpy/app/src/receiver.c
         ../../scrcpy/app/src/compat.c
@@ -80,9 +84,6 @@ add_library( # Sets the name of the library.
         # ../../scrcpy/app/src/main.c
         ../../porting/src/main-porting.c
 
-        # Replace video_buffer.c to porting version
-        # ../../scrcpy/app/src/video_buffer.c
-        ../../porting/src/video_buffer-porting.c
         ../../scrcpy/app/src/opengl.c
         ../../scrcpy/app/src/version.c
 
@@ -93,6 +94,17 @@ add_library( # Sets the name of the library.
         ../../scrcpy/app/src/input_manager.c
         ../../scrcpy/app/src/icon.c
         ../../scrcpy/app/src/options.c
+
+        # Added from v2.0
+        ../../scrcpy/app/src/audio_player.c
+        ../../scrcpy/app/src/delay_buffer.c
+        ../../scrcpy/app/src/packet_merger.c
+        ../../scrcpy/app/src/util/memory.c
+        ../../scrcpy/app/src/util/average.c
+        ../../scrcpy/app/src/util/bytebuf.c
+        ../../scrcpy/app/src/util/rand.c
+        ../../scrcpy/app/src/trait/frame_source.c
+        ../../scrcpy/app/src/trait/packet_source.c
         )
 
 target_include_directories(

@@ -5,6 +5,7 @@
 	};
 	objectVersion = 55;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		AA18E3A9285264BB00A8B07D /* KFKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3A8285264BB00A8B07D /* KFKeychain.m */; };
 		AA18E3AC2852664F00A8B07D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18E3AB2852664F00A8B07D /* MBProgressHUD.m */; };
@@ -60,6 +61,7 @@
 		AAF222302848BDE300B732AE /* ScrcpyClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2222F2848BDE300B732AE /* ScrcpyClient.m */; };
 		AAF2225C284B60CD00B732AE /* CVCreate.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF2225A284B60CD00B732AE /* CVCreate.m */; };
 /* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		AA18E3A7285264BB00A8B07D /* KFKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KFKeychain.h; path = "Keychain-iOS-ObjC/KFKeychain.h"; sourceTree = SOURCE_ROOT; };
 		AA18E3A8285264BB00A8B07D /* KFKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KFKeychain.m; path = "Keychain-iOS-ObjC/KFKeychain.m"; sourceTree = SOURCE_ROOT; };
@@ -165,6 +167,7 @@
 		AAF2225A284B60CD00B732AE /* CVCreate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CVCreate.m; path = "chainable-view/CVCreate.m"; sourceTree = SOURCE_ROOT; };
 		AAF2225B284B60CD00B732AE /* CVCreate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CVCreate.h; path = "chainable-view/CVCreate.h"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		AAF222082848B03F00B732AE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -174,6 +177,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
 		AA2F7155285A21700061552B /* scrcpy-vnc */ = {
 			isa = PBXGroup;
@@ -382,14 +386,15 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
 /* Begin PBXNativeTarget section */
 		AAF2220A2848B03F00B732AE /* scrcpy-ios */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AAF222242848B04100B732AE /* Build configuration list for PBXNativeTarget "scrcpy-ios" */;
 			buildPhases = (
-				AAF222072848B03F00B732AE,
-				AAF222082848B03F00B732AE,
-				AAF222092848B03F00B732AE,
+				AAF222072848B03F00B732AE /* Sources */,
+				AAF222082848B03F00B732AE /* Frameworks */,
+				AAF222092848B03F00B732AE /* Resources */,
 			);
 			buildRules = (
 			);
@@ -401,6 +406,7 @@
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
+
 /* Begin PBXProject section */
 		AAF222032848B03F00B732AE /* Project object */ = {
 			isa = PBXProject;
@@ -431,6 +437,7 @@
 			);
 		};
 /* End PBXProject section */
+
 /* Begin PBXResourcesBuildPhase section */
 		AAF222092848B03F00B732AE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
@@ -449,9 +456,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-/* Begin PBXShellScriptBuildPhase section */
-		
-/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		AAF222072848B03F00B732AE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -505,6 +510,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
 /* Begin PBXVariantGroup section */
 		AAA8D399294390BA00909F29 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
@@ -532,6 +538,7 @@
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		AAF222222848B04100B732AE /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -657,7 +664,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PREPROCESSOR_DEFINITIONS = "$inherited";
+				GCC_PREPROCESSOR_DEFINITIONS = $inherited;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../scrcpy/app/src",
@@ -669,7 +676,6 @@
 					"$(SRCROOT)/CocoaHTTPServer/Vendor/CocoaAsyncSocket",
 					"$(SRCROOT)/CocoaHTTPServer/Vendor/CocoaLumberjack",
 				);
-				
 				INFOPLIST_FILE = "scrcpy-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Scrcpy Remote";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Background Communication";
@@ -691,9 +697,52 @@
 					"$(SRCROOT)/../external/adb-mobile/output",
 					"$(SRCROOT)/../output/iphone",
 				);
-				MARKETING_VERSION = 1.8;
-				OTHER_LDFLAGS = "-ObjC -ladb -lscrcpy -lSDL2 -lavfilter -lavdevice -lavcodec -lavformat -lavutil -lswresample -lswscale -framework AVFoundation -framework VideoToolbox -framework CoreMedia -framework AudioToolbox -framework AVFAudio -framework CoreMotion -framework CoreHaptics -framework GameController -lbz2 -liconv -lz -lc++ -framework UIKit -framework Metal -framework QuartzCore -framework CoreGraphics -framework CoreBluetooth -ObjC $(inherited)  ";
-				
+				MARKETING_VERSION = 2.0;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-ladb",
+					"-lscrcpy",
+					"-lSDL2",
+					"-lavfilter",
+					"-lavdevice",
+					"-lavcodec",
+					"-lavformat",
+					"-lavutil",
+					"-lswresample",
+					"-lswscale",
+					"-framework",
+					AVFoundation,
+					"-framework",
+					VideoToolbox,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					AVFAudio,
+					"-framework",
+					CoreMotion,
+					"-framework",
+					CoreHaptics,
+					"-framework",
+					GameController,
+					"-lbz2",
+					"-liconv",
+					"-lz",
+					"-lc++",
+					"-framework",
+					UIKit,
+					"-framework",
+					Metal,
+					"-framework",
+					QuartzCore,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					CoreBluetooth,
+					"-ObjC",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mobile.scrcpy-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -742,7 +791,7 @@
 					"$(SRCROOT)/../external/adb-mobile/output",
 					"$(SRCROOT)/../output/iphone",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 2.0;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-ladb",
@@ -795,6 +844,7 @@
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
+
 /* Begin XCConfigurationList section */
 		AAF222062848B03F00B732AE /* Build configuration list for PBXProject "scrcpy-ios" */ = {
 			isa = XCConfigurationList;

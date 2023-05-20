@@ -10,7 +10,6 @@
 #import "adb_public.h"
 #import <UIKit/UIKit.h>
 #import <libavutil/frame.h>
-#import <video_buffer.h>
 
 #import <CoreMedia/CoreMedia.h>
 #import <CoreVideo/CoreVideo.h>
@@ -442,11 +441,11 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 
 -(NSArray *)defaultScrcpyOptions {
     return @[ @"--verbosity=debug", @"--shortcut-mod=lctrl+rctrl", @"--fullscreen", @"--display-buffer=32",
-              @"--bit-rate=4M", @"--max-fps=60", @"--print-fps", ];
+              @"--video-bit-rate=4M", @"--audio-bit-rate=128K", @"--audio-buffer=100", @"--max-fps=60", @"--print-fps", ];
 }
 
 -(NSArray *)availableOptions {
-    return @[ @"max-size", @"bit-rate", @"disable-screensaver", @"display-buffer",
+    return @[ @"max-size", @"video-bit-rate", @"disable-screensaver", @"display-buffer",
               @"force-adb-forward", @"max-fps", @"power-off-on-close", @"turn-screen-off",
               @"show-touches", @"stay-awake", ];
 }

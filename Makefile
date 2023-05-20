@@ -6,4 +6,3 @@ update-all:
 libscrcpy:
 	mkdir -pv output/{iphone,android}
 	make -C porting
-

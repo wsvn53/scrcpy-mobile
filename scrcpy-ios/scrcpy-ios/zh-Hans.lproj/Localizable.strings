@@ -2,7 +2,7 @@
 "ADB Port" = "ADB 主机端口";
 "ADB Port, Default 5555" = "ADB 主机端口，默认 5555";
 "--max-size, Default Unlimited" = "--max-size, 默认无限制";
-"--bit-rate, Default 4M" = "--bit-rate, 默认 4M";
+"--video-bit-rate, Default 4M" = "--video-bit-rate, 默认 4M";
 "--max-fps, Default 60" = "--max-fps, 默认 60";
 "Turn Screen Off:" = "连接后关闭物理屏幕：";
 "Stay Awake:" = "保持屏幕唤醒：";

@@ -153,8 +153,8 @@
             .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
-                view.optionKey = @"bit-rate";
-                view.placeholder = NSLocalizedString(@"--bit-rate, Default 4M", nil);
+                view.optionKey = @"video-bit-rate";
+                view.placeholder = NSLocalizedString(@"--video-bit-rate, Default 4M", nil);
                 if (@available(iOS 13.0, *)) {
                     view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 }

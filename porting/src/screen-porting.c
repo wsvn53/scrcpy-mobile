@@ -20,7 +20,7 @@ void SDL_RenderPresent_hijack(SDL_Renderer * renderer);
 #define sc_screen_init(...)   sc_screen_init_orig(__VA_ARGS__)
 #define SDL_UpdateYUVTexture(...)   SDL_UpdateYUVTexture_hijack(__VA_ARGS__)
 #define SDL_RenderPresent(...)   SDL_RenderPresent_hijack(__VA_ARGS__)
-#define sc_video_buffer_consume(...)   sc_video_buffer_consume_hijack(__VA_ARGS__)
+#define sc_frame_buffer_consume(...)   sc_frame_buffer_consume_hijack(__VA_ARGS__)
 #define sc_screen_handle_event(...)    sc_screen_handle_event_hijack(__VA_ARGS__)
 
 #include "screen.c"
@@ -28,7 +28,7 @@ void SDL_RenderPresent_hijack(SDL_Renderer * renderer);
 #undef sc_screen_init
 #undef SDL_UpdateYUVTexture
 #undef SDL_RenderPresent
-#undef sc_video_buffer_consume
+#undef sc_frame_buffer_consume
 #undef sc_screen_handle_event
 
 struct sc_screen *
@@ -84,31 +84,31 @@ void SDL_RenderPresent_hijack(SDL_Renderer * renderer) {
 }
 
 void
-sc_video_buffer_consume(struct sc_video_buffer *vb, AVFrame *dst);
+sc_frame_buffer_consume(struct sc_frame_buffer *fb, AVFrame *dst);
 // Hijack sc_video_buffer_consume to convert NV12 pixels
 void
-sc_video_buffer_consume_hijack(struct sc_video_buffer *vb, AVFrame *dst) {
-    sc_video_buffer_consume(vb, dst);
+sc_frame_buffer_consume_hijack(struct sc_frame_buffer *fb, AVFrame *dst) {
+    sc_frame_buffer_consume(fb, dst);
     
     // Handle hardware frame render
     if (ScrcpyEnableHardwareDecoding()) ScrcpyHandleFrame(dst);
 }
 
-void
+bool
 sc_screen_handle_event(struct sc_screen *screen, SDL_Event *event) {
     // Handle Clipboard Event to Sync Clipboard to Remote
     if (event->type == SDL_CLIPBOARDUPDATE) {
         char *text = SDL_GetClipboardText();
         if (!text) {
             LOGW("Could not get clipboard text: %s", SDL_GetError());
-            return;
+            return false;
         }
 
         char *text_dup = strdup(text);
         SDL_free(text);
         if (!text_dup) {
             LOGW("Could not strdup input text");
-            return;
+            return false;
         }
 
         struct sc_control_msg msg;
@@ -120,10 +120,10 @@ sc_screen_handle_event(struct sc_screen *screen, SDL_Event *event) {
         if (!sc_controller_push_msg(screen->im.controller, &msg)) {
             free(text_dup);
             LOGW("Could not request 'set device clipboard'");
-            return;
+            return false;
         }
-        return;
+        return true;
     }
     
-    sc_screen_handle_event_hijack(screen, event);
+    return sc_screen_handle_event_hijack(screen, event);
 }

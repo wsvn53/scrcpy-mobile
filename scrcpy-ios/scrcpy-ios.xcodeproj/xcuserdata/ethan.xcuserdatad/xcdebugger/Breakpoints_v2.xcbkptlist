@@ -275,7 +275,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "105"
             endingLineNumber = "105"
-            landmarkName = "sc_decoder_push(decoder, packet)"
+            landmarkName = "sc_decoder_init(decoder, name)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -470,8 +470,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
             landmarkName = "RenderPixelBufferFrame(pixelBuffer)"
             landmarkType = "9">
          </BreakpointContent>
@@ -514,8 +514,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
             landmarkName = "-checkStartScheme"
             landmarkType = "7">
          </BreakpointContent>
@@ -530,26 +530,10 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
             landmarkName = "-handleScrcpyURLScheme:"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "EA8ACACC-2FB5-4E08-B230-1D67DA3C5EB8"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "scrcpy-ios/ScrcpyClient.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "116"
-            endingLineNumber = "116"
-            landmarkName = "ScrcpyHandleFrame(frame)"
-            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -578,8 +562,8 @@
             filePath = "scrcpy-ios/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "371"
-            endingLineNumber = "371"
+            startingLineNumber = "328"
+            endingLineNumber = "328"
             landmarkName = "-finalStart"
             landmarkType = "7">
          </BreakpointContent>
@@ -594,8 +578,8 @@
             filePath = "scrcpy-ios/ViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "377"
-            endingLineNumber = "377"
+            startingLineNumber = "337"
+            endingLineNumber = "337"
             landmarkName = "-finalStart"
             landmarkType = "7">
          </BreakpointContent>
@@ -610,8 +594,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "279"
-            endingLineNumber = "279"
+            startingLineNumber = "288"
+            endingLineNumber = "288"
             landmarkName = "-startWithOptions:"
             landmarkType = "7">
          </BreakpointContent>
@@ -626,8 +610,8 @@
             filePath = "scrcpy-ios/ScrcpyClient.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
+            startingLineNumber = "115"
+            endingLineNumber = "115"
             landmarkName = "RenderPixelBufferFrame(pixelBuffer)"
             landmarkType = "9">
          </BreakpointContent>
@@ -642,8 +626,8 @@
             filePath = "scrcpy-vnc/VNCViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
             landmarkName = "-startWebServer"
             landmarkType = "7">
          </BreakpointContent>
@@ -728,6 +712,113 @@
             startingLineNumber = "228"
             endingLineNumber = "228"
             landmarkName = "sc_process_wait(pid, close)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
+         <BreakpointContent
+            uuid = "4C20AC80-175D-4146-B1B2-47B7EB148D6C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            breakpointStackSelectionBehavior = "1"
+            scope = "1"
+            stopOnStyle = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+         <BreakpointContent
+            uuid = "A2F304FC-3EB6-48D6-9F09-3B96DB71642B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "malloc_error_break"
+            moduleName = "">
+            <Locations>
+               <Location
+                  uuid = "A2F304FC-3EB6-48D6-9F09-3B96DB71642B - 9d096611641b4e7c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "malloc_error_break"
+                  moduleName = "libsystem_malloc.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+         <BreakpointContent
+            uuid = "77109BBD-4D85-4A1D-AE36-22273B6E7465"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "sc_frame_buffer_consume_hijack"
+            moduleName = "">
+            <Locations>
+               <Location
+                  uuid = "77109BBD-4D85-4A1D-AE36-22273B6E7465 - 12385f0ce05b2baa"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "sc_frame_buffer_consume_hijack"
+                  moduleName = "scrcpy-ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/porting/src/screen-porting.c"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "90"
+                  endingLineNumber = "90"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
+         <BreakpointContent
+            uuid = "9587A7AD-D27A-4663-AE64-D3D4C7EB9664"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "sc_decoder_open"
+            moduleName = "">
+            <Locations>
+               <Location
+                  uuid = "9587A7AD-D27A-4663-AE64-D3D4C7EB9664 - cd5da277e9d0e3e0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "sc_decoder_open"
+                  moduleName = "scrcpy-ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/decoder.c"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E810D7E3-9DBB-4E49-92DD-A2E2EE4E901C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "scrcpy-ios/ScrcpyClient.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "ScrcpyHandleFrame(frame)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
