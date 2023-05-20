@@ -8,10 +8,12 @@
 #include "scrcpy-porting.h"
 
 #define sc_server_init(...)     sc_server_init_hijack(__VA_ARGS__)
+#define sc_delay_buffer_init(...)     sc_delay_buffer_init_hijack(__VA_ARGS__)
 
 #include "scrcpy.c"
 
 #undef sc_server_init
+#undef sc_delay_buffer_init
 
 __attribute__((weak))
 void ScrcpyUpdateStatus(enum ScrcpyStatus status) {
@@ -61,4 +63,16 @@ sc_server_init_hijack(struct sc_server *server, const struct sc_server_params *p
         .on_disconnected = sc_server_on_disconnected_hijack,
     };
     return sc_server_init(server, params, &cbs_fixed, cbs_userdata);
+}
+
+// Handle sc_delay_buffer_init to reset deley_buffer stopped status
+// this can fix the issue: cannot continue video and audio buffer after re-connect
+void
+sc_delay_buffer_init(struct sc_delay_buffer *db, sc_tick delay,
+                            bool first_frame_asap);
+void
+sc_delay_buffer_init_hijack(struct sc_delay_buffer *db, sc_tick delay,
+                     bool first_frame_asap) {
+    sc_delay_buffer_init(db, delay, first_frame_asap);
+    db->stopped = false;
 }
