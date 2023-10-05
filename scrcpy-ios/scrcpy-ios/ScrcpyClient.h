@@ -36,6 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 // Switch Alwayse Show Navigation Buttons
 @property (nonatomic, assign)   BOOL    shouldAlwaysShowNavButtons;
 
+// Should Show Media Information on Control Center
+@property (nonatomic, assign)   BOOL    shouldShowInControlCenter;
+
 // Shared instance
 +(instancetype)sharedClient;
 

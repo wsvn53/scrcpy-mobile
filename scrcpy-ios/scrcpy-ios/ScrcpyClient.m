@@ -37,7 +37,10 @@
 
 CFRunLoopRunResult CFRunLoopRunInMode_fix(CFRunLoopMode mode, CFTimeInterval seconds, Boolean returnAfterSourceHandled) {
     // Upper runloop duration to reduce CPU usage
-    return CFRunLoopRunInMode(mode, 0.001, returnAfterSourceHandled);
+    // Audio Thread using seconds == 0.100000001f, so dynamic change
+    // the runloop duration here can reduce CPU cost
+    seconds = seconds >= 0.1f ? seconds : 0.001f;
+    return CFRunLoopRunInMode(mode, seconds, returnAfterSourceHandled);
 }
 
 void adb_connect_status_updated(const char *serial, const char *status) {
@@ -285,6 +288,10 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 
 -(void)startWithOptions:(NSArray *)scrcpyOptions {
     __weak typeof(self) _self = self;
+    
+    // Mark audio enabled
+    self.shouldShowInControlCenter = ![scrcpyOptions containsObject:@"--no-audio"];
+    
     self.scrcpyStatusUpdated = ^(enum ScrcpyStatus status) {
         if (status == ScrcpyStatusConnected && _self.onScrcpyConnected) {
             _self.onScrcpyConnected(_self.connectedSerial);
@@ -322,6 +329,10 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 
     ScrcpyUpdateStatus(ScrcpyStatusConnecting);
     scrcpy_main((int)scrcpyOptions.count+1, (char **)args);
+    
+    // Reset Control Center Flag
+    self.shouldShowInControlCenter = NO;
+    
     ScrcpyUpdateStatus(ScrcpyStatusDisconnected);
 }
 
@@ -440,22 +451,32 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 #pragma mark - Scrcpy Options
 
 -(NSArray *)defaultScrcpyOptions {
-    return @[ @"--verbosity=debug", @"--shortcut-mod=lctrl+rctrl", @"--fullscreen", @"--display-buffer=10",
-              @"--video-bit-rate=4M", @"--audio-bit-rate=128K", @"--max-fps=60", @"--print-fps", ];
+    return @[ @"--verbosity=debug", @"--shortcut-mod=lctrl+rctrl",
+              @"--fullscreen", @"--display-buffer=33",
+              @"--video-codec=h265", @"--video-bit-rate=4M",
+              @"--audio-bit-rate=128K", @"--audio-buffer=60", @"--no-audio",
+              @"--max-fps=60", @"--print-fps" ];
 }
 
 -(NSArray *)availableOptions {
     return @[ @"max-size", @"video-bit-rate", @"audio-bit-rate", @"audio-buffer",
-              @"audio-codec", @"no-audio",
-              @"disable-screensaver", @"display-buffer",
+              @"audio-codec", @"no-audio", @"disable-screensaver", @"display-buffer",
               @"force-adb-forward", @"max-fps", @"power-off-on-close", @"turn-screen-off",
               @"show-touches", @"stay-awake", ];
 }
 
 -(NSArray *)setScrcpyOption:(NSArray *)options name:(NSString *)name value:(NSString *)value {
+    // Enable audio
+    if ([name isEqualToString:@"enable-audio"] && [options containsObject:@"--no-audio"]) {
+        // Remove --no-audio in default options
+        NSMutableArray *newOptions = [NSMutableArray arrayWithArray:options];
+        [newOptions removeObject:@"--no-audio"];
+        return newOptions;
+    }
+    
     // Check available options
     if ([self.availableOptions containsObject:name] == NO) {
-        NSLog(@"-> Not Supported: %@", name);
+        NSLog(@"-> Not supported: %@", name);
         return options;
     }
     

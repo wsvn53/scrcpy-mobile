@@ -9,6 +9,7 @@
 "Force ADB Forward:" = "强制使用 ADB Forward 模式：";
 "Turn Off When Closing:" = "断开连接后关闭屏幕：";
 "Always Show Navigation Buttons:" = "始终显示导航按键：";
+"Enable Audio(Android 11+):" = "开启音频（Android 11 以上）：";
 "Connect" = "开始连接";
 "Copy URL Scheme" = "复制当前 URL Scheme";
 "For more help, please visit\nhttps://github.com/wsvn53/scrcpy-mobile" = "获取更多帮助，请访问\nhttps://github.com/wsvn53/scrcpy-mobile";

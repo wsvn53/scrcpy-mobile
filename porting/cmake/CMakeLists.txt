@@ -96,7 +96,7 @@ add_library( # Sets the name of the library.
         ../../scrcpy/app/src/options.c
 
         # Added from v2.0
-        ../../scrcpy/app/src/audio_player.c
+        ../../porting/src/audio_player-porting.c
         ../../scrcpy/app/src/delay_buffer.c
         ../../scrcpy/app/src/packet_merger.c
         ../../scrcpy/app/src/util/memory.c

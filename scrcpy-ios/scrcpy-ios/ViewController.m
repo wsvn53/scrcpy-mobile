@@ -18,6 +18,7 @@
 #import "config.h"
 #import "LogManager.h"
 #import "UICommonUtils.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface ViewController ()
 
@@ -32,6 +33,7 @@
 @property (nonatomic, weak)   ScrcpySwitch  *forceAdbForward;
 @property (nonatomic, weak)   ScrcpySwitch  *turnOffOnClose;
 @property (nonatomic, weak)   ScrcpySwitch  *showNavButtons;
+@property (nonatomic, weak)   ScrcpySwitch  *enableAudio;
 
 @property (nonatomic, weak)   UITextField *editingText;
 
@@ -193,6 +195,9 @@
         CreateScrcpySwitch(NSLocalizedString(@"Always Show Navigation Buttons:", nil), @"show-nav-buttons", ^(ScrcpySwitch *view){
                 self.showNavButtons = view;
             }),
+        CreateScrcpySwitch(NSLocalizedString(@"Enable Audio(Android 11+):", nil), @"enable-audio", ^(ScrcpySwitch *view){
+                self.enableAudio = view;
+            }),
         CreateDarkButton(NSLocalizedString(@"Connect", nil), self, @selector(start)),
         CreateLightButton(NSLocalizedString(@"Copy URL Scheme", nil), self, @selector(copyURLScheme)),
         CVCreate.UILabel.fontSize(13.f).textColor(UIColor.grayColor)
@@ -206,7 +211,7 @@
             .text([NSString stringWithFormat:@"Based on scrcpy v%s", SCRCPY_VERSION])
             .textAlignment(NSTextAlignmentCenter),
         CVCreate.UIView,
-    ]).axis(UILayoutConstraintAxisVertical).spacing(15.f)
+    ]).axis(UILayoutConstraintAxisVertical).spacing(12.f)
     .addToView(self.view)
     .centerXAnchor(self.view.centerXAnchor, 0)
     .topAnchor(self.view.topAnchor, 0)
@@ -330,6 +335,7 @@
     options = updateSwitchOptions(options, self.forceAdbForward);
     options = updateSwitchOptions(options, self.turnOffOnClose);
     options = updateSwitchOptions(options, self.showNavButtons);
+    options = updateSwitchOptions(options, self.enableAudio);
     
     ScrcpySharedClient.shouldAlwaysShowNavButtons = self.showNavButtons.on;
     
@@ -371,6 +377,7 @@
     urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.forceAdbForward);
     urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.turnOffOnClose);
     urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.showNavButtons);
+    urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.enableAudio);
     
     // If no options, avoid "?"
     if (urlComps.queryItems.count == 0) {

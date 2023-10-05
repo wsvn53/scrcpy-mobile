@@ -154,6 +154,10 @@
 		AA9CAC23295A94AB00DD2AB1 /* KeysViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeysViewController.m; sourceTree = "<group>"; };
 		AAA8D398294390BA00909F29 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AAA8D39A294390D100909F29 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		AAB101D82A190F2700D532D2 /* dskit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = dskit; sourceTree = "<group>"; };
+		AAB101D92A190F6900D532D2 /* dskit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = dskit; sourceTree = "<group>"; };
+		AAB101DA2A19102300D532D2 /* dskit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = dskit; sourceTree = "<group>"; };
+		AAB101DE2A19110000D532D2 /* dskit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = dskit; sourceTree = "<group>"; };
 		AAF2220B2848B03F00B732AE /* scrcpy-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "scrcpy-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF222142848B03F00B732AE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		AAF222152848B03F00B732AE /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -325,12 +329,32 @@
 			name = noVNC;
 			sourceTree = "<group>";
 		};
+		AAB101D72A190F2700D532D2 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				AAB101D82A190F2700D532D2 /* dskit */,
+				AAB101D92A190F6900D532D2 /* dskit */,
+				AAB101DA2A19102300D532D2 /* dskit */,
+				AAB101DE2A19110000D532D2 /* dskit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		AAB101E62A1A3F3B00D532D2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AAF222022848B03F00B732AE = {
 			isa = PBXGroup;
 			children = (
+				AAB101D72A190F2700D532D2 /* Packages */,
 				AA2F7155285A21700061552B /* scrcpy-vnc */,
 				AAF2220D2848B03F00B732AE /* scrcpy-ios */,
 				AAF2220C2848B03F00B732AE /* Products */,
+				AAB101E62A1A3F3B00D532D2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -401,6 +425,8 @@
 			dependencies = (
 			);
 			name = "scrcpy-ios";
+			packageProductDependencies = (
+			);
 			productName = "scrcpy-ios";
 			productReference = AAF2220B2848B03F00B732AE /* scrcpy-ios.app */;
 			productType = "com.apple.product-type.application";
@@ -416,6 +442,7 @@
 				TargetAttributes = {
 					AAF2220A2848B03F00B732AE = {
 						CreatedOnToolsVersion = 13.3.1;
+						LastSwiftMigration = 1430;
 					};
 				};
 			};
@@ -429,6 +456,8 @@
 				"zh-Hans",
 			);
 			mainGroup = AAF222022848B03F00B732AE;
+			packageReferences = (
+			);
 			productRefGroup = AAF2220C2848B03F00B732AE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -658,6 +687,7 @@
 				"ARCHS[sdk=iphonesimulator*]" = x86_64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
@@ -688,7 +718,8 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -755,6 +786,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K8Q74NT2BG;
@@ -782,7 +814,8 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

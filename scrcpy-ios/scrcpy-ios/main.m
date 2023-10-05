@@ -29,6 +29,7 @@ void ScrcpyReloadViewController(UIWindow *window) {
     UIViewController *mainController = nil;
     NSString *mode = [KFKeychain loadObjectForKey:ScrcpySwitchModeKey];
     if ([mode isEqualToString:@"adb"]) {
+        // mainController = [[ScrcpyViewController alloc] initWithNibName:nil bundle:nil];
         mainController = [[ViewController alloc] initWithNibName:nil bundle:nil];
     } else if (mode.length == 0 || [mode isEqualToString:@"vnc"]) {
         mainController = [[VNCViewController alloc] initWithNibName:nil bundle:nil];
