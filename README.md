@@ -17,6 +17,7 @@ Ported [scrcpy](https://github.com/Genymobile/scrcpy) for mobile platforms, to r
 * Supports toggle iOS keyboard and send keys to remote device;
 * Sync clipboard contents between iPhone and remote Android devices;
 * Support adbkey management: generate, modify, import, export;
+* Support audio forward to iPhone(for Android 11+ devices);
 
 ## Installation
 
