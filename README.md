@@ -23,7 +23,7 @@ Ported [scrcpy](https://github.com/Genymobile/scrcpy) for mobile platforms, to r
 
 Scrcpy Mobile is now available on the App Store. You can download from:
 
-[![Get it from iTunes](https://lisk.com/sites/default/files/pictures/2020-01/download_on_the_app_store_badge.svg)](https://apps.apple.com/us/app/scrcpy-remote/id1629352527)
+[![Get it from iTunes](screenshots/Download_on_the_App_Store_Badge.png)](https://apps.apple.com/us/app/scrcpy-remote/id1629352527)
 
 ## Usage 
 
