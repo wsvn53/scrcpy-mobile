@@ -19,7 +19,7 @@ scrcpy:
 
 scrcpy-server:
 	set -x && \
-	export SCRCPY_VERSION=2.0 && \
+	export SCRCPY_VERSION=2.3 && \
 	export ANDROID_SDK_ROOT=~/Library/Android/sdk && \
 	export JAVA_HOME="$$(/usr/libexec/java_home --version 1.11)" && \
 	export PATH="$$JAVA_HOME/bin:$$PATH" && \

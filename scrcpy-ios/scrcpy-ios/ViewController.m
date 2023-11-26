@@ -34,6 +34,7 @@
 @property (nonatomic, weak)   ScrcpySwitch  *turnOffOnClose;
 @property (nonatomic, weak)   ScrcpySwitch  *showNavButtons;
 @property (nonatomic, weak)   ScrcpySwitch  *enableAudio;
+@property (nonatomic, weak)   ScrcpySwitch  *enablePowerSavingMode;
 
 @property (nonatomic, weak)   UITextField *editingText;
 
@@ -180,23 +181,38 @@
                 view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.maxFps = view;
             }),
-        CreateScrcpySwitch(NSLocalizedString(@"Turn Screen Off:", nil), @"turn-screen-off", ^(ScrcpySwitch *view){
+        CreateScrcpySwitch(NSLocalizedString(@"Turn Screen Off:", nil), 
+            @"turn-screen-off",
+            ^(ScrcpySwitch *view){
                 self.turnScreenOff = view;
             }),
-        CreateScrcpySwitch(NSLocalizedString(@"Stay Awake:", nil), @"stay-awake", ^(ScrcpySwitch *view){
+        CreateScrcpySwitch(NSLocalizedString(@"Stay Awake:", nil), 
+            @"stay-awake",
+            ^(ScrcpySwitch *view){
                 self.stayAwake = view;
             }),
-        CreateScrcpySwitch(NSLocalizedString(@"Force ADB Forward:", nil), @"force-adb-forward", ^(ScrcpySwitch *view){
+        CreateScrcpySwitch(NSLocalizedString(@"Force ADB Forward:", nil), 
+            @"force-adb-forward",
+            ^(ScrcpySwitch *view){
                 self.forceAdbForward = view;
             }),
-        CreateScrcpySwitch(NSLocalizedString(@"Turn Off When Closing:", nil), @"power-off-on-close", ^(ScrcpySwitch *view){
+        CreateScrcpySwitch(NSLocalizedString(@"Turn Off When Closing:", nil), 
+            @"power-off-on-close",
+            ^(ScrcpySwitch *view){
                 self.turnOffOnClose = view;
             }),
-        CreateScrcpySwitch(NSLocalizedString(@"Always Show Navigation Buttons:", nil), @"show-nav-buttons", ^(ScrcpySwitch *view){
+        CreateScrcpySwitch(NSLocalizedString(@"Always Show Navigation Buttons:", nil), 
+            @"show-nav-buttons",
+            ^(ScrcpySwitch *view){
                 self.showNavButtons = view;
             }),
-        CreateScrcpySwitch(NSLocalizedString(@"Enable Audio(Android 11+):", nil), @"enable-audio", ^(ScrcpySwitch *view){
+        CreateScrcpySwitch(NSLocalizedString(@"Enable Audio(Android 11+):", nil), 
+            @"enable-audio", ^(ScrcpySwitch *view){
                 self.enableAudio = view;
+            }),
+        CreateScrcpySwitch(NSLocalizedString(@"Power Saving Mode(for iPhone):", nil),
+            @"power-saving", ^(ScrcpySwitch *view){
+                self.enablePowerSavingMode = view;
             }),
         CreateDarkButton(NSLocalizedString(@"Connect", nil), self, @selector(start)),
         CreateLightButton(NSLocalizedString(@"Copy URL Scheme", nil), self, @selector(copyURLScheme)),
@@ -336,8 +352,10 @@
     options = updateSwitchOptions(options, self.turnOffOnClose);
     options = updateSwitchOptions(options, self.showNavButtons);
     options = updateSwitchOptions(options, self.enableAudio);
+    options = updateSwitchOptions(options, self.enablePowerSavingMode);
     
     ScrcpySharedClient.shouldAlwaysShowNavButtons = self.showNavButtons.on;
+    ScrcpySharedClient.enablePowerSavingMode = self.enablePowerSavingMode.on;
     
     [self showHUDWith:NSLocalizedString(@"Starting..", nil)];
     [ScrcpySharedClient startWith:self.adbHost.text adbPort:self.adbPort.text options:options];
@@ -399,22 +417,27 @@
     sourceRect.size.height = 40;
     menuController.popoverPresentationController.sourceRect = sourceRect;
     __weak typeof(self) weakSelf = self;
-    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Pair With Pairing Code", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction *action) {
-        NSLog(@"Start Pair Device Controller");
+    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Pair with [Pairing Code]", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction *action) {
+        NSLog(@"Start pair device controller");
         PairViewController *pairController = [[PairViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *pairNav = [[UINavigationController alloc] initWithRootViewController:pairController];
         [weakSelf presentViewController:pairNav animated:YES completion:nil];
     }]];
-    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import/Export ADB Keys", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"Import/Export ADB Keys");
+    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Import/Export ADB keys", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Import/Export ADB keys");
         KeysViewController *keysController = [[KeysViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *keysNav = [[UINavigationController alloc] initWithRootViewController:keysController];
         [weakSelf presentViewController:keysNav animated:YES completion:nil];
     }]];
-    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Show Scrcpy Logs", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Show detailed scrcpy logs", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         LogsViewController *logsController = [[LogsViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *logsrNav = [[UINavigationController alloc] initWithRootViewController:logsController];
         [weakSelf presentViewController:logsrNav animated:YES completion:nil];
+    }]];
+    [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Report an issue", nil) style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Report an issue");
+        NSURL *issueLink = [NSURL URLWithString:@"https://github.com/wsvn53/scrcpy-mobile/issues"];
+        [UIApplication.sharedApplication openURL:issueLink options:@{} completionHandler:nil];
     }]];
     [menuController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
         NSLog(@"Cancel");
@@ -445,9 +468,8 @@
 }
 
 -(void)openScrcpyMobile {
-    [UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://github.com/wsvn53/scrcpy-mobile"]
-                                     options:@{}
-                           completionHandler:nil];
+    NSURL *projectLink = [NSURL URLWithString:@"https://github.com/wsvn53/scrcpy-mobile"];
+    [UIApplication.sharedApplication openURL:projectLink options:@{} completionHandler:nil];
 }
 
 -(void)switchVNCMode:(void(^)(void))continueCompletion {

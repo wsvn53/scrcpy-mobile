@@ -39,7 +39,9 @@ CFRunLoopRunResult CFRunLoopRunInMode_fix(CFRunLoopMode mode, CFTimeInterval sec
     // Upper runloop duration to reduce CPU usage
     // Audio Thread using seconds == 0.100000001f, so dynamic change
     // the runloop duration here can reduce CPU cost
-    seconds = seconds >= 0.1f ? seconds : 0.001f;
+    seconds = seconds >= 0.1f ? seconds : ({
+        ScrcpySharedClient.enablePowerSavingMode ? 0.002f : 0.0001f;
+    });
     return CFRunLoopRunInMode(mode, seconds, returnAfterSourceHandled);
 }
 
@@ -94,16 +96,16 @@ void RenderPixelBufferFrame(CVPixelBufferRef pixelBuffer) {
         displayLayer = [AVSampleBufferDisplayLayer layer];
         displayLayer.videoGravity = AVLayerVideoGravityResizeAspect;
         
-        UIWindow *keyWindow = [UIApplication.sharedApplication.windows filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(UIWindow *window, id bindings) {
-            return window.isKeyWindow;
+        UIWindow *sdlWindow = [UIApplication.sharedApplication.windows filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(UIWindow *window, id bindings) {
+            return [NSStringFromClass([window class]) containsString:@"SDL_"];
         }]].firstObject;
         
-        if ([NSStringFromClass(keyWindow.class) hasPrefix:@"SDL"] == NO)
-            return;
+        // Skip when no SDL window found
+        if (sdlWindow == nil) return;
         
-        displayLayer.frame = keyWindow.rootViewController.view.bounds;
-        [keyWindow.rootViewController.view.layer addSublayer:displayLayer];
-        keyWindow.rootViewController.view.backgroundColor = UIColor.blackColor;
+        displayLayer.frame = sdlWindow.rootViewController.view.bounds;
+        [sdlWindow.rootViewController.view.layer addSublayer:displayLayer];
+        sdlWindow.rootViewController.view.backgroundColor = UIColor.blackColor;
         // sometimes failed to set background color, so we append to next runloop
         displayLayer.backgroundColor = UIColor.blackColor.CGColor;
         NSLog(@"[INFO] Using hardware decoding.");
@@ -289,8 +291,11 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 -(void)startWithOptions:(NSArray *)scrcpyOptions {
     __weak typeof(self) _self = self;
     
-    // Mark audio enabled
-    self.shouldShowInControlCenter = ![scrcpyOptions containsObject:@"--no-audio"];
+    // Power saving options
+    if (self.enablePowerSavingMode) {
+        NSLog(@"Power saving mode enabled, --max-fps set to 30hz");
+        scrcpyOptions = [self setScrcpyOption:scrcpyOptions name:@"max-fps" value:@"30"];
+    }
     
     self.scrcpyStatusUpdated = ^(enum ScrcpyStatus status) {
         if (status == ScrcpyStatusConnected && _self.onScrcpyConnected) {
@@ -329,9 +334,6 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 
     ScrcpyUpdateStatus(ScrcpyStatusConnecting);
     scrcpy_main((int)scrcpyOptions.count+1, (char **)args);
-    
-    // Reset Control Center Flag
-    self.shouldShowInControlCenter = NO;
     
     ScrcpyUpdateStatus(ScrcpyStatusDisconnected);
 }
@@ -453,7 +455,7 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 -(NSArray *)defaultScrcpyOptions {
     return @[ @"--verbosity=debug", @"--shortcut-mod=lctrl+rctrl",
               @"--fullscreen", @"--display-buffer=33",
-              @"--video-codec=h265", @"--video-bit-rate=4M",
+              /** @"--video-codec=h265", **/ @"--video-bit-rate=4M",
               @"--audio-bit-rate=128K", @"--audio-buffer=60", @"--no-audio",
               @"--max-fps=60", @"--print-fps" ];
 }

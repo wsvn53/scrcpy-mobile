@@ -105,6 +105,10 @@ add_library( # Sets the name of the library.
         ../../scrcpy/app/src/util/rand.c
         ../../scrcpy/app/src/trait/frame_source.c
         ../../scrcpy/app/src/trait/packet_source.c
+
+        # Added from v2.2
+        ../../porting/src/display-porting.c
+        ../../scrcpy/app/src/util/timeout.c
         )
 
 target_include_directories(

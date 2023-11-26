@@ -33,11 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
 // Pending URL Scheme
 @property (nonatomic, strong, nullable)   NSURL   *pendingScheme;
 
-// Switch Alwayse Show Navigation Buttons
+// Switch Always Show Navigation Buttons
 @property (nonatomic, assign)   BOOL    shouldAlwaysShowNavButtons;
 
-// Should Show Media Information on Control Center
-@property (nonatomic, assign)   BOOL    shouldShowInControlCenter;
+// Switch to enable power saving mode on iPhone, with lower refresh rate and lower interactive response
+@property (nonatomic, assign)   BOOL    enablePowerSavingMode;
 
 // Shared instance
 +(instancetype)sharedClient;

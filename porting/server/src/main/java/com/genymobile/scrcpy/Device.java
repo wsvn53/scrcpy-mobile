@@ -1,6 +1,7 @@
 package com.genymobile.scrcpy;
 
 import com.genymobile.scrcpy.wrappers.ClipboardManager;
+import com.genymobile.scrcpy.wrappers.DisplayControl;
 import com.genymobile.scrcpy.wrappers.InputManager;
 import com.genymobile.scrcpy.wrappers.ServiceManager;
 import com.genymobile.scrcpy.wrappers.SurfaceControl;
@@ -11,6 +12,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.view.IDisplayFoldListener;
 import android.view.IRotationWatcher;
 import android.view.InputDevice;
 import android.view.InputEvent;
@@ -35,6 +37,10 @@ public final class Device {
         void onRotationChanged(int rotation);
     }
 
+    public interface FoldListener {
+        void onFoldChanged(int displayId, boolean folded);
+    }
+
     public interface ClipboardListener {
         void onClipboardTextChanged(String text);
     }
@@ -46,6 +52,7 @@ public final class Device {
 
     private ScreenInfo screenInfo;
     public RotationListener rotationListener;
+    private FoldListener foldListener;
     private ClipboardListener clipboardListener;
     private final AtomicBoolean isSettingClipboard = new AtomicBoolean();
 
@@ -92,6 +99,33 @@ public final class Device {
                 }
             }
         }, displayId);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ServiceManager.getWindowManager().registerDisplayFoldListener(new IDisplayFoldListener.Stub() {
+                @Override
+                public void onDisplayFoldChanged(int displayId, boolean folded) {
+                    if (Device.this.displayId != displayId) {
+                        // Ignore events related to other display ids
+                        return;
+                    }
+
+                    synchronized (Device.this) {
+                        DisplayInfo displayInfo = ServiceManager.getDisplayManager().getDisplayInfo(displayId);
+                        if (displayInfo == null) {
+                            Ln.e("Display " + displayId + " not found\n" + LogUtils.buildDisplayListMessage());
+                            return;
+                        }
+
+                        screenInfo = ScreenInfo.computeScreenInfo(displayInfo.getRotation(), displayInfo.getSize(), options.getCrop(),
+                                options.getMaxSize(), options.getLockVideoOrientation());
+                        // notify
+                        if (foldListener != null) {
+                            foldListener.onFoldChanged(displayId, folded);
+                        }
+                    }
+                }
+            });
+        }
 
         if (options.getControl() && options.getClipboardAutosync()) {
             // If control and autosync are enabled, synchronize Android clipboard to the computer automatically
@@ -224,6 +258,10 @@ public final class Device {
         this.rotationListener = rotationListener;
     }
 
+    public synchronized void setFoldListener(FoldListener foldlistener) {
+        this.foldListener = foldlistener;
+    }
+
     public synchronized void setClipboardListener(ClipboardListener clipboardListener) {
         this.clipboardListener = clipboardListener;
     }
@@ -278,8 +316,12 @@ public final class Device {
      */
     public static boolean setScreenPowerMode(int mode) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // On Android 14, these internal methods have been moved to DisplayControl
+            boolean useDisplayControl =
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && !SurfaceControl.hasPhysicalDisplayIdsMethod();
+
             // Change the power mode for all physical displays
-            long[] physicalDisplayIds = SurfaceControl.getPhysicalDisplayIds();
+            long[] physicalDisplayIds = useDisplayControl ? DisplayControl.getPhysicalDisplayIds() : SurfaceControl.getPhysicalDisplayIds();
             if (physicalDisplayIds == null) {
                 Ln.e("Could not get physical display ids");
                 return false;
@@ -287,11 +329,9 @@ public final class Device {
 
             boolean allOk = true;
             for (long physicalDisplayId : physicalDisplayIds) {
-                IBinder binder = SurfaceControl.getPhysicalDisplayToken(physicalDisplayId);
-                boolean ok = SurfaceControl.setDisplayPowerMode(binder, mode);
-                if (!ok) {
-                    allOk = false;
-                }
+                IBinder binder = useDisplayControl ? DisplayControl.getPhysicalDisplayToken(
+                        physicalDisplayId) : SurfaceControl.getPhysicalDisplayToken(physicalDisplayId);
+                allOk &= SurfaceControl.setDisplayPowerMode(binder, mode);
             }
             return allOk;
         }
