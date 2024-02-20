@@ -292,8 +292,11 @@
         hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.minSize = CGSizeMake(130, 130);
     }
-    hud.label.text = text;
-    hud.label.numberOfLines = 2;
+    hud.label.text = [text stringByAppendingString:@"\nClick to Cancel"];
+    hud.label.font = [UIFont boldSystemFontOfSize:14.f];
+    hud.label.numberOfLines = 3;
+    hud.label.userInteractionEnabled = YES;
+    [hud.label addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(stop)]];
 }
 
 -(void)stopEditing {
@@ -302,6 +305,12 @@
     [self.maxSize endEditing:YES];
     [self.bitRate endEditing:YES];
     [self.maxFps endEditing:YES];
+}
+
+-(void)stop {
+    NSLog(@"User cacncelled connect.");
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [ScrcpySharedClient stopScrcpy];
 }
 
 -(void)start {
@@ -396,6 +405,7 @@
     urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.turnOffOnClose);
     urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.showNavButtons);
     urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.enableAudio);
+    urlComps.queryItems = updateURLBoolItems(urlComps.queryItems, self.enablePowerSavingMode);
     
     // If no options, avoid "?"
     if (urlComps.queryItems.count == 0) {
