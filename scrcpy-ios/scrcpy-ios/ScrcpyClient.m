@@ -233,6 +233,9 @@ void ScrcpyHandleFrame(AVFrame *frame) {
             self.shouldAlwaysShowNavButtons = [query.value boolValue];
         }
         
+        if ([query.name isEqualToString:@"power-saving"]) {
+            self.enablePowerSavingMode = [query.value boolValue];
+        }
     }];
     
     NSLog(@"-> Scrcpy Options: %@", scrcpyOptions);
