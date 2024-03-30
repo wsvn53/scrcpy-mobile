@@ -88,19 +88,13 @@
 
 -(void)setupViews {
     self.title = @"Scrcpy Remote";
-    self.view.backgroundColor = UIColor.whiteColor;
     
-    if (@available(iOS 13.0, *)) {
-        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-        [appearance configureWithOpaqueBackground];
-        appearance.backgroundColor = [UIColor systemGray6Color];
-        self.navigationController.navigationBar.standardAppearance = appearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
-    }
+    // Setup appearance
+    SetupViewControllerAppearance(self);
     
     // More button
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"More"] style:(UIBarButtonItemStylePlain) target:self action:@selector(showMoreMenu:)];
-    moreItem.tintColor = UIColor.blackColor;
+    moreItem.tintColor = DynamicTintColor();
     self.navigationItem.rightBarButtonItem = moreItem;
     
     __weak typeof(self) _self = self;
@@ -108,29 +102,23 @@
         CVCreate.UIView.size(CGSizeMake(0, 5)),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
+            .border(DynamicTextFieldBorderColor(), 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"adb-host";
-                view.placeholder = NSLocalizedString(@"ADB Host", nil);
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"ADB Host", nil));
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
-                if (@available(iOS 13.0, *)) {
-                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-                }
                 view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.adbHost = view;
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
+            .border(DynamicTextFieldBorderColor(), 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"adb-port";
-                view.placeholder = NSLocalizedString(@"ADB Port, Default 5555", nil);
-                if (@available(iOS 13.0, *)) {
-                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-                }
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"ADB Port, Default 5555", nil));
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.delegate = (id<UITextFieldDelegate>)_self;
@@ -138,14 +126,11 @@
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
+            .border(DynamicTextFieldBorderColor(), 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"max-size";
-                view.placeholder = NSLocalizedString(@"--max-size, Default Unlimited", nil);
-                if (@available(iOS 13.0, *)) {
-                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-                }
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"--max-size, Default Unlimited", nil));
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.delegate = (id<UITextFieldDelegate>)_self;
@@ -153,14 +138,11 @@
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
+            .border(DynamicTextFieldBorderColor(), 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"video-bit-rate";
-                view.placeholder = NSLocalizedString(@"--video-bit-rate, Default 4M", nil);
-                if (@available(iOS 13.0, *)) {
-                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-                }
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"--video-bit-rate, Default 4M", nil));
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.delegate = (id<UITextFieldDelegate>)_self;
@@ -168,14 +150,11 @@
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
+            .border(DynamicTextFieldBorderColor(), 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
                 view.optionKey = @"max-fps";
-                view.placeholder = NSLocalizedString(@"--max-fps, Default 60", nil);
-                if (@available(iOS 13.0, *)) {
-                    view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-                }
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"--max-fps, Default 60", nil));
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 view.delegate = (id<UITextFieldDelegate>)_self;
@@ -239,13 +218,13 @@
     
     ScrcpySharedClient.onADBConnecting = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf showHUDWith:NSLocalizedString(@"ADB\nConnecting", nil)];
+            [weakSelf showHUDWith:NSLocalizedString(@"ADB\n🌐 Connecting", nil)];
         });
     };
     
     ScrcpySharedClient.onADBConnected = ^(NSString *serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf showHUDWith:NSLocalizedString(@"ADB\nConnected", nil)];
+            [weakSelf showHUDWith:NSLocalizedString(@"ADB\n✅ Connected!", nil)];
         });
     };
     
@@ -292,7 +271,7 @@
         hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.minSize = CGSizeMake(130, 130);
     }
-    hud.label.text = [text stringByAppendingString:@"\nClick to Cancel"];
+    hud.label.text = [text stringByAppendingString:@"\n[Click to Cancel]"];
     hud.label.font = [UIFont boldSystemFontOfSize:14.f];
     hud.label.numberOfLines = 3;
     hud.label.userInteractionEnabled = YES;

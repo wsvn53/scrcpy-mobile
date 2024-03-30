@@ -22,14 +22,6 @@ int adb_auth_key_generate(const char* filename);
 
 @implementation KeysViewController
 
-+(void)reload {
-    NSLog(@"Reload UI");
-    
-    UINavigationController *nav = (UINavigationController *)UIApplication.sharedApplication.keyWindow.rootViewController;
-    UINavigationController *keysNav = (UINavigationController *)nav.viewControllers.firstObject.presentedViewController;
-    [keysNav setViewControllers:@[[self new]] animated:YES];
-}
-
 -(void)loadView {
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:(CGRectZero)];
     scrollView.alwaysBounceVertical = YES;
@@ -42,39 +34,41 @@ int adb_auth_key_generate(const char* filename);
 }
 
 -(void)setupViews {
-    self.view.backgroundColor = UIColor.whiteColor;
     self.title = NSLocalizedString(@"Import/Export ADB Keys", nil);
     
-    if (@available(iOS 13.0, *)) {
-        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-        [appearance configureWithOpaqueBackground];
-        appearance.backgroundColor = [UIColor systemGray6Color];
-        self.navigationController.navigationBar.standardAppearance = appearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
-    }
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Export", nil) style:(UIBarButtonItemStylePlain) target:self action:@selector(onExportADBKey)];
-    self.navigationItem.rightBarButtonItem.tintColor = UIColor.blackColor;
+    // Setup appearance
+    SetupViewControllerAppearance(self);
+
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Export", nil) 
+                                                                              style:(UIBarButtonItemStylePlain)
+                                                                             target:self
+                                                                             action:@selector(onExportADBKey)];
+    self.navigationItem.rightBarButtonItem.tintColor = DynamicTintColor();
     
     CVCreate.UIStackView(@[
         CVCreate.UIView.size(CGSizeMake(0, 5)),
-        CVCreate.UILabel.boldFontSize(15).text(NSLocalizedString(@"ADB Private Key(adbkey):", nil)).textColor(UIColor.darkGrayColor),
+        CVCreate.UILabel.boldFontSize(15)
+            .text(NSLocalizedString(@"ADB Private Key(adbkey):", nil))
+            .textColor(DynamicTextColor()),
         CVCreate.withView(self.keyTextView).fontSize(15)
             .size((CGSize){0, 200})
             .text([self loadADBKey])
             .cornerRadius(5.f)
-            .backgroundColor(UIColor.whiteColor)
-            .textColor(UIColor.darkGrayColor)
+            .backgroundColor(DynamicBackgroundColor())
+            .textColor(DynamicTextColor())
             .border(UIColor.lightGrayColor, 1.f),
         CVCreate.UIView.size((CGSize){0, 1}),
-        CVCreate.UILabel.boldFontSize(15).text(NSLocalizedString(@"ADB Public Key(adbkey.pub):", nil)).textColor(UIColor.darkGrayColor),
+        CVCreate.UILabel
+            .boldFontSize(15)
+            .text(NSLocalizedString(@"ADB Public Key(adbkey.pub):", nil))
+            .textColor(DynamicTextColor()),
         CVCreate.withView(self.pubkeyTextView).fontSize(15)
             .size((CGSize){0, 200})
             .text([self loadADBPubKey])
             .cornerRadius(5.f)
-            .backgroundColor(UIColor.whiteColor)
-            .textColor(UIColor.darkGrayColor)
-            .border(UIColor.lightGrayColor, 1.f),
+            .backgroundColor(DynamicBackgroundColor())
+            .textColor(DynamicTextColor())
+            .border(DynamicTextFieldBorderColor(), 1.f),
         CreateDarkButton(NSLocalizedString(@"Save Privatekey & Pubkey", nil), self, @selector(onSaveADBKeyPair)),
         CreateLightButton(NSLocalizedString(@"Import ADB Key Pair From File", nil), self, @selector(onImportADBKeyPair)),
         CreateLightButton(NSLocalizedString(@"Generate New ADB Key Pair", nil), self, @selector(onGenerateADBKeyPair)),

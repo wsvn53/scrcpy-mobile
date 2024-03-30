@@ -10,6 +10,7 @@
 #import "ScrcpyTextField.h"
 #import "ScrcpyClient.h"
 #import "MBProgressHUD.h"
+#import "UICommonUtils.h"
 
 @interface PairViewController ()
 // TextFields
@@ -36,34 +37,31 @@
 }
 
 -(void)setupViews {
-    self.view.backgroundColor = UIColor.whiteColor;
     self.title = NSLocalizedString(@"ADB Pair With Android", nil);
     
-    if (@available(iOS 13.0, *)) {
-        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-        [appearance configureWithOpaqueBackground];
-        appearance.backgroundColor = [UIColor systemGray6Color];
-        self.navigationController.navigationBar.standardAppearance = appearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
-    }
-    
+    // Setup appearance
+    SetupViewControllerAppearance(self);
+
     __weak typeof(self) _self = self;
     CVCreate.UIStackView(@[
         CVCreate.UIView.size(CGSizeMake(0, 5)),
-        CVCreate.UILabel.boldFontSize(15).textColor(UIColor.darkGrayColor)
+        CVCreate.UILabel.boldFontSize(15)
+            .textColor(DynamicTextColor())
             .text(NSLocalizedString(@"How To Pair With Android Devices:", nil)),
-        CVCreate.UILabel.fontSize(15).textColor(UIColor.darkGrayColor)
+        CVCreate.UILabel.fontSize(15)
+            .textColor(DynamicTextColor())
             .customView(^(UILabel *view){ view.numberOfLines = 10; })
             .text(NSLocalizedString(@"1. Go to Settings -> System -> Developer Options\n2. Enable Wireless Debugging\n3. Pair device with pairing code", nil)),
-        CVCreate.UILabel.boldFontSize(15).textColor(UIColor.darkGrayColor)
+        CVCreate.UILabel.boldFontSize(15)
+            .textColor(DynamicTextColor())
             .text(NSLocalizedString(@"Note: This feature only available on Android 11 and above!", nil))
             .customView(^(UILabel *view){ view.numberOfLines = 2; }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
+            .border(DynamicTextFieldBorderColor(), 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
-                view.placeholder = NSLocalizedString(@"ADB Pairing IP Address", nil);
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"ADB Pairing IP Address", nil));
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 if (@available(iOS 13.0, *)) {
@@ -74,10 +72,10 @@
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
+            .border(DynamicTextFieldBorderColor(), 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
-                view.placeholder = NSLocalizedString(@"ADB Pairing Port", nil);
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"ADB Pairing Port", nil));
                 view.autocorrectionType = UITextAutocorrectionTypeNo;
                 view.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 if (@available(iOS 13.0, *)) {
@@ -88,10 +86,10 @@
             }),
         CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
             .fontSize(16)
-            .border([UIColor colorWithRed:0 green:0 blue:0 alpha:0.3], 2.f)
+            .border(DynamicTextFieldBorderColor(), 2.f)
             .cornerRadius(5.f)
             .customView(^(ScrcpyTextField *view){
-                view.placeholder = NSLocalizedString(@"ADB Pairing Code", nil);
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"ADB Pairing Code", nil));
                 if (@available(iOS 13.0, *)) {
                     view.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
                 }
@@ -100,21 +98,9 @@
                 view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.pairingCode = view;
             }),
-        CVCreate.UIButton.text(NSLocalizedString(@"Start Pairing", nil)).boldFontSize(16)
-            .addToView(self.view)
-            .size(CGSizeMake(0, 45))
-            .textColor(UIColor.whiteColor)
-            .backgroundColor(UIColor.blackColor)
-            .cornerRadius(6)
-            .click(self, @selector(startPairing)),
-        CVCreate.UIButton.text(NSLocalizedString(@"Cancel", nil)).boldFontSize(16)
-            .addToView(self.view)
-            .size(CGSizeMake(0, 45))
-            .textColor(UIColor.blackColor)
-            .backgroundColor(UIColor.whiteColor)
-            .border(UIColor.grayColor, 2.f)
-            .cornerRadius(6)
-            .click(self, @selector(cancelPairing)),
+        CVCreate.UIView,
+        CreateDarkButton(NSLocalizedString(@"Start Pairing", nil), self, @selector(startPairing)),
+        CreateLightButton(NSLocalizedString(@"Cancel", nil), self, @selector(cancelPairing)),
         CVCreate.UIView,
     ]).axis(UILayoutConstraintAxisVertical).spacing(15.f)
     .addToView(self.view)

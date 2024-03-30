@@ -107,21 +107,6 @@
             symbolName = "SDL_iPhoneSetEventPump"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "DDB2FCF8-0D0A-4BD0-9EEE-CCEE75C5F95D - d28003dba1939e20"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SDL_iPhoneSetEventPump"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///var/folders/gp/mn51sr5d1_lgsq263zd16v4h0000gn/T/SDL.shwWdIT1/SDL2-2.0.22/src/video/uikit/SDL_uikitevents.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "45"
-                  endingLineNumber = "45"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -167,16 +152,6 @@
             symbolName = "-[UIApplication beginIgnoringInteractionEvents]"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "688BD605-21F8-46DA-B5CF-1097C2DE159C - 8811125695ac7325"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[UIApplication beginIgnoringInteractionEvents]"
-                  moduleName = "UIKitCore"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -190,16 +165,6 @@
             symbolName = "-[UIApplication endIgnoringInteractionEvents]"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "59EB042B-6410-4001-B978-88F920C0F29A - 5f880138f72b02f5"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[UIApplication endIgnoringInteractionEvents]"
-                  moduleName = "UIKitCore"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -213,21 +178,6 @@
             symbolName = "sc_screen_init"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "5D8720C2-6743-4C9C-8614-72BBAEF19E02 - d808642ba1a171b9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_screen_init"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/porting/src/screen-porting.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "36"
-                  endingLineNumber = "36"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -321,21 +271,6 @@
             symbolName = "sc_video_buffer_on_new_frame"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "CFBE44DE-BE28-4482-8E14-94EA356068A8 - 22b8359401a64dd4"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_video_buffer_on_new_frame"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/screen.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "363"
-                  endingLineNumber = "363"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -349,21 +284,6 @@
             symbolName = "sc_video_buffer_start"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "ECF3A263-C711-46D3-822C-8D27D6510930 - bf96e628457186e1"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_video_buffer_start"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/porting/src/video_buffer-porting.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "15"
-                  endingLineNumber = "15"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -393,16 +313,6 @@
             symbolName = "avcodec_alloc_context3"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "AA3D5E6F-0FE1-47AD-B831-C73D05E89B30 - 7eec3f923d195afa"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "avcodec_alloc_context3"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -416,31 +326,6 @@
             symbolName = "update_texture"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "EF91A81E-07A9-44B8-B84A-C1C70CA8EC9D - 2c638784e46699a5"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "update_texture"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/screen.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "715"
-                  endingLineNumber = "715"
-                  offsetFromSymbolStart = "0">
-               </Location>
-               <Location
-                  uuid = "EF91A81E-07A9-44B8-B84A-C1C70CA8EC9D - a26b6315f5c9d66c"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "CA::OGL::GLContext::update_texture(unsigned int)"
-                  moduleName = "QuartzCore"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -470,21 +355,6 @@
             symbolName = "sc_demuxer_recv_packet"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "54AE950F-8F79-40A3-BC7F-C7404E57AD19 - b79abd0671c6e37a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_demuxer_recv_packet"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/demuxer.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -578,16 +448,6 @@
             symbolName = "av_new_packet"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "CC7AC110-D1C2-441E-8843-4E1143DD9562 - 448b4ce69eda3472"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "av_new_packet"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -617,21 +477,6 @@
             symbolName = "sc_server_on_disconnected"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "36D591F1-399B-4B73-B82C-623149059CA7 - f72729d4723f345b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_server_on_disconnected"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/scrcpy.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "259"
-                  endingLineNumber = "259"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -673,16 +518,6 @@
             symbolName = "malloc_error_break"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "A2F304FC-3EB6-48D6-9F09-3B96DB71642B - 9d096611641b4e7c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "malloc_error_break"
-                  moduleName = "libsystem_malloc.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -696,21 +531,6 @@
             symbolName = "sc_frame_buffer_consume_hijack"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "77109BBD-4D85-4A1D-AE36-22273B6E7465 - 12385f0ce05b2baa"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_frame_buffer_consume_hijack"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/porting/src/screen-porting.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "90"
-                  endingLineNumber = "90"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -724,36 +544,6 @@
             symbolName = "run_demuxer"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "9587A7AD-D27A-4663-AE64-D3D4C7EB9664 - cd5da277e9d0e3e0"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_decoder_open"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/decoder.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "15"
-                  endingLineNumber = "15"
-                  offsetFromSymbolStart = "0">
-               </Location>
-               <Location
-                  uuid = "9587A7AD-D27A-4663-AE64-D3D4C7EB9664 - 349f2def833f1d77"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "run_demuxer"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/demuxer.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "134"
-                  endingLineNumber = "134"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -783,21 +573,6 @@
             symbolName = "run_buffering"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "0C8321B2-12C6-4DE0-91F2-ED6A49D1A6AA - 469c1135ace17742"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "run_buffering"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/delay_buffer.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "40"
-                  endingLineNumber = "40"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -827,36 +602,6 @@
             symbolName = "sc_delay_buffer_frame_sink_open"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "CBA9FEE5-56E3-436D-BF3C-44C7EE5F2140 - 3949e085cb7a3e24"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_delay_buffer_frame_sink_open"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/delay_buffer.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "116"
-                  endingLineNumber = "116"
-                  offsetFromSymbolStart = "0">
-               </Location>
-               <Location
-                  uuid = "CBA9FEE5-56E3-436D-BF3C-44C7EE5F2140 - 3949e085cb7a3f81"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_delay_buffer_frame_sink_open"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/delay_buffer.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "119"
-                  endingLineNumber = "119"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -870,36 +615,6 @@
             symbolName = "multiple_resample"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "BEB707C8-496E-49AE-9FB1-B4B1FF3017F5 - e318fe49176d9ba0"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[AVAudioSession setActive:error:]"
-                  moduleName = "AudioSession"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
-               <Location
-                  uuid = "BEB707C8-496E-49AE-9FB1-B4B1FF3017F5 - e5ebbc3dbeabb6ab"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "resample_linear_float"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
-               <Location
-                  uuid = "BEB707C8-496E-49AE-9FB1-B4B1FF3017F5 - e17a8211068dc523"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "multiple_resample"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -913,16 +628,6 @@
             symbolName = "AudioConverterFillComplexBuffer"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "1E6E54C1-04D4-4220-B91A-72B233E37AD9 - 6201dc7e6055eaf0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AudioConverterFillComplexBuffer"
-                  moduleName = "AudioToolboxCore"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -968,16 +673,6 @@
             symbolName = "swr_alloc_set_opts"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "8CEC3EFA-11C5-4034-9C97-9E76652165D3 - d035cef052ea3be"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "swr_alloc_set_opts"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -1007,31 +702,6 @@
             symbolName = "avcodec_open2"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "F54EF606-200F-4B84-8486-678E777CAE4E - fd01e4e261d0671d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "avcodec_alloc_context3_hijack"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/porting/src/demuxer-porting.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "17"
-                  endingLineNumber = "17"
-                  offsetFromSymbolStart = "0">
-               </Location>
-               <Location
-                  uuid = "F54EF606-200F-4B84-8486-678E777CAE4E - ace2e1d9045b2a33"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "avcodec_open2"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  offsetFromSymbolStart = "0">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -1093,21 +763,6 @@
             symbolName = "sc_display_update_texture_internal"
             moduleName = "">
             <Locations>
-               <Location
-                  uuid = "20932A39-B210-470B-8921-EE5C7CB7FF78 - 2fc088656ef52926"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "sc_display_update_texture_internal"
-                  moduleName = "scrcpy-ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethan/Src/github/scrcpy-mobile/scrcpy/app/src/display.c"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "201"
-                  endingLineNumber = "201"
-                  offsetFromSymbolStart = "20">
-               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>

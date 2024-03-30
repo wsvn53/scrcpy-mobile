@@ -8,6 +8,7 @@
 #import "LogsViewController.h"
 #import "LogManager.h"
 #import "CVCreate.h"
+#import "UICommonUtils.h"
 
 @interface LogsViewController ()
 @property (nonatomic, weak)     UITextView  *logsView;
@@ -38,31 +39,25 @@
 
 -(void)setupViews {
     self.title = @"Scrcpy Logs";
-    self.view.backgroundColor = UIColor.whiteColor;
-    
-    if (@available(iOS 13.0, *)) {
-        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-        [appearance configureWithOpaqueBackground];
-        appearance.backgroundColor = [UIColor systemGray6Color];
-        self.navigationController.navigationBar.standardAppearance = appearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
-    }
+   
+    SetupViewControllerAppearance(self);
     
     // Refresh Logs
     UIBarButtonItem *refreshItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Refresh"]
                                                                     style:(UIBarButtonItemStylePlain)
                                                                    target:self
                                                                    action:@selector(refreshLogs)];
-    refreshItem.tintColor = UIColor.darkGrayColor;
+    refreshItem.tintColor = DynamicTintColor();
     UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Share"]
                                                                   style:(UIBarButtonItemStylePlain)
                                                                  target:self
                                                                  action:@selector(shareLogs)];
-    shareItem.tintColor = UIColor.darkGrayColor;
+    shareItem.tintColor = DynamicTintColor();
     self.navigationItem.rightBarButtonItem = refreshItem;
     self.navigationItem.leftBarButtonItem = shareItem;
     
-    CVCreate.UITextView.fontSize(13).textColor(UIColor.blackColor)
+    CVCreate.UITextView.fontSize(13)
+        .textColor(DynamicTextColor())
         .text(LogManager.sharedManager.recentLogs)
         .addToView(self.view)
         .leftAnchor(self.view.leftAnchor, 5)
