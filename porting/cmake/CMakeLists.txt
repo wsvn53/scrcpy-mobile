@@ -23,7 +23,6 @@ add_library( # Sets the name of the library.
         ../../scrcpy/app/src/cli.c
         ../../scrcpy/app/src/receiver.c
         ../../scrcpy/app/src/compat.c
-        ../../scrcpy/app/src/mouse_inject.c
         ../../scrcpy/app/src/util/log.c
         ../../scrcpy/app/src/util/net_intr.c
         ../../scrcpy/app/src/util/thread.c
@@ -53,7 +52,6 @@ add_library( # Sets the name of the library.
         ../../scrcpy/app/src/clock.c
         ../../scrcpy/app/src/frame_buffer.c
         ../../scrcpy/app/src/server.c
-        ../../scrcpy/app/src/keyboard_inject.c
         ../../scrcpy/app/src/file_pusher.c
 
         # Disable usb sources
@@ -101,7 +99,6 @@ add_library( # Sets the name of the library.
         ../../scrcpy/app/src/packet_merger.c
         ../../scrcpy/app/src/util/memory.c
         ../../scrcpy/app/src/util/average.c
-        ../../scrcpy/app/src/util/bytebuf.c
         ../../scrcpy/app/src/util/rand.c
         ../../scrcpy/app/src/trait/frame_source.c
         ../../scrcpy/app/src/trait/packet_source.c
@@ -109,6 +106,22 @@ add_library( # Sets the name of the library.
         # Added from v2.2
         ../../porting/src/display-porting.c
         ../../scrcpy/app/src/util/timeout.c
+
+        # Added from v3.0.2
+        ../../scrcpy/app/src/events.c
+        ../../scrcpy/app/src/keyboard_sdk.c
+        ../../scrcpy/app/src/mouse_sdk.c
+        ../../scrcpy/app/src/hid/hid_gamepad.c
+        ../../scrcpy/app/src/hid/hid_keyboard.c
+        ../../scrcpy/app/src/hid/hid_mouse.c
+        ../../scrcpy/app/src/uhid/gamepad_uhid.c
+        ../../scrcpy/app/src/uhid/keyboard_uhid.c
+        ../../scrcpy/app/src/uhid/mouse_uhid.c
+        ../../scrcpy/app/src/uhid/uhid_output.c
+        ../../scrcpy/app/src/util/audiobuf.c
+        ../../scrcpy/app/src/audio_regulator.c
+        ../../scrcpy/app/src/mouse_capture.c
+        ../../scrcpy/app/src/util/env.c
         )
 
 target_include_directories(

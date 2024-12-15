@@ -456,8 +456,7 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 #pragma mark - Scrcpy Options
 
 -(NSArray *)defaultScrcpyOptions {
-    return @[ @"--verbosity=debug", @"--shortcut-mod=lctrl+rctrl",
-              @"--fullscreen", @"--display-buffer=33",
+    return @[ @"--verbosity=debug", @"--fullscreen",
               /** @"--video-codec=h265", **/ @"--video-bit-rate=4M",
               @"--audio-bit-rate=128K", @"--audio-buffer=60", @"--no-audio",
               @"--max-fps=60", @"--print-fps" ];
@@ -465,9 +464,9 @@ void ScrcpyHandleFrame(AVFrame *frame) {
 
 -(NSArray *)availableOptions {
     return @[ @"max-size", @"video-bit-rate", @"audio-bit-rate", @"audio-buffer",
-              @"audio-codec", @"no-audio", @"disable-screensaver", @"display-buffer",
+              @"audio-codec", @"no-audio", @"disable-screensaver", @"video-buffer",
               @"force-adb-forward", @"max-fps", @"power-off-on-close", @"turn-screen-off",
-              @"show-touches", @"stay-awake", ];
+              @"show-touches", @"stay-awake", @"new-display", @"start-app", ];
 }
 
 -(NSArray *)setScrcpyOption:(NSArray *)options name:(NSString *)name value:(NSString *)value {

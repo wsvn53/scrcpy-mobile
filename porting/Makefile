@@ -19,13 +19,13 @@ scrcpy:
 
 scrcpy-server:
 	set -x && \
-	export SCRCPY_VERSION=2.3 && \
+	export SCRCPY_VERSION=3.0.2 && \
 	export ANDROID_SDK_ROOT=~/Library/Android/sdk && \
 	export JAVA_HOME="$$(/usr/libexec/java_home --version 1.11)" && \
 	export PATH="$$JAVA_HOME/bin:$$PATH" && \
 	cd server && rm -rf scrcpy-* && \
 	curl -o scrcpy.zip -L https://github.com/Genymobile/scrcpy/archive/refs/tags/v$$SCRCPY_VERSION.zip && \
-	unzip scrcpy.zip && find src -name "*.java" -exec cp -v {} scrcpy-$$SCRCPY_VERSION/server/{} \; && \
+	unzip scrcpy.zip && \
 	cd scrcpy-$$SCRCPY_VERSION && \
 	meson setup x --buildtype=release --strip -Db_lto=true -Dcompile_app=false -Dcompile_server=true && \
 	sed -ibak 's/exit/echo/g' server/scripts/build-wrapper.sh && \

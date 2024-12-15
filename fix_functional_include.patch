@@ -1,0 +1,14 @@
+Subject: [PATCH] fix functional include: https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=276983#c6
+---
+Index: tls/include/adb/tls/tls_connection.h
+<+>UTF-8
+===================================================================
+diff --git a/tls/include/adb/tls/tls_connection.h b/tls/include/adb/tls/tls_connection.h
+@@ -21,6 +21,7 @@
+ 
+ #include <string_view>
+ #include <vector>
++#include <functional>
+ 
+ #include <android-base/unique_fd.h>
+ #include <openssl/ssl.h>

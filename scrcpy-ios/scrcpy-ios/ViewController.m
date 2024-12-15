@@ -27,6 +27,8 @@
 @property (nonatomic, weak)   ScrcpyTextField *maxSize;
 @property (nonatomic, weak)   ScrcpyTextField *bitRate;
 @property (nonatomic, weak)   ScrcpyTextField *maxFps;
+@property (nonatomic, weak)   ScrcpyTextField *display;
+@property (nonatomic, weak)   ScrcpyTextField *startApp;
 
 @property (nonatomic, weak)   ScrcpySwitch  *turnScreenOff;
 @property (nonatomic, weak)   ScrcpySwitch  *stayAwake;
@@ -160,7 +162,31 @@
                 view.delegate = (id<UITextFieldDelegate>)_self;
                 _self.maxFps = view;
             }),
-        CreateScrcpySwitch(NSLocalizedString(@"Turn Screen Off:", nil), 
+        CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
+            .fontSize(16)
+            .border(DynamicTextFieldBorderColor(), 2.f)
+            .cornerRadius(5.f)
+            .customView(^(ScrcpyTextField *view){
+                view.optionKey = @"new-display";
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"--new-display, format 1920x1080", nil));
+                view.autocorrectionType = UITextAutocorrectionTypeNo;
+                view.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                view.delegate = (id<UITextFieldDelegate>)_self;
+                _self.display = view;
+            }),
+        CVCreate.create(ScrcpyTextField.class).size(CGSizeMake(0, 40))
+            .fontSize(16)
+            .border(DynamicTextFieldBorderColor(), 2.f)
+            .cornerRadius(5.f)
+            .customView(^(ScrcpyTextField *view){
+                view.optionKey = @"start-app";
+                view.attributedPlaceholder = DynamicColoredPlaceholder(NSLocalizedString(@"--start-app, format org.fossify.home", nil));
+                view.autocorrectionType = UITextAutocorrectionTypeNo;
+                view.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                view.delegate = (id<UITextFieldDelegate>)_self;
+                _self.startApp = view;
+            }),
+        CreateScrcpySwitch(NSLocalizedString(@"Turn Screen Off:", nil),
             @"turn-screen-off",
             ^(ScrcpySwitch *view){
                 self.turnScreenOff = view;
@@ -284,6 +310,8 @@
     [self.maxSize endEditing:YES];
     [self.bitRate endEditing:YES];
     [self.maxFps endEditing:YES];
+    [self.display endEditing:YES];
+    [self.startApp endEditing:YES];
 }
 
 -(void)stop {
@@ -327,6 +355,8 @@
     options = updateTextOptions(options, self.maxSize);
     options = updateTextOptions(options, self.bitRate);
     options = updateTextOptions(options, self.maxFps);
+    options = updateTextOptions(options, self.display);
+    options = updateTextOptions(options, self.startApp);
     
     NSArray * (^updateSwitchOptions)(NSArray *options, ScrcpySwitch *) = ^NSArray * (NSArray *options, ScrcpySwitch *s) {
         [s updateOptionValue];
@@ -370,6 +400,8 @@
     urlComps.queryItems = updateURLTextItems(urlComps.queryItems, self.maxSize);
     urlComps.queryItems = updateURLTextItems(urlComps.queryItems, self.bitRate);
     urlComps.queryItems = updateURLTextItems(urlComps.queryItems, self.maxFps);
+    urlComps.queryItems = updateURLTextItems(urlComps.queryItems, self.display);
+    urlComps.queryItems = updateURLTextItems(urlComps.queryItems, self.startApp);
     
     // Assemble bool options
     NSArray *(^updateURLBoolItems)(NSArray *, ScrcpySwitch *) = ^NSArray *(NSArray *items, ScrcpySwitch *s) {
