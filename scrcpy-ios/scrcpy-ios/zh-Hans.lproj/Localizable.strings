@@ -17,7 +17,7 @@
 "ADB\nConnecting" = "ADB\n连接中";
 "ADB\nConnected" = "ADB\n已连接成功";
 "ADB Connect Failed:\n%@" = "ADB 连接失败：\n%@";
-"Device [%@] connected, but unahtorized. Please accept authorization on your device." = "设备 %@ 已连接，但需要完成授权操作。请在设备后接受授权请求。";
+"Device [%@] connected, but unauthorized. Please accept authorization on your device." = "设备 %@ 已连接，但需要完成授权操作。请在设备后接受授权请求。";
 "Start Scrcpy Failed" = "启动 Scrcpy 失败";
 "Scrcpy\nConnected" = "Scrcpy\n已连接成功";
 "ADB Host is required" = "需要填写 ADB 主机地址";

@@ -237,7 +237,7 @@
     
     ScrcpySharedClient.onADBUnauthorized = ^(NSString * _Nonnull serial) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Device [%@] connected, but unahtorized. Please accept authorization on your device.", nil), serial];
+            NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Device [%@] connected, but unauthorized. Please accept authorization on your device.", nil), serial];
             [weakSelf performSelectorOnMainThread:@selector(showAlert:) withObject:message waitUntilDone:NO];
         });
     };
