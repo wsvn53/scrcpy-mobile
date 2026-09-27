@@ -125,6 +125,10 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
     
     /// Scrcpy 客户端包装器实例，用于直接管理连接
     private var scrcpyClientWrapper: ScrcpyClientWrapper?
+
+    // Invalidates asynchronous cleanup from a previous connection, even if
+    // the same saved session is reconnected before cleanup finishes.
+    private var connectionInstanceID = UUID()
     
     /// 后台断开连接计时器
     private var backgroundDisconnectTimer: Timer?
@@ -219,6 +223,7 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
                 // 启用后台保活的静音音频（在 SDL audio session 起来之后,
                 // 我们用 .playback + .mixWithOthers 覆盖,与 scrcpy/VNC 音频共存）。
                 BackgroundKeepAliveManager.shared.sessionConnected()
+                self.startIPhoneOrientationSyncIfNeeded()
 
                 // 连接成功后,如果启用了自动重连,保存当前会话
                 self.saveCurrentSessionIfAutoReconnectEnabled()
@@ -242,6 +247,7 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
                 }
 
                 BackgroundKeepAliveManager.shared.sessionConnected()
+                self.startIPhoneOrientationSyncIfNeeded()
 
                 // 连接成功后,如果启用了自动重连,保存当前会话
                 self.saveCurrentSessionIfAutoReconnectEnabled()
@@ -257,6 +263,9 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
                     self.cleanupCallbacksAfterSuccess()
                 }
                 
+            case ScrcpyStatusConnected:
+                self.startIPhoneOrientationSyncIfNeeded()
+
             case ScrcpyStatusDisconnected:
                 print("❌ [SessionConnectionManager] Status: Disconnected - clearing session")
                 if let disconnectMessage = statusMessage, !disconnectMessage.isEmpty {
@@ -383,6 +392,11 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
         // 取消后台断开计时器
         stopBackgroundDisconnectTimer()
 
+        // Re-sync if the iPhone rotated while this app was in the background.
+        if connectionStatus.isFullyConnected {
+            IPhoneOrientationSync.shared.resume()
+        }
+
         // 检查是否需要自动重连
         print("🔍 [SessionConnectionManager] Checking if auto reconnect is needed...")
         attemptAutoReconnectIfNeeded()
@@ -454,11 +468,18 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
         // 如果当前状态不是 Disconnected，先断开现有连接
         if connectionStatus != ScrcpyStatusDisconnected {
             print("🔄 [SessionConnectionManager] Current status is \(connectionStatus.description), disconnecting first")
-            disconnectCurrent()
-            
-            // 等待断开完成后再开始新连接
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.performConnection(to: session, statusCallback: statusCallback, errorCallback: errorCallback)
+            disconnectCurrent { [weak self] in
+                // Only reconnect once Android's previous rotation is restored
+                // and the previous ADB client has started shutting down.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    guard let self = self else { return }
+                    // Disconnect cleanup clears callbacks. Install the new
+                    // session's callbacks only after that cleanup has finished.
+                    self.connectingSession = session
+                    self.currentConnectionCallback = statusCallback
+                    self.currentErrorCallback = errorCallback
+                    self.performConnection(to: session, statusCallback: statusCallback, errorCallback: errorCallback)
+                }
             }
         } else {
             // 直接开始连接
@@ -714,6 +735,7 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
     ///   - session: 会话模型
     ///   - connectionInfo: 连接信息（包含实际的 host 和 port）
     func setCurrentSession(_ session: ScrcpySessionModel, connectionInfo: NetworkConnectionInfo?) {
+        connectionInstanceID = UUID()
         currentSession = session
         
         // 清除连接中的会话信息，因为现在已经设置为当前会话
@@ -742,6 +764,17 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
     
     /// 清除当前会话信息
     func clearCurrentSession(clearPendingAction: Bool = true) {
+        // Give the orientation controller a chance to restore Android before
+        // releasing the ADB client / Tailscale forward on an unexpected exit.
+        let endingConnectionID = connectionInstanceID
+        IPhoneOrientationSync.shared.stop { [weak self] in
+            guard let self = self, self.connectionInstanceID == endingConnectionID else { return }
+            self.finishClearCurrentSession(clearPendingAction: clearPendingAction)
+        }
+    }
+
+    private func finishClearCurrentSession(clearPendingAction: Bool) {
+        connectionInstanceID = UUID() // Invalidate any duplicate disconnect callback.
         let wasConnected = currentSession != nil
         let previousHost = actualHost
         let previousPort = actualPort
@@ -863,11 +896,24 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
     
     /// 断开当前连接
     func disconnectCurrent() {
+        disconnectCurrent(completion: {})
+    }
+
+    private func disconnectCurrent(completion: @escaping () -> Void) {
         guard connectionStatus != ScrcpyStatusDisconnected else {
             print("🚫 [SessionConnectionManager] Already disconnected, no action needed")
+            completion()
             return
         }
-        
+        // Wait for restoration before closing the ADB connection.
+        IPhoneOrientationSync.shared.stop { [weak self] in
+            self?.finishDisconnectCurrent()
+            completion()
+        }
+    }
+
+    private func finishDisconnectCurrent() {
+        guard connectionStatus != ScrcpyStatusDisconnected else { return }
         print("🔌 [SessionConnectionManager] Disconnecting current connection")
         
         // 使用 ScrcpyClientWrapper 的 disconnect 方法
@@ -900,6 +946,19 @@ typealias ActionConfirmationCallback = (ScrcpyAction, @escaping () -> Void) -> V
         clearCurrentSession(clearPendingAction: true)
     }
     
+    private func startIPhoneOrientationSyncIfNeeded() {
+        guard let session = currentSession, session.deviceType == .adb,
+              session.adbOptions.syncIPhoneOrientation else { return }
+        // Rotation of secondary and virtual displays is not supported.
+        guard !session.adbOptions.startNewDisplay,
+              session.adbOptions.displayId.isEmpty || session.adbOptions.displayId == "0" else {
+            print("[iPhoneOrientationSync] Secondary/virtual displays are not supported.")
+            return
+        }
+        guard let serial = getADBDeviceSerial() else { return }
+        IPhoneOrientationSync.shared.start(sessionID: session.id, serial: serial)
+    }
+
     // MARK: - Utility Methods
     
     /// 获取当前连接的描述信息

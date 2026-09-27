@@ -43,6 +43,7 @@ import UIKit
  - display-height/height: 显示高度
  - display-dpi/dpi: 显示 DPI
  - display-id: 显示器 ID (用于多显示器支持)
+ - sync-iphone-orientation: 用 iPhone 的方向同步 Android 主屏幕 (true/false)
  
  VNC 参数：
  - vnc-user/user: VNC 用户名
@@ -355,6 +356,8 @@ class AppSchemeManagerV2: ObservableObject {
                 session.adbOptions.stayAwake = value == "true"
             case "power-off-on-close":
                 session.adbOptions.powerOffOnClose = value == "true"
+            case "sync-iphone-orientation":
+                session.adbOptions.syncIPhoneOrientation = value == "true"
             case "force-adb-forward":
                 session.adbOptions.forceAdbForward = value == "true"
             case "volume-scale":
@@ -438,8 +441,10 @@ class AppSchemeManagerV2: ObservableObject {
             // 如果 value == "true"，设置 value 为 "" 以匹配命令行样式的 scrcpy 选项，如 --turn-screen-off
             let processedValue = (value == "true") ? "" : value
             
-            // 设置 scrcpy 选项
-            scrcpyOptions = setScrcpyOption(scrcpyOptions, name: name, value: processedValue)
+            // Client-side orientation sync must not become a scrcpy CLI flag.
+            if name != "sync-iphone-orientation" {
+                scrcpyOptions = setScrcpyOption(scrcpyOptions, name: name, value: processedValue)
+            }
             
             // 处理特殊参数
             switch name {
@@ -471,6 +476,8 @@ class AppSchemeManagerV2: ObservableObject {
                 session.adbOptions.stayAwake = value == "true"
             case "power-off-on-close":
                 session.adbOptions.powerOffOnClose = value == "true"
+            case "sync-iphone-orientation":
+                session.adbOptions.syncIPhoneOrientation = value == "true"
             case "force-adb-forward":
                 session.adbOptions.forceAdbForward = value == "true"
             case "volume-scale":
@@ -594,37 +601,19 @@ class AppSchemeManagerV2: ObservableObject {
         return newOptions
     }
     
-    /// 启动连接
+    /// Forward each URL launch to the same connection lifecycle used by the
+    /// Sessions screen. A repeated URL is an explicit request to reconnect,
+    /// even when it targets the current device. Do not pre-disconnect or set
+    /// currentSession here: connectToSession() owns both operations and waits
+    /// for rotation restoration before starting the next connection.
     private func startConnection(with session: ScrcpySessionModel) {
         print("🚀 [AppSchemeManagerV2] Starting connection with session: \(session.sessionName)")
-        
-        // 解析连接信息
-        Task {
-            let connectionInfo = await SessionNetworking.shared.getConnectionInfo(for: session)
-            
-            await MainActor.run {
-                // 使用 SessionConnectionManager 检查是否需要重连
-                if !connectionManager.shouldReconnect(to: session, with: connectionInfo) {
-                    print("🔄 [AppSchemeManagerV2] No reconnection needed, ignoring URL scheme")
-                    return
-                }
-                
-                // 断开当前连接（如果有）
-                connectionManager.disconnectCurrent()
-                
-                // 设置新的当前会话
-                connectionManager.setCurrentSession(session, connectionInfo: connectionInfo)
-                
-                // 启动新连接
-                DispatchQueue.main.async {
-                    // 发送通知来触发连接，由 MainContentView 处理
-                    NotificationCenter.default.post(
-                        name: Notification.Name("StartSchemeConnection"),
-                        object: nil,
-                        userInfo: ["session": session]
-                    )
-                }
-            }
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(
+                name: .startSchemeConnection,
+                object: nil,
+                userInfo: ["session": session]
+            )
         }
     }
     

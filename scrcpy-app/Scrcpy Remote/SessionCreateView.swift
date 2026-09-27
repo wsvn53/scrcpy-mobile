@@ -309,6 +309,15 @@ struct SessionCreateView: View {
 
                         Toggle("Follow Remote Orientation Change", isOn: $sessionModel.adbOptions.followRemoteOrientation)
 
+                        VStack(alignment: .leading, spacing: 4) {
+                            Toggle("Sync iPhone Orientation to Android", isOn: $sessionModel.adbOptions.syncIPhoneOrientation)
+                                .disabled(startNewDisplay || (!sessionModel.adbOptions.displayId.isEmpty && sessionModel.adbOptions.displayId != "0"))
+                            Text("Match the Android main display to your iPhone when connecting and rotating. Restores the Android rotation mode on normal disconnect. Does not change display resolution.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+
                         if !startNewDisplay {
                             HStack {
                                 Text("Display ID")

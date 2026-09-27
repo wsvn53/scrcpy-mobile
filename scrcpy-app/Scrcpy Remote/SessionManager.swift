@@ -169,6 +169,9 @@ struct ADBSessionOptions: Codable, Identifiable {
     // 跟随远程设备方向变化选项，默认禁用
     var followRemoteOrientation: Bool = false
 
+    // Keep the Android primary display aligned with the iPhone's physical orientation.
+    var syncIPhoneOrientation: Bool = false
+
     init() { }
     
     init(from decoder: any Decoder) throws {
@@ -219,6 +222,7 @@ struct ADBSessionOptions: Codable, Identifiable {
 
         // 解码跟随远程设备方向变化选项，默认为 false
         self.followRemoteOrientation = try container.decodeIfPresent(Bool.self, forKey: .followRemoteOrientation) ?? false
+        self.syncIPhoneOrientation = try container.decodeIfPresent(Bool.self, forKey: .syncIPhoneOrientation) ?? false
     }
 }
 
