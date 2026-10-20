@@ -54,6 +54,18 @@ This only works on Android 10+ devices:
 
 Then just follow the tips on Android device to start pair.
 
+#### PIN entry on a protected lock screen
+
+Android may hide its PIN keypad from the mirrored video. During an ADB session,
+open the floating menu, tap the keyboard icon, then tap **PIN** above the iOS
+keyboard. Enter your 4–16 digit PIN and tap **Send PIN**. The app sends numeric
+key events to the connected device and shows sending/delivery status. Delivery
+confirmation does not mean the PIN was accepted; check that the device unlocks.
+
+The PIN is not saved, copied to the clipboard, or included in the app's ADB command
+log. This requires an already authorized ADB connection. It does not remove capture
+protection or support pattern/password locks.
+
 #### VNC Mode: 
 
 You can switch back to VNC mode by one of the following options:

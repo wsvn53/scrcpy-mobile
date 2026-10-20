@@ -37,6 +37,10 @@ typedef void (^ADBClientCallback)(NSString * _Nullable output, int returnCode);
 @property (nonatomic, strong, readonly) NSArray <ADBDevice *> *adbDevices;
 @property (nonatomic, assign, readonly) BOOL isADBLaunched;
 @property (nonatomic, assign, readonly) int listenPort;
+@property (atomic, copy, nullable) NSString *activeScrcpySerial;
+
+/// Send numeric PIN key events without logging the command or its output.
+- (void)sendPIN:(NSString *)pin onDevice:(NSString *)serial callback:(ADBClientCallback)callback;
 
 + (instancetype)shared;
 

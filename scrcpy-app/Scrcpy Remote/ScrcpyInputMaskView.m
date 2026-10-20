@@ -15,6 +15,7 @@
 @property (nonatomic, strong) UIButton *btnShift;
 @property (nonatomic, strong) UIButton *btnTab;
 @property (nonatomic, strong) UIButton *btnEsc;
+@property (nonatomic, strong) UIButton *pinButton;
 @property (nonatomic, assign) BOOL toolbarVisible;
 @property (nonatomic, copy) NSString *currentDeviceType; // "adb" or "vnc"
 
@@ -92,6 +93,10 @@ static const CGFloat kKeyButtonSpacing = 6.0;
         self.hideKeyboardButton.contentEdgeInsets = UIEdgeInsetsMake(4, 4, 4, 4);
         [self.hideKeyboardButton addTarget:self action:@selector(handleHideKeyboardTapped) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbarView.contentView addSubview:self.hideKeyboardButton];
+
+        self.pinButton = [self createKeyButtonWithTitle:@"PIN" action:@selector(handlePIN)];
+        self.pinButton.accessibilityLabel = NSLocalizedString(@"Send PIN", nil);
+        [self.toolbarView.contentView addSubview:self.pinButton];
 
         // Pre-create key buttons for VNC (include Shift as modifier)
         self.btnMeta = [self createKeyButtonWithTitle:@"Meta" action:@selector(handleMeta)];
@@ -172,6 +177,14 @@ static const CGFloat kKeyButtonSpacing = 6.0;
     [self hide];
 }
 
+- (void)handlePIN {
+    UIViewController *presenter = self.window.rootViewController;
+    while (presenter.presentedViewController) { presenter = presenter.presentedViewController; }
+    SDL_StopTextInput(SDL_GetKeyboardFocus());
+    [self hide];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ScrcpyPresentPINEntry" object:presenter];
+}
+
 - (void)onClearCandidateModifiers:(NSNotification *)note {
     BOOL changed = self.candMeta || self.candCtrl || self.candAlt || self.candShift;
     if (!changed) { return; }
@@ -228,16 +241,19 @@ static const CGFloat kKeyButtonSpacing = 6.0;
     // Configure keys based on device type first
     BOOL isADB = [self.currentDeviceType.lowercaseString isEqualToString:@"adb"];
 
+    self.pinButton.hidden = !isADB;
     if (isADB) {
-        // Auto-fit toolbar to just the hide button (icon only)
+        // Keep PIN input available even when Android protects the video.
         CGFloat hideButtonW = kKeyButtonHeight;
-        CGFloat compactWidth = hideButtonW + 12.0; // inner padding total
+        CGFloat compactWidth = hideButtonW + 64.0; // inner padding total
         CGFloat tbX = CGRectGetMaxX(bounds) - compactWidth - kToolbarHorizontalPadding;
         self.toolbarView.frame = CGRectMake(tbX, toolbarY, compactWidth, kToolbarHeight);
 
         CGFloat hideY = (kToolbarHeight - kKeyButtonHeight) / 2.0;
         CGFloat hideX = compactWidth - hideButtonW - 6.0;
         self.hideKeyboardButton.frame = CGRectMake(hideX, hideY, hideButtonW, kKeyButtonHeight);
+
+        self.pinButton.frame = CGRectMake(6, hideY, 46, kKeyButtonHeight);
 
         // No keys area
         self.keysScrollView.frame = CGRectZero;

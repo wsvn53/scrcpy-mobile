@@ -6,6 +6,7 @@
 //
 
 #import "ADBClient.h"
+#import "PINInput.h"
 #import "adb_public.h"
 #import <sys/socket.h>
 #import <netinet/in.h>
@@ -175,6 +176,13 @@ void adb_connect_status_updated(const char *serial, const char *status)
 
 - (NSString *)executeADBCommandUnderlying:(NSArray <NSString *>*)commands returnCode:(int*)returnCode
 {
+    return [self executeADBCommandUnderlying:commands returnCode:returnCode logCommand:YES];
+}
+
+- (NSString *)executeADBCommandUnderlying:(NSArray<NSString *> *)commands
+                             returnCode:(int *)returnCode
+                             logCommand:(BOOL)logCommand
+{
     char *output = NULL;
     size_t output_size = 0;
     // Convert NSArray to char**
@@ -184,15 +192,20 @@ void adb_connect_status_updated(const char *serial, const char *status)
     }
     int ret = adb_commandline_porting_safe(&output, &output_size, (int)commands.count, argv);
     if (returnCode) { *returnCode = ret; }
-    NSLog(@"> adb_commandline_porting [%@]\n> return code: %d\n> output text:\n%s",
-          [commands componentsJoinedByString:@" "], ret, output);
+    if (logCommand) {
+        NSLog(@"> adb_commandline_porting [%@]\n> return code: %d\n> output text:\n%s",
+              [commands componentsJoinedByString:@" "], ret, output);
+    }
     
     // Special for connect and disconnect commands, we need to update devices after executed
     if (commands.count > 0 && [@[@"connect", @"disconnect"] containsObject:commands[0]]) {
         [self updateDevices];
     }
     
-    return output_size > 0 && output != NULL ? [NSString stringWithUTF8String:output] : @"";
+    NSString *result = output_size > 0 && output != NULL ? [NSString stringWithUTF8String:output] : @"";
+    free(argv);
+    free(output);
+    return result;
 }
 
 - (NSString *)executeADBCommand:(NSArray <NSString *>*)commands returnCode:(int * __nullable)returnCode
@@ -217,6 +230,23 @@ void adb_connect_status_updated(const char *serial, const char *status)
         int returnCode = -1;
         NSString *output = [self executeADBCommand:commands returnCode:&returnCode];
         if (callback) { callback(output, returnCode); }
+    });
+}
+
+- (void)sendPIN:(NSString *)pin onDevice:(NSString *)serial callback:(ADBClientCallback)callback {
+    NSArray *arguments = ScrcpyPINArguments(pin, serial);
+    if (!self.isADBLaunched || !arguments) {
+        if (callback) { callback(nil, -1); }
+        return;
+    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        if (![serial isEqualToString:self.activeScrcpySerial]) {
+            if (callback) { callback(nil, -1); }
+            return;
+        }
+        int code = -1;
+        [self executeADBCommandUnderlying:arguments returnCode:&code logCommand:NO];
+        if (callback) { callback(nil, code); }
     });
 }
 

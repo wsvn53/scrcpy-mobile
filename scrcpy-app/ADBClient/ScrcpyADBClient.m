@@ -9,6 +9,7 @@
 
 #import "ScrcpyADBClient.h"
 #import "ADBClient.h"
+#import "PINInput.h"
 #import "ScrcpyClientWrapper.h"
 #import <SDL3/SDL.h>
 #import <libavutil/frame.h>
@@ -150,6 +151,7 @@ void ScrcpyTryResetVideo(void) {
 
 // Background timer to control bakcground activities
 @property (nonatomic, strong) NSTimer *backgroundTimer;
+@property (nonatomic, assign) BOOL pinSendInFlight;
 @property (nonatomic, assign) NSTimeInterval lastBackgroundCheckTime;
 
 // The single in-flight background task. Tracked so that re-entering the
@@ -191,6 +193,11 @@ void ScrcpyTryResetVideo(void) {
                                                      name:ScrcpyRequestDisconnectNotification
                                                    object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(presentPINEntry:)
+                                                     name:@"ScrcpyPresentPINEntry"
+                                                   object:nil];
+
         // Observe ADB key event execution
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(executeADBKeyEvent:)
@@ -558,7 +565,9 @@ void ScrcpyTryResetVideo(void) {
         args[i] = (char *)[startArgs[i] UTF8String];
     }
     
+    ADBClient.shared.activeScrcpySerial = serial;
     scrcpy_main((int)startArgs.count, (char **)args);
+    ADBClient.shared.activeScrcpySerial = nil;
     SDL_SetiOSEventPump(false);
     
     // Remove SDL event filter to avoid blocking events
@@ -571,6 +580,7 @@ void ScrcpyTryResetVideo(void) {
 }
 
 -(void)stopScrcpy {
+    ADBClient.shared.activeScrcpySerial = nil;
     // Call SQL_Quit to send Quit Event
     SDL_Event event;
     event.type = SDL_EVENT_QUIT;
@@ -832,6 +842,70 @@ static const NSTimeInterval kBackgroundDurationAlways = -1;
         self.lastBackgroundCheckTime = 0;
         NSLog(@"Background timer stopped");
     }
+}
+
+- (void)presentPINEntry:(NSNotification *)notification {
+    NSString *serial = ADBClient.shared.activeScrcpySerial;
+    UIViewController *presenter = notification.object;
+    if (!serial.length || self.pinSendInFlight ||
+        ![presenter isKindOfClass:UIViewController.class] || presenter.presentedViewController) { return; }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Send PIN", nil)
+        message:NSLocalizedString(@"PIN entry explanation", nil)
+        preferredStyle:UIAlertControllerStyleAlert];
+    __weak UIAlertController *weakAlert = alert;
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel
+        handler:^(UIAlertAction *action) { weakAlert.textFields.firstObject.text = @""; }]];
+    UIAlertAction *send = [UIAlertAction actionWithTitle:NSLocalizedString(@"Send PIN", nil) style:UIAlertActionStyleDefault
+        handler:^(UIAlertAction *action) {
+            NSString *pin = weakAlert.textFields.firstObject.text ?: @"";
+            weakAlert.textFields.firstObject.text = @"";
+            self.pinSendInFlight = YES;
+            UILabel *status = [[UILabel alloc] init];
+            status.text = NSLocalizedString(@"Sending PIN…", nil);
+            status.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+            status.textColor = UIColor.labelColor;
+            status.backgroundColor = UIColor.secondarySystemBackgroundColor;
+            status.textAlignment = NSTextAlignmentCenter;
+            status.numberOfLines = 0;
+            status.layer.cornerRadius = 12;
+            status.clipsToBounds = YES;
+            status.translatesAutoresizingMaskIntoConstraints = NO;
+            [presenter.view addSubview:status];
+            [NSLayoutConstraint activateConstraints:@[
+                [status.centerXAnchor constraintEqualToAnchor:presenter.view.centerXAnchor],
+                [status.topAnchor constraintEqualToAnchor:presenter.view.safeAreaLayoutGuide.topAnchor constant:12],
+                [status.widthAnchor constraintEqualToAnchor:presenter.view.widthAnchor multiplier:0.9],
+                [status.heightAnchor constraintGreaterThanOrEqualToConstant:64]
+            ]];
+            UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, status.text);
+            [ADBClient.shared sendPIN:pin onDevice:serial callback:^(NSString *output, int code) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.pinSendInFlight = NO;
+                    // ADB success confirms delivery, not whether Android accepted the PIN.
+                    status.text = NSLocalizedString(code == 0 ? @"PIN delivery complete" : @"PIN delivery failed", nil);
+                    UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, status.text);
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [status removeFromSuperview];
+                    });
+                });
+            }];
+        }];
+    send.enabled = NO;
+    __weak UIAlertAction *weakSend = send;
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *field) {
+        field.secureTextEntry = YES;
+        field.keyboardType = UIKeyboardTypeNumberPad;
+        field.placeholder = NSLocalizedString(@"PIN (4–16 digits)", nil);
+        field.textContentType = @"";
+        field.autocorrectionType = UITextAutocorrectionTypeNo;
+        field.spellCheckingType = UITextSpellCheckingTypeNo;
+        [field addAction:[UIAction actionWithHandler:^(__kindof UIAction *action) {
+            UITextField *input = (UITextField *)action.sender;
+            weakSend.enabled = ScrcpyIsValidPIN(input.text);
+        }] forControlEvents:UIControlEventEditingChanged];
+    }];
+    [alert addAction:send];
+    [presenter presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - ADB Action Execution

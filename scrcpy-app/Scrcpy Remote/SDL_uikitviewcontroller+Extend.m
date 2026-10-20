@@ -616,6 +616,8 @@ static char orientationLockEnabledKey;
 #pragma mark - Keyboard Notifications
 
 - (void)keyboardWillShow:(NSNotification *)notification {
+    // Native dialogs (including PIN entry) must receive their own keyboard touches.
+    if (self.presentedViewController) { return; }
     // 当键盘显示时，创建并显示输入遮罩视图，并在键盘上方显示工具栏
     if (!self.inputMaskView) {
         self.inputMaskView = [[ScrcpyInputMaskView alloc] initWithFrame:self.view.bounds];
